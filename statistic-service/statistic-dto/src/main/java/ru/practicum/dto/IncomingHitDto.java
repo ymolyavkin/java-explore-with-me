@@ -18,6 +18,5 @@ public class IncomingHitDto {
     private String uri;
     @NotNull(groups = Marker.OnCreate.class)
     private String ip;
-    @NotNull(groups = Marker.OnCreate.class)
     private LocalDateTime created;
 }

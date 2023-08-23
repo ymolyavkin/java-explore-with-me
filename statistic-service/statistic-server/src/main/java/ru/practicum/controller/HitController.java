@@ -16,24 +16,19 @@ import ru.practicum.validator.Marker;
 public class HitController {
     @GetMapping("/stats")
     public ResponseEntity<Object> getBookingsByOwner(
-            //  @RequestHeader(value = USER_ID_FROM_REQUEST) Long ownerId,
-            //     @RequestParam(defaultValue = "ALL") String state,
             @RequestParam(name = "start") String start,
             @RequestParam(name = "end") String end,
             @RequestParam(name = "uris", required = false) String[] uris,
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
-        //State stateValue = State.fromString(state)
-        //        .orElseThrow(() -> new IllegalArgumentException("Unknown state: UNSUPPORTED_STATUS"));
+
         return null;
     }
-    @PostMapping
-    public ResponseEntity<Object> addHit(//@RequestHeader(value = USER_ID_FROM_REQUEST) Long bookerId,
-                                            // @Valid
-                                            // @StartBeforeEndValidation(message = "Дата окончания не может быть раньше или совпадать с датой начала")
-                                             @Validated(Marker.OnCreate.class) @RequestBody IncomingHitDto incomingHitDto) {
+
+    @PostMapping("/hit")
+    public ResponseEntity<Object> addHit(@Validated(Marker.OnCreate.class) @RequestBody IncomingHitDto incomingHitDto) {
         log.info("Получен запрос на сохранение информации о том что эндпойнт запрашивали");
-return null;
+        return null;
         //return bookingClient.addBooking(bookerId, incomingBookingDto);
     }
 }
