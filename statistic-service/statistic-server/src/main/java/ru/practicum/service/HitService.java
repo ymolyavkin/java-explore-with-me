@@ -1,14 +1,14 @@
 package ru.practicum.service;
 
-import ru.practicum.dto.HitResponseDto;
+import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.dto.IncomingHitDto;
 
 import java.util.List;
 
 public interface HitService {
-    List<HitResponseDto> getAll();
+    List<ResponseHitDto> getAllHits();
 
-    HitResponseDto getHitById(Long id);
+    ResponseHitDto getHitById(Long id);
 
-    HitResponseDto addBooking(IncomingHitDto incomingHitDto);
+    ResponseHitDto addHit(IncomingHitDto incomingHitDto);
 }
