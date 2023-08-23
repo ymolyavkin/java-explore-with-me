@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class IncomingStatisticDto {
+public class IncomingHitDto {
     @NotNull(groups = Marker.OnCreate.class)
     private String app;
     @NotNull(groups = Marker.OnCreate.class)

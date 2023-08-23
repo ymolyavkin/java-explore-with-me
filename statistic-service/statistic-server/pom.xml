@@ -20,6 +20,13 @@
 
     <dependencies>
         <dependency>
+            <groupId>ru.practicum</groupId>
+            <artifactId>statistic-dto</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
