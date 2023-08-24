@@ -1,5 +1,6 @@
 package ru.practicum.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,10 +12,15 @@ import java.util.Objects;
 //@NoArgsConstructor
 //@AllArgsConstructor
 public class ResponseHitDto {
+    @JsonProperty("id")
     private long id;
+    @JsonProperty("app")
     private String app;
+    @JsonProperty("uri")
     private String uri;
+    @JsonProperty("ip")
     private String ip;
+    @JsonProperty("created")
     private LocalDateTime created;
 
     @Override

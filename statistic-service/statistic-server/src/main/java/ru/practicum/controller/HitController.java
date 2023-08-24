@@ -15,7 +15,7 @@ import ru.practicum.validator.Marker;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping(value = "/")
 @Slf4j
 @RequiredArgsConstructor

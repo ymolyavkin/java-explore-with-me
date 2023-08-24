@@ -7,7 +7,7 @@ import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.entity.HitEntity;
 
 @Mapper(componentModel = "spring", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
-public interface HitMapper {
+public interface HitMapper extends EntityMapper<IncomingHitDto, HitEntity, ResponseHitDto>{
     public HitEntity toHitEntity(IncomingHitDto incomingHitDto);
 
     public ResponseHitDto toResponseHitDto(HitEntity hitEntity);
