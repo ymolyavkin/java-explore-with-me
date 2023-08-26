@@ -2,8 +2,6 @@ package ru.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.client.HitClient;
@@ -22,8 +20,9 @@ import java.util.List;
 public class HitController {
     private final HitClient hitClient;
     private final HitService hitService;
+
     @GetMapping("/stats")
-  //  public ResponseEntity<Object> getAllHits(
+    //  public ResponseEntity<Object> getAllHits(
     public List<ResponseHitDto> getAllHits(
             @RequestParam(name = "start") String start,
             @RequestParam(name = "end") String end,
