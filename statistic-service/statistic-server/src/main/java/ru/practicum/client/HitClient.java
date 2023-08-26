@@ -19,7 +19,7 @@ public class HitClient extends BaseClient {
     private static final String API_PREFIX = "/";
 
     @Autowired
-    public HitClient(@Value("http://localhost:9090") String serverUrl, RestTemplateBuilder builder) {
+    public HitClient(@Value("${statistic-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl + API_PREFIX))
