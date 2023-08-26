@@ -1,16 +1,18 @@
 package ru.practicum.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
+
 @Getter
 @Setter
 @RequiredArgsConstructor
-//@NoArgsConstructor
-//@AllArgsConstructor
 public class ResponseHitDto {
     @JsonProperty("id")
     private long id;
@@ -21,6 +23,7 @@ public class ResponseHitDto {
     @JsonProperty("ip")
     private String ip;
     @JsonProperty("created")
+    @JsonFormat(pattern=DATE_TIME_PATTERN)
     private LocalDateTime created;
 
     @Override

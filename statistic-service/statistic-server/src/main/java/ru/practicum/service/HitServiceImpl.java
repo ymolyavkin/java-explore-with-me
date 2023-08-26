@@ -34,7 +34,6 @@ public class HitServiceImpl implements HitService {
     @Transactional
     @Override
     public ResponseHitDto addHit(IncomingHitDto incomingHitDto) {
-        //  Booking booking = bookingRepository.save(resultBooking);
         HitEntity hitEntity = hitRepository.save(hitMapper.toHitEntity(incomingHitDto));
         ResponseHitDto responseHitDto = hitMapper.toResponseHitDto(hitEntity);
         System.out.println(hitEntity);

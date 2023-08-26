@@ -25,7 +25,6 @@ public class HitController {
     private final HitService hitService;
 
     @GetMapping("/stats")
-    //  public ResponseEntity<Object> getAllHits(
     public List<ResponseHitDto> getAllHits(
             @RequestParam(name = "start")
             @DateTimeFormat(pattern = DATE_TIME_PATTERN) String start,
