@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   stats-server:
-    build: stats-server
+    build: ./statistic-service/statistic-server
     image: stats-server-image
     container_name: stats-server-container
     ports:
@@ -9,7 +9,7 @@ services:
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5433/statistic
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5433/statistic
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
   stats-db:
