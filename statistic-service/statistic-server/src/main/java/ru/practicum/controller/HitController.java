@@ -2,6 +2,7 @@ package ru.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.client.HitClient;
@@ -12,6 +13,8 @@ import ru.practicum.validator.Marker;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
 
 @RestController
 @RequestMapping(value = "/")
@@ -24,8 +27,10 @@ public class HitController {
     @GetMapping("/stats")
     //  public ResponseEntity<Object> getAllHits(
     public List<ResponseHitDto> getAllHits(
-            @RequestParam(name = "start") String start,
-            @RequestParam(name = "end") String end,
+            @RequestParam(name = "start")
+            @DateTimeFormat(pattern = DATE_TIME_PATTERN) String start,
+            @RequestParam(name = "end")
+            @DateTimeFormat(pattern = DATE_TIME_PATTERN) String end,
             @RequestParam(name = "uris", required = false) String[] uris,
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
