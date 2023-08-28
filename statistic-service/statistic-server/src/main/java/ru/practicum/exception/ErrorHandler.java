@@ -19,12 +19,14 @@ public class ErrorHandler {
         log.debug("Ошибка IllegalArgumentException. Статус ошибки 400 Bad Request{}", e.getMessage(), e);
         return Map.of("error", e.getMessage());
     }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleMissingParams(MissingServletRequestParameterException e) {
         log.debug("Ошибка MissingServletRequestParameterException. Отсутствует обязательный параметр запросаСтатус ошибки 400 Bad Request{}", e.getMessage(), e);
         return Map.of("error", e.getMessage());
     }
+
     @ExceptionHandler({ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleValidation(final RuntimeException e) {
