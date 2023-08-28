@@ -43,7 +43,7 @@ services:
         volumes:
           - /var/lib/postgresql/data/
         environment:
-          - POSTGRES_DB=stats
+          - POSTGRES_DB=ewm-db
           - POSTGRES_USER=root
           - POSTGRES_PASSWORD=root
 #version: '3.1'
