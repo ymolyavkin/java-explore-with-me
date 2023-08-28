@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.dto.IncomingHitDto;
+import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.entity.HitEntity;
 import ru.practicum.entity.ViewStatsResponse;
 import ru.practicum.mapper.HitMapper;
@@ -63,7 +64,9 @@ public class HitServiceImpl implements HitService {
         //List<HitEntity> countHits = hitRepository.getListHitEntity(start, end, uris);
      //   List<HitEntity> countHits = hitRepository.getListHitEntity();
       Optional<HitEntity> hitEntityOptional = hitRepository.findById(5L);
-        Optional<HitEntity> hitEntity = hitRepository.getHitById(8L);
+        HitEntity hitEntity = hitRepository.getHitById(8L);
+       // List<ViewStatsResponse> countHits = hitRepository.getCountHits(start, end, uris);
+        List<ViewStatsResponseDto> countHits = hitRepository.getCountHits(start, end);
         System.out.println();
        // return countHits;
         return null;

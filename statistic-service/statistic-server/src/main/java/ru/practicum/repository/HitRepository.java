@@ -2,8 +2,11 @@ package ru.practicum.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.entity.HitEntity;
+import ru.practicum.entity.ViewStatsResponse;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +32,7 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
     Optional<HitEntity> findById(Long id);
 
     @Query("select e from HitEntity e where e.id = :id")
-    Optional<HitEntity> getHitById(Long id);
+    HitEntity getHitById(Long id);
     /*@Query("SELECT app, uri, count(*) \n" +
             "FROM endpointhit\n" +
             "WHERE \n" +
@@ -37,26 +40,16 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
             "AND created BETWEEN :start and :end\n" +
             "group by app, uri")
     List<ViewStatsResponseDto> collectStatistic(LocalDateTime start, LocalDateTime end, List<String> uris);*/
-    /*@Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
-            "FROM endpointhit e " +
+    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
+            "FROM HitEntity e " +
             "WHERE " +
-            "e.uri IN :uris " +
-            "AND e.created BETWEEN :start and :end " +
+         //   "e.uri IN :uris AND " +
+            "e.created BETWEEN :start and :end " +
             "GROUP BY e.app, e.uri " +
-            "ORDER BY COUNT(e.ip) DESC")*/
-  /*  @SqlResultSetMapping(
-            name = "countHitsMapping",
-            classes = {
-                    @ConstructorResult(
-                            targetClass = ViewStatsResponseDto.class,
-                            columns = {
-                                    @ColumnResult(name="app"),
-                                    @ColumnResult(name="uri"),
-                                    @ColumnResult(name="hits")
-                            }
-                    )
-            }
-    )*/
+            "ORDER BY COUNT(e.ip) DESC")
+   // List<ViewStatsResponse> getCountHits(LocalDateTime start, LocalDateTime end, List<String> uris);
+    List<ViewStatsResponseDto> getCountHits(LocalDateTime start, LocalDateTime end);
+
 //    @NamedNativeQuery(name="getHitsCount", query = "SELECT app, uri, count(*) \n" +
 //            "FROM endpointhit\n" +
 //            "WHERE \n" +
