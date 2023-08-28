@@ -14,8 +14,6 @@ import ru.practicum.repository.HitRepository;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_START_AFTER_END;
 
@@ -27,24 +25,11 @@ public class HitServiceImpl implements HitService {
     private final HitRepository hitRepository;
     private final HitMapper hitMapper;
 
-    @Override
-    public List<ResponseHitDto> getAllHits() {
-        List<HitEntity> hits = hitRepository.findAll();
-        return hits.stream().map(hitEntity -> hitMapper.toResponseHitDto(hitEntity)).collect(Collectors.toList());
-    }
-
-    @Override
-    public ResponseHitDto getHitById(Long id) {
-        HitEntity hitEntity = hitRepository.getReferenceById(id);
-        return hitMapper.toResponseHitDto(hitEntity);
-    }
-
     @Transactional
     @Override
     public ResponseHitDto addHit(IncomingHitDto incomingHitDto) {
         HitEntity hitEntity = hitRepository.save(hitMapper.toHitEntity(incomingHitDto));
-        ResponseHitDto responseHitDto = hitMapper.toResponseHitDto(hitEntity);
-        System.out.println(hitEntity);
+
         return hitMapper.toResponseHitDto(hitEntity);
     }
 
@@ -55,22 +40,15 @@ public class HitServiceImpl implements HitService {
             throw new ValidationException(MESSAGE_VALIDATION_START_AFTER_END);
         }
         if (unique) {
-            return hitRepository.getViewStatisticsWithUniqueIp(start, end);
+            if (uris.get(0).equals("/events")) {
+                return hitRepository.getViewStatisticsWithUniqueIpAllUris(start, end);
+            } else {
+                return hitRepository.getViewStatisticsWithUniqueIp(start, end, uris);
+            }
+        } else if (uris.get(0).equals("/events")) {
+            return hitRepository.getViewStatisticsWithAllIpAllUris(start, end);
         } else {
-            return hitRepository.getViewStatisticsWithAllIp(start, end);
+            return hitRepository.getViewStatisticsWithAllIp(start, end, uris);
         }
-    }
-
-    @Override
-    public List<HitEntity> findHitEntity(LocalDateTime start, LocalDateTime end, List<String> uris, boolean unique) {
-        //List<HitEntity> countHits = hitRepository.getListHitEntity(start, end, uris);
-        //   List<HitEntity> countHits = hitRepository.getListHitEntity();
-        Optional<HitEntity> hitEntityOptional = hitRepository.findById(5L);
-        HitEntity hitEntity = hitRepository.getHitById(8L);
-        // List<ViewStatsResponse> countHits = hitRepository.getCountHits(start, end, uris);
-        List<ViewStatsResponseDto> countHits = hitRepository.getCountHits(start, end);
-        System.out.println();
-        // return countHits;
-        return null;
     }
 }
