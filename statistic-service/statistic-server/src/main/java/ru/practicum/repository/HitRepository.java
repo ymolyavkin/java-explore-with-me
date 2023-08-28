@@ -24,13 +24,13 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
             "ORDER BY COUNT(e.ip) DESC")
     List<ViewStatsResponseDto> getCountHits(LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT DISTINCT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
+    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
             "FROM HitEntity e " +
             "WHERE " +
          //   "e.uri IN :uris AND " +
             "e.created BETWEEN :start and :end " +
             "GROUP BY e.app, e.uri " +
-            "ORDER BY COUNT(e.ip) DESC")
+            "ORDER BY COUNT(DISTINCT e.ip) DESC")
     List<ViewStatsResponseDto> getViewStatisticsWithUniqueIp(LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
