@@ -5,19 +5,21 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import ru.practicum.validator.Marker;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
 
 @Getter
 @Setter
 @RequiredArgsConstructor
 public class IncomingHitDto {
-    @NotNull(groups = Marker.OnCreate.class)
+    @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private String app;
-    @NotNull(groups = Marker.OnCreate.class)
+    @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private String uri;
-    @NotNull(groups = Marker.OnCreate.class)
+    @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private String ip;
     private LocalDateTime created;
 

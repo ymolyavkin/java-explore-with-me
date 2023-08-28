@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.client.HitClient;
 import ru.practicum.dto.IncomingHitDto;
 import ru.practicum.dto.ResponseHitDto;
+import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.entity.HitEntity;
 import ru.practicum.entity.ViewStatsResponse;
 import ru.practicum.service.HitService;
@@ -24,7 +25,6 @@ import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
 @Slf4j
 @RequiredArgsConstructor
 public class HitController {
-    private final HitClient hitClient;
     private final HitService hitService;
 
     //    @GetMapping("/stats")
@@ -43,9 +43,8 @@ public class HitController {
     //ViewStatsDto
     @GetMapping("/stats")
     //public List<ViewStatsDto> getAllHits(
-    //   public List<ViewStatsResponseDto> getAllHits(
-    //  public List<ViewStatsResponse> getAllHits(
-    public List<HitEntity> getAllHits(
+    public List<ViewStatsResponseDto> getViewStatistics(
+            //  public List<ViewStatsResponse> getAllHits(
             @RequestParam(name = "start")
             @DateTimeFormat(pattern = DATE_TIME_PATTERN) LocalDateTime start,
             @RequestParam(name = "end")
@@ -54,9 +53,7 @@ public class HitController {
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
         List<String> urisList = Arrays.asList(uris);
-        //return hitClient.getStatisticsOnHits(start, end, uris, unique);
-        return hitService.findHitEntity(start, end, urisList, unique);
-        //return hitService.findCountHits(start, end, urisList, unique);
+        return hitService.getViewStatistics(start, end, urisList, unique);
     }
 
     @PostMapping("/hit")
