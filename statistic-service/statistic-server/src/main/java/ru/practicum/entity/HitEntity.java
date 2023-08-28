@@ -12,8 +12,8 @@ import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
 @Getter
 @Setter
 @NoArgsConstructor(force = true)
-@AllArgsConstructor
-@Table(name = "endpointhit", schema = "public")
+//@AllArgsConstructor
+@Table(name = "endpointhit")
 public class HitEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

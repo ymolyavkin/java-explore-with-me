@@ -63,6 +63,7 @@ public class HitServiceImpl implements HitService {
         //List<HitEntity> countHits = hitRepository.getListHitEntity(start, end, uris);
      //   List<HitEntity> countHits = hitRepository.getListHitEntity();
       Optional<HitEntity> hitEntityOptional = hitRepository.findById(5L);
+        Optional<HitEntity> hitEntity = hitRepository.getHitById(8L);
         System.out.println();
        // return countHits;
         return null;

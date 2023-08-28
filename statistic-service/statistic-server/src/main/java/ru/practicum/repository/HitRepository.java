@@ -13,20 +13,23 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
                                                 @Param("end") LocalDateTime end,
                                                 @Param("uris") List<String> uris);
 */
-  //  @Query("SELECT e.app, e.uri, COUNT(e.ip) " +
+    //  @Query("SELECT e.app, e.uri, COUNT(e.ip) " +
     //i FROM Item AS i
 //    @Query("SELECT e " +
 //            "FROM endpointhit AS e ")// +
 //    List<HitEntity> getListHitEntity();
-           // "WHERE " +
-           // "e.uri IN :uris " +
-         //   "AND e.created BETWEEN :start and :end ")// +
-           // "GROUP BY e.app, e.uri)") //+
-          //  "ORDER BY DESC")
+    // "WHERE " +
+    // "e.uri IN :uris " +
+    //   "AND e.created BETWEEN :start and :end ")// +
+    // "GROUP BY e.app, e.uri)") //+
+    //  "ORDER BY DESC")
 //    List<HitEntity> getListHitEntity(@Param("start") LocalDateTime start,
 //                                     @Param("end") LocalDateTime end,
 //                                     @Param("uris") List<String> uris);
-Optional<HitEntity> findById(Long id);
+    Optional<HitEntity> findById(Long id);
+
+    @Query("select e from HitEntity e where e.id = :id")
+    Optional<HitEntity> getHitById(Long id);
     /*@Query("SELECT app, uri, count(*) \n" +
             "FROM endpointhit\n" +
             "WHERE \n" +
