@@ -4,7 +4,6 @@ import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.dto.IncomingHitDto;
 import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.entity.HitEntity;
-import ru.practicum.entity.ViewStatsResponse;
 
 import java.time.LocalDateTime;
 import java.util.List;

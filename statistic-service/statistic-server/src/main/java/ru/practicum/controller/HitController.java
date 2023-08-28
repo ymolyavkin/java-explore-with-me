@@ -5,12 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.client.HitClient;
 import ru.practicum.dto.IncomingHitDto;
 import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.dto.ViewStatsResponseDto;
-import ru.practicum.entity.HitEntity;
-import ru.practicum.entity.ViewStatsResponse;
 import ru.practicum.service.HitService;
 import ru.practicum.validator.Marker;
 

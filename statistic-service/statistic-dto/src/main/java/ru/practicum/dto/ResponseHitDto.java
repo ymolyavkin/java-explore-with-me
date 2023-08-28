@@ -3,7 +3,6 @@ package ru.practicum.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -23,7 +22,7 @@ public class ResponseHitDto {
     @JsonProperty("ip")
     private String ip;
     @JsonProperty("created")
-    @JsonFormat(pattern=DATE_TIME_PATTERN)
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 
     @Override
