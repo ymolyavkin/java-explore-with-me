@@ -2,32 +2,78 @@ version: '3.1'
 services:
   stats-server:
     build: ./statistic-service
-    image: stats-server-image
-    container_name: stats-server-container
+    container_name: stats-server
     ports:
       - "9090:9090"
     depends_on:
       - stats-db
     environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
       - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5433/statistic
+      - STATS-SERVER-URL=http://localhost:9090
 
   stats-db:
     image: postgres:14-alpine
-    container_name: postgres
     ports:
-      - "5433:5433"
-    volumes:
-      - /var/lib/postgresql/data/
+      - "6541:5433"
     environment:
       - POSTGRES_DB=statistic
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
+
   ewm-service:
-      build: ./main-service
-      image: main-service-image
-      container_name: main-service-container
-      ports:
-        - "8080:8080"
+    build: main-service
+    container_name: main-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - main-db
+      - stats-server
+    environment:
+      - STATS_SERVER_URL=http://server:9090
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/mainDB
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+
+  main-db:
+    image: postgres:14-alpine
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_DB=main
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+#version: '3.1'
+#services:
+#  stats-server:
+#    build: ./statistic-service
+#    image: stats-server-image
+#    container_name: stats-server-container
+#    ports:
+#      - "9090:9090"
+#    depends_on:
+#      - stats-db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5433/statistic
+#
+#  stats-db:
+#    image: postgres:14-alpine
+#    container_name: postgres
+#    ports:
+#      - "5433:5433"
+#    volumes:
+#      - /var/lib/postgresql/data/
+#    environment:
+#      - POSTGRES_DB=statistic
+#      - POSTGRES_USER=root
+#      - POSTGRES_PASSWORD=root
+#  ewm-service:
+#      build: ./main-service
+#      image: main-service-image
+#      container_name: main-service-container
+#      ports:
+#        - "8080:8080"
 #      depends_on:
 #        - ewm-db
 #        - stats-server
