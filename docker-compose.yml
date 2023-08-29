@@ -23,6 +23,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     hostname: stats-db
+    volumes:
+      - /var/lib/postgresql/data/
 
   ewm-service:
     build: ./main-service
