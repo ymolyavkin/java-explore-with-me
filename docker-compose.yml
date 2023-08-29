@@ -14,17 +14,22 @@ services:
       - SPRING_DATASOURCE_PASSWORD=postgres
 
   stats-db:
-    image: postgres:14-alpine
-    container_name: stats-db
-    ports:
-      - "5433:5433"
-    environment:
-      - POSTGRES_DB=stats-db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-    hostname: stats-db
-    volumes:
-      - /var/lib/postgresql/data/
+      image: postgres:13.7-alpine
+      container_name: stats-db
+      ports:
+        - "6541:5433"
+
+#    image: postgres:14-alpine
+#    container_name: stats-db
+#    ports:
+#      - "5433:5433"
+      environment:
+        - POSTGRES_DB=stats-db
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+      hostname: stats-db
+      volumes:
+        - /var/lib/postgresql/data/
 
   ewm-service:
     build: ./main-service
