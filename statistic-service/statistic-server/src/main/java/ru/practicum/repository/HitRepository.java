@@ -35,7 +35,7 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
             "ORDER BY COUNT(DISTINCT e.ip) DESC")
     List<ViewStatsResponseDto> getViewStatisticsWithUniqueIp(LocalDateTime start, LocalDateTime end, List<String> uris);
 
-    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
+    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
             "FROM HitEntity e " +
             "WHERE " +
             "e.uri IN :uris AND " +

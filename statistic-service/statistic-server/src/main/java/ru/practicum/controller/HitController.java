@@ -32,9 +32,7 @@ public class HitController {
             @RequestParam(name = "uris", required = false) List<String> uris,
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
-        if (uris == null) {
-            uris = List.of("/events");
-        }
+
         return hitService.getViewStatistics(start, end, uris, unique);
     }
 
