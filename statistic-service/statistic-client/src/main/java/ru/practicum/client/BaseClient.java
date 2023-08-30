@@ -84,7 +84,7 @@ public class BaseClient {
     }
 
     private <T> ResponseEntity<Object> makeAndSendRequest(HttpMethod method, String path, Long userId, @Nullable Map<String, Object> parameters, @Nullable T body) {
-        HttpEntity<T> requestEntity = new HttpEntity<>(body, defaultHeaders(userId));
+        HttpEntity<T> requestEntity = new HttpEntity<>(body);
 
         ResponseEntity<Object> shareitServerResponse;
         try {
@@ -97,16 +97,6 @@ public class BaseClient {
             return ResponseEntity.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
         }
         return prepareGatewayResponse(shareitServerResponse);
-    }
-
-    private HttpHeaders defaultHeaders(Long userId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        if (userId != null) {
-            headers.set("USER_ID_FROM_REQUEST", String.valueOf(userId));
-        }
-        return headers;
     }
 
     private static ResponseEntity<Object> prepareGatewayResponse(ResponseEntity<Object> response) {
