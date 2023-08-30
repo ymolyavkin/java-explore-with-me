@@ -6,6 +6,7 @@ import lombok.Setter;
 import ru.practicum.validator.Marker;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class IncomingHitDto {
     private String uri;
     @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private String ip;
+    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocalDateTime created;
 
     @Override

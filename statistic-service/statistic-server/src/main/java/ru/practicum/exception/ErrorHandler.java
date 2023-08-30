@@ -13,24 +13,20 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
-    @ExceptionHandler({IllegalArgumentException.class})
+    @ExceptionHandler({
+            MissingServletRequestParameterException.class,
+            IllegalArgumentException.class,
+            ValidationException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleIllegalArgumentException(final RuntimeException e) {
-        log.debug("Ошибка IllegalArgumentException. Статус ошибки 400 Bad Request{}", e.getMessage(), e);
+    public Map<String, String> handleMissingParams(RuntimeException e) {
+        log.debug("Ошибка RuntimeException. Отсутствует обязательный параметр запроса. Статус ошибки 400 Bad Request{}", e.getMessage(), e);
         return Map.of("error", e.getMessage());
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleMissingParams(MissingServletRequestParameterException e) {
-        log.debug("Ошибка MissingServletRequestParameterException. Отсутствует обязательный параметр запросаСтатус ошибки 400 Bad Request{}", e.getMessage(), e);
-        return Map.of("error", e.getMessage());
-    }
-
-    @ExceptionHandler({ValidationException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handleValidation(final RuntimeException e) {
-        log.debug("Ошибка валидации. Получен статус 400 BAD_REQUEST {}", e.getMessage(), e);
+    @ExceptionHandler({Throwable.class})
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleThrowable(final RuntimeException e) {
+        log.debug("Необработанное исключение. Получен статус 500 INTERNAL_SERVER_ERROR {}", e.getMessage(), e);
         return Map.of("error", e.getMessage());
     }
 }

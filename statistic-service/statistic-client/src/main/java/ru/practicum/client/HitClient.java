@@ -10,6 +10,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.dto.IncomingHitDto;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
@@ -32,11 +33,11 @@ public class HitClient extends BaseClient {
         return post("/hit", incomingHitDto);
     }
 
-    public ResponseEntity<Object> getStatisticsOnHits(String start, String end, String[] uris, Boolean unique) {
+    public ResponseEntity<Object> getStatisticsOnHits(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
         Map<String, Object> parameters = Map.of(
                 "start", start,
                 "end", end,
-                "uris", uris,
+                "uris", String.join(",", uris),
                 "unique", unique
         );
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
