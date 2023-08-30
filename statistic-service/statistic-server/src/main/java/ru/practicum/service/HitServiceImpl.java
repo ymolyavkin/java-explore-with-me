@@ -50,5 +50,6 @@ public class HitServiceImpl implements HitService {
         } else {
             return hitRepository.getViewStatisticsWithAllIp(start, end, uris);
         }
+
     }
 }
