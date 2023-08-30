@@ -9,27 +9,27 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface HitRepository extends JpaRepository<HitEntity, Long> {
+//    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
+//            "FROM HitEntity e " +
+//            "WHERE " +
+//            "e.created BETWEEN :start and :end " +
+//            "GROUP BY e.app, e.uri " +
+//            "ORDER BY COUNT(DISTINCT e.ip) DESC")
+//    List<ViewStatsResponseDto> getViewStatisticsWithUniqueIpAllUris(LocalDateTime start, LocalDateTime end);
+//
+//    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
+//            "FROM HitEntity e " +
+//            "WHERE " +
+//            "e.created BETWEEN :start and :end " +
+//            "GROUP BY e.app, e.uri " +
+//            "ORDER BY COUNT(e.ip) DESC")
+//    List<ViewStatsResponseDto> getViewStatisticsWithAllIpAllUris(LocalDateTime start, LocalDateTime end);
+
+
     @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
             "FROM HitEntity e " +
             "WHERE " +
-            "e.created BETWEEN :start and :end " +
-            "GROUP BY e.app, e.uri " +
-            "ORDER BY COUNT(DISTINCT e.ip) DESC")
-    List<ViewStatsResponseDto> getViewStatisticsWithUniqueIpAllUris(LocalDateTime start, LocalDateTime end);
-
-    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
-            "FROM HitEntity e " +
-            "WHERE " +
-            "e.created BETWEEN :start and :end " +
-            "GROUP BY e.app, e.uri " +
-            "ORDER BY COUNT(e.ip) DESC")
-    List<ViewStatsResponseDto> getViewStatisticsWithAllIpAllUris(LocalDateTime start, LocalDateTime end);
-
-
-    @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
-            "FROM HitEntity e " +
-            "WHERE " +
-            "e.uri IN :uris AND " +
+            "e.uri IN (COALESCE(:uris, e.uri)) AND " +
             "e.created BETWEEN :start and :end " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(DISTINCT e.ip) DESC")
@@ -38,7 +38,7 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
     @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(e.ip)) " +
             "FROM HitEntity e " +
             "WHERE " +
-            "e.uri IN :uris AND " +
+            "e.uri IN (COALESCE(:uris, e.uri)) AND " +
             "e.created BETWEEN :start and :end " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC")
