@@ -7,10 +7,7 @@ import ru.practicum.entity.HitEntity;
 
 import java.time.LocalDateTime;
 import java.util.List;
-/*
-(:name is null or c.name = :name)
-and (coalesce(:unitNames) is null or r.deliveryUnit.unitName in (:unitNames) )"
- */
+
 public interface HitRepository extends JpaRepository<HitEntity, Long> {
     @Query("SELECT new ru.practicum.dto.ViewStatsResponseDto(e.app, e.uri, COUNT(DISTINCT e.ip)) " +
             "FROM HitEntity e " +
