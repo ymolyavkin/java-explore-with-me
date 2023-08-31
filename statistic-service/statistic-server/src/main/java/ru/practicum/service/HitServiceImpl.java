@@ -39,10 +39,18 @@ public class HitServiceImpl implements HitService {
             log.error(MESSAGE_VALIDATION_START_AFTER_END);
             throw new ValidationException(MESSAGE_VALIDATION_START_AFTER_END);
         }
-        if (unique) {
-            return hitRepository.getViewStatisticsWithUniqueIp(start, end, uris);
+        if (uris == null) {
+            if (unique) {
+                return hitRepository.getViewStatisticsWithUniqueIpAllUris(start, end);
+            } else {
+                return hitRepository.getViewStatisticsWithAllIpAllUris(start, end);
+            }
         } else {
-            return hitRepository.getViewStatisticsWithAllIp(start, end, uris);
+            if (unique) {
+                return hitRepository.getViewStatisticsWithUniqueIp(start, end, uris);
+            } else {
+                return hitRepository.getViewStatisticsWithAllIp(start, end, uris);
+            }
         }
     }
 }
