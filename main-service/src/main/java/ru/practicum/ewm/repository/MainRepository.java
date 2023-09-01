@@ -1,4 +1,4 @@
-package ru.practicum.repository;
+package ru.practicum.ewm.repository;
 
 public interface MainRepository {
 }

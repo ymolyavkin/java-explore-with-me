@@ -1,4 +1,4 @@
-package ru.practicum.service;
+package ru.practicum.ewm.service;
 
 public interface MainInterface {
 }
