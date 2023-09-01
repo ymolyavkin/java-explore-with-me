@@ -3,12 +3,12 @@ package ru.practicum.ewm.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.enums.State;
 import ru.practicum.ewm.model.Location;
 import ru.practicum.validator.Marker;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -17,28 +17,23 @@ import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EventFullDto {
-    private Long id;
+public class NewEventDto {
     @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @Size(min = 20, max = 2000, groups = Marker.OnCreate.class)
     private String annotation;
     @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
-    private CategoryDto category;
-    private Long confirmedRequests;
-    private LocalDateTime createdOn;
-    private String Description;
+    private long category;
+    @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @Size(min = 20, max = 7000, groups = Marker.OnCreate.class)
+    private String description;
     @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocalDateTime eventDate;
     @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
-    private UserShortDto initiator;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private Location location;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
-    private boolean paid;
+    private Boolean paid;
     private Integer participantLimit;
-    private LocalDateTime publishedOn;
     private Boolean requestModeration;
-    private State state;
     @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @Size(min = 3, max = 120, groups = Marker.OnCreate.class)
     private String title;
-    private Long views;
 }
