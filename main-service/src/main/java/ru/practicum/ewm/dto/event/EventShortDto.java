@@ -1,9 +1,10 @@
-package ru.practicum.ewm.dto;
+package ru.practicum.ewm.dto.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.validator.Marker;
+import ru.practicum.ewm.dto.user.UserShortDto;
+import ru.practicum.ewm.dto.category.CategoryDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -16,18 +17,18 @@ import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
 @NoArgsConstructor
 public class EventShortDto {
     private Long id;
-    @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     private String annotation;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private CategoryDto category;
     private Long confirmedRequests;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocalDateTime eventDate;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private UserShortDto initiator;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private boolean paid;
-    @NotNull(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
+    @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private String title;
     private Long views;
 }
