@@ -16,9 +16,9 @@ import static ru.practicum.util.Constants.MESSAGE_VALIDATION_SIZE;
 public class UserDto {
     private Long id;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
-    @Size(min = 1, max = 50, message = MESSAGE_VALIDATION_SIZE)
+    @Size(min = 2, max = 250, message = MESSAGE_VALIDATION_SIZE)
     private String name;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
-    @Size(min = 1, max = 50, message = MESSAGE_VALIDATION_SIZE)
+    @Size(min = 6, max = 254, message = MESSAGE_VALIDATION_SIZE)
     private String email;
 }
