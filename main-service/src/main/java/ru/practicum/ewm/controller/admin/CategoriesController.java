@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.category.NewCategoryDto;
 import ru.practicum.validator.Marker;
 
@@ -26,10 +25,18 @@ public class CategoriesController {
         return null;
     }
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     public ResponseEntity<Object> updateCategory(@Validated(Marker.OnUpdate.class)
-                                                 @RequestBody NewCategoryDto newCategoryDto) {
-        log.info("Получен запрос на обновление категории");
+                                                 @RequestBody NewCategoryDto newCategoryDto,
+                                                 @PathVariable Long id) {
+        log.info("Получен запрос на обновление категориис id {}", id);
+
+        return null;
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteCategoryById(@PathVariable Long id) {
+        log.info("Получен запрос на удаление категории с id {}", id);
 
         return null;
     }
