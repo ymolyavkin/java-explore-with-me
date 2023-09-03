@@ -1,4 +1,4 @@
-package ru.practicum.ewm.controller.privateapi;
+package ru.practicum.ewm.controller.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

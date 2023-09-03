@@ -1,10 +1,9 @@
-package ru.practicum.ewm.controller.publicapi;
+package ru.practicum.ewm.controller.compilation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -42,7 +41,7 @@ public class PublicCompilationsController {
     }
     @GetMapping("/{id}")
     public CompilationDto getCompilationById(@PathVariable Long id) {
-        log.info("Получен запрос на получение события с id {}", id);
+        log.info("Получен запрос на получение подборки событий с id {}", id);
         //return compilationService.getCompilationById(compId);
         return  null;
     }

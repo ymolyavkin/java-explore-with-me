@@ -1,4 +1,4 @@
-package ru.practicum.ewm.controller.publicapi;
+package ru.practicum.ewm.controller.category;
 
 import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
