@@ -27,7 +27,7 @@ public class EventFullDto {
     private CategoryDto category;
     private Long confirmedRequests;
     private LocalDateTime createdOn;
-    private String Description;
+    private String description;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocalDateTime eventDate;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)

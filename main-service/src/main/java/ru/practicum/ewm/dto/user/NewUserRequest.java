@@ -1,4 +1,4 @@
-package ru.practicum.ewm.dto.request;
+package ru.practicum.ewm.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
