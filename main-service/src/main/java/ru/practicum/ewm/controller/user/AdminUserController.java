@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.user.NewUserRequest;
 import ru.practicum.ewm.dto.user.UserDto;
+import ru.practicum.ewm.service.user.UserService;
 
 import javax.validation.Valid;
 
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 public class AdminUserController {
+    private final UserService userService;
     /*@GetMapping
     public ResponseEntity<Object> test(HttpServletRequest request) {
         log.info("Получен тестовый запрос на эндпоинт /users GET");
@@ -33,9 +36,10 @@ public class AdminUserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> addNewUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> addNewUser(@Valid @RequestBody
+                                             NewUserRequest newUserRequest) {
         log.info("Получен запрос на добавление нового пользователя");
-
-        return null;
+        return new ResponseEntity<>(userService.addUser(newUserRequest), HttpStatus.OK);
+       // return userService.addUser(newUserRequest);
     }
 }
