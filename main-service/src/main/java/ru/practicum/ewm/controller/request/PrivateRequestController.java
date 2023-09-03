@@ -28,55 +28,11 @@ public class PrivateRequestController {
         return null;
     }
 
-    @PatchMapping("/users/{userId}/requests/{userId}/cancel")
-    public ResponseEntity<ParticipationRequestDto> cancelRequests(@PathVariable Long userId, @RequestParam Long eventId) {
+    @PatchMapping("/{requestId}/cancel")
+    public ResponseEntity<ParticipationRequestDto> cancelRequests(@PathVariable Long userId, @RequestParam Long requestId) {
 
-        log.info("Получен запрос на отмену заявки на участие в событии с id {} пользователя с id {}", eventId, userId);
+        log.info("Получен запрос на отмену заявки с id {} пользователя с id {}", requestId, userId);
 
         return null;
     }
 }
-/*
-
-
-    @GetMapping("/{eventId}")
-    public ResponseEntity<Object> getEventByIdByUser(@PathVariable Long userId, @PathVariable Long eventId) {
-        log.info("Получен запрос на полную информацию о событии с id {}, добавленном пользователем с id {}", eventId, userId);
-
-        return null;
-    }
-
-    @GetMapping("/{eventId}/requests")
-    public ResponseEntity<Object> getEventByIdByUserParticipation(@PathVariable Long userId, @PathVariable Long eventId) {
-        log.info("Получен запрос на информацию о запросах на участие в событии с id {} пользователя с id {}", eventId, userId);
-
-        return null;
-    }
-
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> addNewEvent(@PathVariable Long userId,
-                                              @Valid @RequestBody NewEventDto newEventDto) {
-        log.info("Получен запрос на добавление нового события пользователем с id {}", userId);
-
-        return null;
-    }
-
-    @PatchMapping("/{eventId}")
-    public ResponseEntity<Object> updateEvent(@PathVariable Long userId,
-                                              @Valid @RequestBody NewEventDto newEventDto) {
-        log.info("Получен запрос на обновление события пользователем с id {}", userId);
-
-        return null;
-    }
-
-    @PatchMapping("/{eventId}/requests")
-    public ResponseEntity<Object> changeStatusRequests(
-            @PathVariable Long userId, @PathVariable Long eventId,
-            @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
-
-        log.info("Получен запрос на изменение статуса заявок на участие в событии с id {} пользователя с id {}", userId, eventId);
-
-        return null;
-    }
- */
