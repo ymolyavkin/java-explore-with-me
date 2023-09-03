@@ -4,18 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.user.UserDto;
 
 import javax.validation.Valid;
 
-@Controller
+@RestController
 @RequestMapping(value = "/admin/users")
 @Slf4j
-//@Validated
 @RequiredArgsConstructor
-public class UserController {
+public class AdminUserController {
     /*@GetMapping
     public ResponseEntity<Object> test(HttpServletRequest request) {
         log.info("Получен тестовый запрос на эндпоинт /users GET");

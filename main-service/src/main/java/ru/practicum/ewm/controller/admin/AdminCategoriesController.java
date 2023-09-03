@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.category.NewCategoryDto;
 import ru.practicum.validator.Marker;
 
-@Controller
+@RestController
 @RequestMapping(value = "/admin/categories")
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class CategoriesController {
+public class AdminCategoriesController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> addNewCategory(@Validated(Marker.OnCreate.class)
