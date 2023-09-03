@@ -6,13 +6,15 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "locations")
+public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
-    private String name;
-    @Column(name = "email")
-    private String email;
+
+    @Column(name = "lat")
+    private Double lat;
+
+    @Column(name = "lon")
+    private Double lon;
 }

@@ -3,12 +3,11 @@ package ru.practicum.ewm.dto.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.model.Location;
+import ru.practicum.ewm.entity.Location;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import java.time.LocalDateTime;
 
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;

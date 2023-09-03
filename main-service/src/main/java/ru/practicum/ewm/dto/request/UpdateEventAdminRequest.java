@@ -3,8 +3,8 @@ package ru.practicum.ewm.dto.request;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.entity.Location;
 import ru.practicum.ewm.enums.EventState;
-import ru.practicum.ewm.model.Location;
 
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;

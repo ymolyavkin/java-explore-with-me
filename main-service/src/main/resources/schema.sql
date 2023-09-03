@@ -23,13 +23,18 @@ create TABLE IF NOT EXISTS events (
                                      description VARCHAR(7000) NOT NULL,
                                      event_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
                                      location_id BIGINT NOT NULL,
-                                     paid VARCHAR(5),
+                                     paid VARCHAR(5) NOT NULL,
                                      participant_limit INT,
                                      request_moderation VARCHAR(5),
-                                     title VARCHAR(120),
+                                     title VARCHAR(120) NOT NULL,
+                                     state VARCHAR(9), --PENDING, CANCELED, PUBLISHED
+                                     created TIMESTAMP WITHOUT TIME ZONE,
+                                     initiator_id BIGINT NOT NULL,
+                                     published_on TIMESTAMP WITHOUT TIME ZONE,
 
                                      CONSTRAINT PK_EVENT PRIMARY KEY (id),
                                      CONSTRAINT FK_CATEGORY_ID FOREIGN KEY(category_id) REFERENCES categories(id),
+                                     CONSTRAINT FK_INITIATOR_ID FOREIGN KEY(initiator_id) REFERENCES users(id),
                                      CONSTRAINT FK_LOCATION_ID FOREIGN KEY(location_id) REFERENCES locations(id)
 );
 create TABLE IF NOT EXISTS requests (

@@ -3,18 +3,18 @@ package ru.practicum.ewm.dto.event;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.dto.user.UserShortDto;
 import ru.practicum.ewm.dto.category.CategoryDto;
+import ru.practicum.ewm.dto.user.UserShortDto;
+import ru.practicum.ewm.entity.Location;
 import ru.practicum.ewm.enums.State;
-import ru.practicum.ewm.model.Location;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-
 import java.time.LocalDateTime;
 
-import static ru.practicum.util.Constants.*;
+import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
+import static ru.practicum.util.Constants.MESSAGE_VALIDATION_POSITIVE;
 
 @Data
 @AllArgsConstructor
