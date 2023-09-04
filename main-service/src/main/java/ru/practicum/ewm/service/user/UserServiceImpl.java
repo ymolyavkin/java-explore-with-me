@@ -10,13 +10,13 @@ import ru.practicum.ewm.entity.User;
 import ru.practicum.ewm.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    //@Autowired
     private final ModelMapper mapper;
 
     @Override
@@ -27,10 +27,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        List<User> users = userRepository.findAll();
-        // return UserMapper.mapToUserDto(users);
-        return null;
+    public List<UserDto> getUsers(List<Long> userIds, int from, int size) {
+        List<User> users;
+        if (userIds != null) {
+            users = userRepository.findAllById(userIds);
+        } else {
+            users = userRepository.findAll();
+        }
+
+        return users.stream().map(user -> mapper.map(user, UserDto.class)).collect(Collectors.toList());
     }
 
     @Override

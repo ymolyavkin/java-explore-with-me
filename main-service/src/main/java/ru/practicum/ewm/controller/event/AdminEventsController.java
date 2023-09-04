@@ -9,8 +9,13 @@ import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.enums.State;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static ru.practicum.util.Constants.PAGE_DEFAULT_FROM;
+import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 
 @RestController
 @RequestMapping(value = "/admin/events")
@@ -23,8 +28,8 @@ public class AdminEventsController {
                                                    @RequestParam List<Long> categories,
                                                    @RequestParam LocalDateTime rangeStart,
                                                    @RequestParam LocalDateTime rangeEnd,
-                                                   @RequestParam(defaultValue = "0") int from,
-                                                   @RequestParam(defaultValue = "10") int size) {
+                                                   @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
+                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на полную информацию обо всех событиях, подходящих под условия");
 
         return null;
@@ -32,7 +37,7 @@ public class AdminEventsController {
 
     @PatchMapping("/{eventId}")
     public EventFullDto updateEvent(@PathVariable Long userId,
-                                              @Valid @RequestBody NewEventDto newEventDto) {
+                                    @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Получен запрос на обновление события пользователем с id {}", userId);
 
         return null;
