@@ -1,0 +1,67 @@
+package ru.practicum.ewm.service.category;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
+import ru.practicum.ewm.dto.category.CategoryDto;
+import ru.practicum.ewm.dto.category.NewCategoryDto;
+import ru.practicum.ewm.entity.Category;
+import ru.practicum.ewm.exception.NotFoundException;
+import ru.practicum.ewm.repository.CategoryRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class CategoryServiceImpl implements CategoryService {
+    private final CategoryRepository categoryRepository;
+    private final ModelMapper mapper;
+
+    @Override
+    public CategoryDto addCategory(NewCategoryDto newCategoryDto) {
+        log.info("Добавление новой категории");
+        Category category = categoryRepository.save(mapper.map(newCategoryDto, Category.class));
+
+        return mapper.map(category, CategoryDto.class);
+    }
+
+    @Override
+    public CategoryDto editCategory(Long id, NewCategoryDto newCategoryDto) {
+        Category updated = categoryRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(String.format("Category %s not found", id)));
+
+        if (newCategoryDto.getName() != null && !newCategoryDto.getName().isBlank()) {
+            updated.setName(newCategoryDto.getName());
+        }
+
+        return mapper.map(updated, CategoryDto.class);
+    }
+
+    @Override
+    public Boolean deleteCategoryById(long id) {
+        log.info("Удаление категории с id = {}", id);
+        boolean isFound = categoryRepository.existsById(id);
+        if (isFound) {
+            categoryRepository.deleteById(id);
+        }
+        return isFound;
+    }
+
+    @Override
+    public List<CategoryDto> getCategories(int from, int size) {
+        log.info("Получение информации о категориях");
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream().map(category -> mapper.map(category, CategoryDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public CategoryDto getCategoryById(long id) {
+        log.info("Получение информации о категории с id = {}", id);
+
+        return mapper.map(categoryRepository.findById(id), CategoryDto.class);
+    }
+}

@@ -3,8 +3,6 @@ package ru.practicum.ewm.service.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.user.NewUserRequest;
 import ru.practicum.ewm.dto.user.UserDto;
@@ -23,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto addUser(NewUserRequest newUserRequest) {
+        log.info("Добавление нового пользователя");
         User user = userRepository.save(mapper.map(newUserRequest, User.class));
 
         return mapper.map(user, UserDto.class);
@@ -30,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getUsers(List<Long> userIds, int from, int size) {
+        log.info("Получение информации о пользователях");
         List<User> users;
         if (userIds != null) {
             users = userRepository.findAllById(userIds);
@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean deleteUserById(long id) {
+        log.info("Удаление пользователя с id = {}", id);
         boolean isFound = userRepository.existsById(id);
         if (isFound) {
             userRepository.deleteById(id);

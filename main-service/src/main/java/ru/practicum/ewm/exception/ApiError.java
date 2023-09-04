@@ -2,7 +2,7 @@ package ru.practicum.ewm.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.apache.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,4 +15,14 @@ public class ApiError {
     private final String reason;
     private final HttpStatus status;
     private final LocalDateTime timestamp;
+
+    @Override
+    public String toString() {
+        return "ApiError{" +
+                ", message='" + message + '\'' +
+                ", reason='" + reason + '\'' +
+                ", status=" + status +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }
