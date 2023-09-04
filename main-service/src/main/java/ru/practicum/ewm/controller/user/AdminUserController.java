@@ -50,4 +50,15 @@ public class AdminUserController {
 
         return new ResponseEntity<>(userService.addUser(newUserRequest), HttpStatus.CREATED);
     }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<String> deleteUserById(@PathVariable("id") long id) {
+        log.info("Получен запрос на удаление пользователя с id = {}", id);
+
+        if (userService.deleteUserById(id)) {
+            return new ResponseEntity<>("Пользователь удален", HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>("Пользователь не найден или недоступен", HttpStatus.NOT_FOUND);
+        }
+    }
 }

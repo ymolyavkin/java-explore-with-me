@@ -3,6 +3,8 @@ package ru.practicum.ewm.service.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.user.NewUserRequest;
 import ru.practicum.ewm.dto.user.UserDto;
@@ -39,7 +41,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUserById(Long id) {
-        userRepository.findById(id).ifPresent(user -> userRepository.deleteById(id));
+    public Boolean deleteUserById(long id) {
+        boolean isFound = userRepository.existsById(id);
+        if (isFound) {
+            userRepository.deleteById(id);
+        }
+        return isFound;
     }
 }
