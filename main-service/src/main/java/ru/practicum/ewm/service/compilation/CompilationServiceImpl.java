@@ -1,21 +1,43 @@
-package ru.practicum.ewm.controller.compilation;
+package ru.practicum.ewm.service.compilation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
-import ru.practicum.validator.Marker;
+import ru.practicum.ewm.entity.Compilation;
+import ru.practicum.ewm.repository.CompilationRepository;
 
-@RestController
-@RequestMapping(value = "/admin/compilations")
+@Service
 @Slf4j
 @RequiredArgsConstructor
-public class AdminCompilationsController {
-    @PostMapping
+public class CompilationServiceImpl implements CompilationService {
+    private final CompilationRepository compilationRepository;
+    private final ModelMapper mapper;
+
+    @Override
+    public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
+        log.info("Добавление новой подборки");
+        Compilation compilation = compilationRepository.save(mapper.map(newCompilationDto, Compilation.class));
+
+        return mapper.map(compilation, CompilationDto.class);
+    }
+
+    @Override
+    public CompilationDto updateCompilation(Long id, NewCompilationDto newCompilationDto) {
+        log.info("Обновление информации о подборке с id {}", id);
+        return null;
+    }
+
+    @Override
+    public Boolean deleteCompilationById(long id) {
+        log.info("Удаление подборки с id {}", id);
+        return null;
+    }
+}
+/*
+@PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CompilationDto> addNewCompilation(@Validated(Marker.OnCreate.class)
                                                             @RequestBody NewCompilationDto newCompilationDto) {
@@ -39,4 +61,4 @@ public class AdminCompilationsController {
 
         return null;
     }
-}
+ */

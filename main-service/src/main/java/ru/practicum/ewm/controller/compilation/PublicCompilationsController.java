@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.compilation.CompilationDto;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -31,7 +32,7 @@ public class PublicCompilationsController {
 
     @GetMapping
     public List<CompilationDto> getAllCompilations(@RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
-   // public ResponseEntity<Page<CompilationDto>> getAllCompilations(@Valid @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
+                                                   // public ResponseEntity<Page<CompilationDto>> getAllCompilations(@Valid @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
                                                    @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size,
                                                    @RequestParam Boolean pinned) {
         log.info("Получен запрос на получение подборок событий");

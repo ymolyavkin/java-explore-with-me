@@ -1,4 +1,4 @@
-package ru.practicum.ewm.controller.compilation;
+package ru.practicum.ewm.dto.compilation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
