@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
         List<User> users;
         Page<User> userPage;
         if (userIds != null) {
-            users = userRepository.findAllById(userIds);
+            users = userRepository.findAllByIdIn(userIds, PageRequest.of(from, size));
         } else {
             userPage = userRepository.findAll(PageRequest.of(from, size));
             users = userPage.getContent();

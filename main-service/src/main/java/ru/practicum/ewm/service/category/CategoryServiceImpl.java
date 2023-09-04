@@ -3,6 +3,8 @@ package ru.practicum.ewm.service.category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.category.NewCategoryDto;
@@ -30,8 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto editCategory(Long id, NewCategoryDto newCategoryDto) {
-        Category updated = categoryRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(String.format("Category %s not found", id)));
+        Category updated = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Категория %s не найдена", id)));
 
         if (newCategoryDto.getName() != null && !newCategoryDto.getName().isBlank()) {
             updated.setName(newCategoryDto.getName());
@@ -53,7 +54,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryDto> getCategories(int from, int size) {
         log.info("Получение информации о категориях");
-        List<Category> categories = categoryRepository.findAll();
+
+        Page<Category> categoriesPage = categoryRepository.findAll(PageRequest.of(from, size));
+        List<Category> categories = categoriesPage.getContent();
 
         return categories.stream().map(category -> mapper.map(category, CategoryDto.class)).collect(Collectors.toList());
     }
