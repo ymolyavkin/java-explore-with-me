@@ -3,6 +3,8 @@ package ru.practicum.ewm.service.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.user.NewUserRequest;
 import ru.practicum.ewm.dto.user.UserDto;
@@ -31,10 +33,12 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getUsers(List<Long> userIds, int from, int size) {
         log.info("Получение информации о пользователях");
         List<User> users;
+        Page<User> userPage;
         if (userIds != null) {
             users = userRepository.findAllById(userIds);
         } else {
-            users = userRepository.findAll();
+            userPage = userRepository.findAll(PageRequest.of(from, size));
+            users = userPage.getContent();
         }
 
         return users.stream().map(user -> mapper.map(user, UserDto.class)).collect(Collectors.toList());
