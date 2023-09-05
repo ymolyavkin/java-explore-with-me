@@ -21,7 +21,7 @@ public class AdminCategoriesController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<Object> addNewCategory(@Validated(Marker.OnCreate.class)
+    public ResponseEntity<CategoryDto> addNewCategory(@Validated(Marker.OnCreate.class)
                                                  @RequestBody NewCategoryDto newCategoryDto) {
         log.info("Получен запрос на добавление новой категории");
 
@@ -38,7 +38,7 @@ public class AdminCategoriesController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCategoryById(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCategoryById(@PathVariable Long id) {
         log.info("Получен запрос на удаление категории с id {}", id);
 
         if (categoryService.deleteCategoryById(id)) {

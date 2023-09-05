@@ -2,9 +2,12 @@ package ru.practicum.ewm.controller.compilation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
+import ru.practicum.ewm.service.compilation.CompilationService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -19,6 +22,7 @@ import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 @Validated
 @RequiredArgsConstructor
 public class PublicCompilationsController {
+    private final CompilationService compilationService;
    /* @GetMapping
     public ResponseEntity<Object> test(HttpServletRequest request) {
         log.info("Получен тестовый запрос");
@@ -31,20 +35,19 @@ public class PublicCompilationsController {
     }*/
 
     @GetMapping
-    public List<CompilationDto> getAllCompilations(@RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
+    public ResponseEntity<List<CompilationDto>> getAllCompilations(@RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
                                                    // public ResponseEntity<Page<CompilationDto>> getAllCompilations(@Valid @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
                                                    @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size,
                                                    @RequestParam Boolean pinned) {
         log.info("Получен запрос на получение подборок событий");
 
-
-        return null;
+        return new ResponseEntity<>(compilationService.getCompilations(from, size), HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public CompilationDto getCompilationById(@PathVariable Long id) {
+    public ResponseEntity<CompilationDto> getCompilationById(@PathVariable Long id) {
         log.info("Получен запрос на получение подборки событий с id {}", id);
-        //return compilationService.getCompilationById(compId);
-        return  null;
+
+        return new ResponseEntity<>(compilationService.getCompilationById(id), HttpStatus.OK);
     }
 
 }
