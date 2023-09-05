@@ -54,44 +54,13 @@ public class CompilationServiceImpl implements CompilationService {
         return mapper.map(compilation, CompilationDto.class);
     }
 
-    /*
-    Category updated = categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Категория %s не найдена", id)));
-
-            if (newCategoryDto.getName() != null && !newCategoryDto.getName().isBlank()) {
-                updated.setName(newCategoryDto.getName());
-            }
-
-            return mapper.map(updated, CategoryDto.class);
-     */
     @Override
     public Boolean deleteCompilationById(long id) {
         log.info("Удаление подборки с id {}", id);
-        return null;
+        boolean isFound = compilationRepository.existsById(id);
+        if (isFound) {
+            compilationRepository.deleteById(id);
+        }
+        return isFound;
     }
 }
-/*
-@PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<CompilationDto> addNewCompilation(@Validated(Marker.OnCreate.class)
-                                                            @RequestBody NewCompilationDto newCompilationDto) {
-        log.info("Получен запрос на добавление новой подборки");
-
-        return null;
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<CompilationDto> updateCompilation(@Validated(Marker.OnUpdate.class)
-                                                            @RequestBody NewCompilationDto newCompilationDto,
-                                                            @PathVariable Long id) {
-        log.info("Получен запрос на обновление информации о подборке с id {}", id);
-
-        return null;
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteCompilationById(@PathVariable Long id) {
-        log.info("Получен запрос на удаление подборки с id {}", id);
-
-        return null;
-    }
- */
