@@ -2,8 +2,9 @@ package ru.practicum.ewm.service.compilation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.NotFound;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.compilation.NewCompilationDto;
@@ -16,6 +17,7 @@ import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -24,6 +26,23 @@ public class CompilationServiceImpl implements CompilationService {
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
     private final ModelMapper mapper;
+
+    @Override
+    public List<CompilationDto> getCompilations(int from, int size) {
+        log.info("Получение информации о подборках");
+
+        Page<Compilation> compilationsPage = compilationRepository.findAll(PageRequest.of(from, size));
+        List<Compilation> compilations = compilationsPage.getContent();
+
+        return compilations.stream().map(compilation -> mapper.map(compilation, CompilationDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public CompilationDto getCompilationById(long id) {
+        log.info("Получение информации о категории с id = {}", id);
+
+        return mapper.map(compilationRepository.findById(id), CompilationDto.class);
+    }
 
     @Override
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
