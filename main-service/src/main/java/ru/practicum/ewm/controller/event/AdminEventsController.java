@@ -36,9 +36,9 @@ public class AdminEventsController {
     }
 
     @PatchMapping("/{eventId}")
-    public EventFullDto updateEvent(@PathVariable Long userId,
+    public EventFullDto updateEvent(@PathVariable Long eventId,
                                     @Valid @RequestBody NewEventDto newEventDto) {
-        log.info("Получен запрос на обновление события пользователем с id {}", userId);
+        log.info("Получен запрос на обновление события с id {}", eventId);
 
         return null;
     }

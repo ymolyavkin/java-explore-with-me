@@ -1,4 +1,5 @@
 package ru.practicum.ewm.controller.event;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 
 import javax.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/users/{userId}/events")
 @Slf4j
@@ -44,9 +46,10 @@ public class PrivateEventsController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<Object> updateEvent(@PathVariable Long userId,
-                                              @Valid @RequestBody NewEventDto newEventDto) {
-        log.info("Получен запрос на обновление события пользователем с id {}", userId);
+    public ResponseEntity<Object> changeEventByAuthor(@PathVariable Long userId,
+                                                      @PathVariable Long eventId,
+                                                      @Valid @RequestBody NewEventDto newEventDto) {
+        log.info("Получен запрос на изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
 
         return null;
     }
