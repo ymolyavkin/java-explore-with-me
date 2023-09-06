@@ -58,12 +58,14 @@ public class EventServiceImpl implements EventService {
         Location savedLocation = locationRepository.save(newEventDto.getLocation());
 
         TypeMap<NewEventDto, Event> propertyMapperToEvent = this.mapper.createTypeMap(NewEventDto.class, Event.class);
-        propertyMapperToEvent.addMappings(mapper -> mapper.skip(Event::setId));
-        propertyMapperToEvent.addMappings(mapper -> mapper.skip(Event::setCategory));
-        propertyMapperToEvent.addMappings(mapper -> mapper.skip(Event::setInitiator));
-        propertyMapperToEvent.addMappings(mapper -> mapper.skip(Event::setState));
-        propertyMapperToEvent.addMappings(mapper -> mapper.skip(Event::setCreatedOn));
-        propertyMapperToEvent.addMappings(mapper -> mapper.skip(Event::setPublishedOn));
+        propertyMapperToEvent.addMappings((mapper) -> {
+            mapper.skip(Event::setId);
+            mapper.skip(Event::setCategory);
+            mapper.skip(Event::setInitiator);
+            mapper.skip(Event::setState);
+            mapper.skip(Event::setPublishedOn);
+            mapper.skip(Event::setCreatedOn);
+        });
 
         Event event = mapper.map(newEventDto, Event.class);
 
