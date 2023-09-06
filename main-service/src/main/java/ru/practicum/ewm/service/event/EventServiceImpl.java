@@ -3,7 +3,8 @@ package ru.practicum.ewm.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -13,11 +14,11 @@ import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.dto.request.UpdateEventAdminRequest;
 import ru.practicum.ewm.entity.Category;
-import ru.practicum.ewm.entity.User;
-import ru.practicum.ewm.entity.Location;
 import ru.practicum.ewm.entity.Event;
-import ru.practicum.ewm.enums.State;
+import ru.practicum.ewm.entity.Location;
+import ru.practicum.ewm.entity.User;
 import ru.practicum.ewm.enums.SortingOption;
+import ru.practicum.ewm.enums.State;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.CategoryRepository;
 import ru.practicum.ewm.repository.EventRepository;
@@ -26,6 +27,7 @@ import ru.practicum.ewm.repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,8 +40,10 @@ public class EventServiceImpl implements EventService {
     private final ModelMapper mapper;
 
     @Override
-    public List<EventShortDto> getEventsByOwner(Long userId) {
-        return null;
+    public List<EventShortDto> getEventsByOwner(Long userId, int from, int size) {
+        Page<Event> pageEvent = eventRepository.findAllByInitiator_Id(userId, PageRequest.of(from, size));
+        List<Event> events = pageEvent.getContent();
+        return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -57,8 +61,11 @@ public class EventServiceImpl implements EventService {
 
         Location savedLocation = locationRepository.save(newEventDto.getLocation());
 
-        TypeMap<NewEventDto, Event> propertyMapperToEvent = this.mapper.createTypeMap(NewEventDto.class, Event.class);
-        propertyMapperToEvent.addMappings((mapper) -> {
+        if (this.mapper.getTypeMap(NewEventDto.class, Event.class) == null) {
+            this.mapper.createTypeMap(NewEventDto.class, Event.class);
+        }
+
+        this.mapper.getTypeMap(NewEventDto.class, Event.class).addMappings((mapper) -> {
             mapper.skip(Event::setId);
             mapper.skip(Event::setCategory);
             mapper.skip(Event::setInitiator);
@@ -112,20 +119,29 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getAllEventsPublic(String text,
-                                                  List<Long> categories,
-                                                  Boolean paid,
-                                                  LocalDateTime rangeStart,
-                                                  LocalDateTime rangeEnd,
-                                                  boolean onlyAvailable,
-                                                  SortingOption sortingOption,
-                                                  int from,
-                                                  int size) {
+    public List<EventShortDto> getAllEvents(String text,
+                                            List<Long> categories,
+                                            Boolean paid,
+                                            LocalDateTime rangeStart,
+                                            LocalDateTime rangeEnd,
+                                            boolean onlyAvailable,
+                                            SortingOption sortingOption,
+                                            int from,
+                                            int size) {
         return null;
     }
 
     @Override
-    public EventShortDto getEventByIdPublic(Long id) {
+    public EventShortDto getEventById(Long eventId) {
         return null;
     }
+    /*
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventShortDto> getEventsAddedByCurrentUser(Long userId, Pageable page) {
+        List<Event> events = eventRepository.findAllByInitiator_Id(userId, page);
+
+        return mapToEventShortDto(events);
+    }
+     */
 }

@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
-    List<EventShortDto> getEventsByOwner(Long userId);
+    List<EventShortDto> getEventsByOwner(Long userId, int from, int size);
 
     List<EventFullDto> getEventFullByIdByOwner(Long userId, Long eventId);
 
@@ -36,15 +36,15 @@ public interface EventService {
 
     EventFullDto editEventForPublished(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
-    List<EventShortDto> getAllEventsPublic(String text,
-                                           List<Long> categories,
-                                           Boolean paid,
-                                           LocalDateTime rangeStart,
-                                           LocalDateTime rangeEnd,
-                                           boolean onlyAvailable,
-                                           SortingOption sortingOption,
-                                           int from,
-                                           int size);
+    List<EventShortDto> getAllEvents(String text,
+                                     List<Long> categories,
+                                     Boolean paid,
+                                     LocalDateTime rangeStart,
+                                     LocalDateTime rangeEnd,
+                                     boolean onlyAvailable,
+                                     SortingOption sortingOption,
+                                     int from,
+                                     int size);
 
-    EventShortDto getEventByIdPublic(Long id);
+    EventShortDto getEventById(Long id);
 }
