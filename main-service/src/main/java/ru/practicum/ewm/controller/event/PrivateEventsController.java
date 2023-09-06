@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
+import ru.practicum.ewm.service.event.EventService;
 
 import javax.validation.Valid;
 
@@ -15,6 +17,7 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 public class PrivateEventsController {
+    private final EventService eventService;
     @GetMapping
     public ResponseEntity<Object> getEventsByUser(@PathVariable Long userId) {
         log.info("Получен запрос на поиск событий, добавленных пользователем с id {}", userId);
@@ -38,11 +41,11 @@ public class PrivateEventsController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Object> addNewEvent(@PathVariable Long userId,
-                                              @Valid @RequestBody NewEventDto newEventDto) {
+    public ResponseEntity<EventFullDto> addNewEvent(@PathVariable Long userId,
+                                                    @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Получен запрос на добавление нового события пользователем с id {}", userId);
 
-        return null;
+        return new ResponseEntity<>(eventService.addEvent(userId, newEventDto), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{eventId}")

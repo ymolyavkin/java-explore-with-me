@@ -1,5 +1,6 @@
 package ru.practicum.ewm.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +11,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
-import static ru.practicum.util.Constants.MESSAGE_VALIDATION_SIZE;
+import static ru.practicum.util.Constants.*;
 
 @Data
 @AllArgsConstructor
@@ -25,6 +25,7 @@ public class NewEventDto {
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     @Size(min = 20, max = 7000, message = MESSAGE_VALIDATION_SIZE)
     private String description;
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocalDateTime eventDate;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
