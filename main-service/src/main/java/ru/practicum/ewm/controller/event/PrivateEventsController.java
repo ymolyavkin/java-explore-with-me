@@ -6,11 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.service.event.EventService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
+import java.util.List;
+
+import static ru.practicum.util.Constants.PAGE_DEFAULT_FROM;
+import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 
 @RestController
 @RequestMapping(value = "/users/{userId}/events")
@@ -18,11 +25,15 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class PrivateEventsController {
     private final EventService eventService;
+
     @GetMapping
-    public ResponseEntity<Object> getEventsByUser(@PathVariable Long userId) {
+    public ResponseEntity<List<EventShortDto>> getEventsByUser(
+            @PathVariable Long userId,
+            @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
+            @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на поиск событий, добавленных пользователем с id {}", userId);
 
-        return null;
+        return new ResponseEntity<>(eventService.getEventsByOwner(userId, from, size), HttpStatus.OK);
     }
 
     @GetMapping("/{eventId}")
