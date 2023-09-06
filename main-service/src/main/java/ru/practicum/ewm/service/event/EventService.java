@@ -20,7 +20,7 @@ public interface EventService {
 
     EventFullDto addEvent(Long userId, NewEventDto newEventDto);
 
-    EventShortDto editEventFromOwner(Long userId, Long eventId);
+    EventFullDto editEventFromAuthor(Long userId, Long eventId, NewEventDto newEventDto);
 
     List<ParticipationRequestDto> getRequestToParticipationByUser(Long userId, Long eventId);
 

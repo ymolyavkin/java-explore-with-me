@@ -9,6 +9,8 @@ import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
+import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
+import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.service.event.EventService;
 
 import javax.validation.Valid;
@@ -37,17 +39,17 @@ public class PrivateEventsController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<Object> getEventByIdByUser(@PathVariable Long userId, @PathVariable Long eventId) {
+    public ResponseEntity<List<EventFullDto>> getEventByIdByUser(@PathVariable Long userId, @PathVariable Long eventId) {
         log.info("Получен запрос на полную информацию о событии с id {}, добавленном пользователем с id {}", eventId, userId);
 
-        return null;
+        return new ResponseEntity<>(eventService.getEventFullByIdByOwner(userId, eventId), HttpStatus.OK);
     }
 
     @GetMapping("/{eventId}/requests")
-    public ResponseEntity<Object> getEventByIdByUserParticipation(@PathVariable Long userId, @PathVariable Long eventId) {
+    public ResponseEntity<List<ParticipationRequestDto>> getEventByIdByUserParticipation(@PathVariable Long userId, @PathVariable Long eventId) {
         log.info("Получен запрос на информацию о запросах на участие в событии с id {} пользователя с id {}", eventId, userId);
 
-        return null;
+        return new ResponseEntity<>(eventService.getRequestToParticipationByUser(userId, eventId), HttpStatus.OK);
     }
 
     @PostMapping
@@ -60,21 +62,21 @@ public class PrivateEventsController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<Object> changeEventByAuthor(@PathVariable Long userId,
-                                                      @PathVariable Long eventId,
-                                                      @Valid @RequestBody NewEventDto newEventDto) {
+    public ResponseEntity<EventFullDto> editEventFromAuthor(@PathVariable Long userId,
+                                                            @PathVariable Long eventId,
+                                                            @Valid @RequestBody NewEventDto newEventDto) {
         log.info("Получен запрос на изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
 
-        return null;
+        return new ResponseEntity<>(eventService.editEventFromAuthor(userId, eventId, newEventDto), HttpStatus.OK);
     }
 
     @PatchMapping("/{eventId}/requests")
-    public ResponseEntity<Object> changeStatusRequests(
+    public ResponseEntity<EventRequestStatusUpdateResult> changeStatusRequests(
             @PathVariable Long userId, @PathVariable Long eventId,
             @RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
 
         log.info("Получен запрос на изменение статуса заявок на участие в событии с id {} пользователя с id {}", userId, eventId);
 
-        return null;
+        return new ResponseEntity<>(eventService.changeStatusRequests(userId, eventId, eventRequestStatusUpdateRequest), HttpStatus.OK);
     }
 }

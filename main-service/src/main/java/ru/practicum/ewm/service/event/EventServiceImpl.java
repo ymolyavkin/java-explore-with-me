@@ -41,6 +41,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventShortDto> getEventsByOwner(Long userId, int from, int size) {
+        log.info("Private: Получение событий, добавленных текущим пользователем с id = {}", userId);
         Page<Event> pageEvent = eventRepository.findAllByInitiator_Id(userId, PageRequest.of(from, size));
         List<Event> events = pageEvent.getContent();
         return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
@@ -48,6 +49,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventFullDto> getEventFullByIdByOwner(Long userId, Long eventId) {
+        log.info("Private: Получение полной информации о событии с id = {}, добавленном текущим пользователем с id = {}", eventId, userId);
         return null;
     }
 
@@ -88,17 +90,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventShortDto editEventFromOwner(Long userId, Long eventId) {
+    public EventFullDto editEventFromAuthor(Long userId, Long eventId, NewEventDto newEventDto) {
+        log.info("Private: Изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
         return null;
     }
 
     @Override
     public List<ParticipationRequestDto> getRequestToParticipationByUser(Long userId, Long eventId) {
+        log.info("Private: Получение запросов на участие в событии с id {} пользователя с id {}", eventId, userId);
         return null;
     }
 
     @Override
     public EventRequestStatusUpdateResult changeStatusRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest) {
+        log.info("Private: Изменение статуса заявок на участие в событии с id {} пользователя с id {}", userId, eventId);
         return null;
     }
 
