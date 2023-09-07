@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -21,7 +22,7 @@ import java.util.List;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_FROM;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 
-@RestController
+@Controller
 @RequestMapping(value = "/users/{userId}/events")
 @Slf4j
 @RequiredArgsConstructor
@@ -39,10 +40,10 @@ public class PrivateEventsController {
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<List<EventFullDto>> getEventByIdByUser(@PathVariable Long userId, @PathVariable Long eventId) {
+    public ResponseEntity<EventFullDto> getEventByIdByUser(@PathVariable Long userId, @PathVariable Long eventId) {
         log.info("Получен запрос на полную информацию о событии с id {}, добавленном пользователем с id {}", eventId, userId);
 
-        return new ResponseEntity<>(eventService.getEventFullByIdByOwner(userId, eventId), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.getEventFullAddedCurrentUser(userId, eventId), HttpStatus.OK);
     }
 
     @GetMapping("/{eventId}/requests")

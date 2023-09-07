@@ -48,9 +48,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventFullDto> getEventFullByIdByOwner(Long userId, Long eventId) {
+    public EventFullDto getEventFullAddedCurrentUser(Long userId, Long eventId) {
         log.info("Private: Получение полной информации о событии с id = {}, добавленном текущим пользователем с id = {}", eventId, userId);
-        return null;
+        Event event = eventRepository.findByInitiator_IdAndAndId(userId, eventId)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        "Событие с id %s, добавленное пользователем с id %s не найдено", eventId, userId)));
+
+        return mapper.map(event, EventFullDto.class);
     }
 
     @Override
@@ -136,11 +140,13 @@ public class EventServiceImpl implements EventService {
                                             SortingOption sortingOption,
                                             int from,
                                             int size) {
+        log.info("Public: Получение событий с возможностью фильтрации");
         return null;
     }
 
     @Override
-    public EventShortDto getEventById(Long eventId) {
+    public EventFullDto getEventById(Long eventId) {
+        log.info("Public: Получение событий с возможностью фильтрации");
 
         return null;
     }

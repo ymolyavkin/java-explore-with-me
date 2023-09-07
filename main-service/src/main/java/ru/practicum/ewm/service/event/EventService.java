@@ -16,7 +16,7 @@ import java.util.List;
 public interface EventService {
     List<EventShortDto> getEventsByOwner(Long userId, int from, int size);
 
-    List<EventFullDto> getEventFullByIdByOwner(Long userId, Long eventId);
+    EventFullDto getEventFullAddedCurrentUser(Long userId, Long eventId);
 
     EventFullDto addEvent(Long userId, NewEventDto newEventDto);
 
@@ -46,5 +46,5 @@ public interface EventService {
                                      int from,
                                      int size);
 
-    EventShortDto getEventById(Long id);
+    EventFullDto getEventById(Long id);
 }

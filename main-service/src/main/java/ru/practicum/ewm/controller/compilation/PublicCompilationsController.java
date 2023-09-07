@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
@@ -16,7 +17,7 @@ import java.util.List;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_FROM;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 
-@RestController
+@Controller
 @RequestMapping(value = "/compilations")
 @Slf4j
 @Validated

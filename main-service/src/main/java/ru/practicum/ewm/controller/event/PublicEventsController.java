@@ -2,10 +2,14 @@ package ru.practicum.ewm.controller.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.enums.SortingOption;
+import ru.practicum.ewm.service.event.EventService;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
@@ -15,29 +19,33 @@ import java.util.List;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_FROM;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 
-@RestController
+@Controller
 @RequestMapping(value = "/events")
 @Slf4j
 @RequiredArgsConstructor
 public class PublicEventsController {
+    private final EventService eventService;
+
     @GetMapping
     public ResponseEntity<List<EventShortDto>> getAllEvents(@RequestParam String text,
-                                                                   @RequestParam List<Long> categories,
-                                                                   @RequestParam Boolean paid,
-                                                                   @RequestParam LocalDateTime rangeStart,
-                                                                   @RequestParam LocalDateTime rangeEnd,
-                                                                   @RequestParam(defaultValue = "false") boolean onlyAvailable,
-                                                                   @RequestParam SortingOption sortingOption,
-                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_FROM)@PositiveOrZero int from,
-                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
+                                                            @RequestParam List<Long> categories,
+                                                            @RequestParam Boolean paid,
+                                                            @RequestParam LocalDateTime rangeStart,
+                                                            @RequestParam LocalDateTime rangeEnd,
+                                                            @RequestParam(defaultValue = "false") boolean onlyAvailable,
+                                                            @RequestParam SortingOption sortingOption,
+                                                            @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
+                                                            @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на получение событий с возможностью фильтрации");
 
-        return null;
+        return new ResponseEntity<>(eventService.getAllEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
+                sortingOption, from, size), HttpStatus.OK);
     }
-    @GetMapping("/{id}")
-    public ResponseEntity<EventShortDto> getEventById(@PathVariable Long id) {
-        log.info("Получен запрос на получение события с id {}", id);
 
-        return  null;
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventFullDto> getEventById(@PathVariable Long eventId) {
+        log.info("Получен запрос на получение события с id {}", eventId);
+
+        return new ResponseEntity<>(eventService.getEventById(eventId), HttpStatus.OK);
     }
 }
