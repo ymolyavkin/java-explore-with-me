@@ -2,11 +2,11 @@ package ru.practicum.ewm.enums;
 
 import java.util.Optional;
 
-public enum EventState {
+public enum StateAction {
     PUBLISH_EVENT,
     REJECT_EVENT;
-    public static Optional<EventState> fromString(String stringState) {
-        for (ru.practicum.ewm.enums.EventState state : values()) {
+    public static Optional<StateAction> fromString(String stringState) {
+        for (StateAction state : values()) {
             if (state.name().equalsIgnoreCase(stringState)) {
                 return java.util.Optional.of(state);
             }

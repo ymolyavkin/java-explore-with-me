@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.entity.Location;
-import ru.practicum.ewm.enums.EventState;
+import ru.practicum.ewm.enums.StateAction;
 
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -28,7 +28,7 @@ public class UpdateEventAdminRequest {
     @PositiveOrZero(message = MESSAGE_VALIDATION_POSITIVE)
     private Integer participantLimit;
     private Boolean requestModeration;
-    private EventState stateAction;
+    private StateAction stateAction;
     @Size(min = 3, max = 120, message = MESSAGE_VALIDATION_SIZE)
     private String title;
 }
