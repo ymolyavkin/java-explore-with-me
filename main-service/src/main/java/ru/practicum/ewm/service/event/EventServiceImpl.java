@@ -3,6 +3,7 @@ package ru.practicum.ewm.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -10,19 +11,13 @@ import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.*;
-import ru.practicum.ewm.entity.Category;
-import ru.practicum.ewm.entity.Event;
-import ru.practicum.ewm.entity.Location;
-import ru.practicum.ewm.entity.User;
+import ru.practicum.ewm.entity.*;
 import ru.practicum.ewm.enums.ChangeEventState;
 import ru.practicum.ewm.enums.SortingOption;
 import ru.practicum.ewm.enums.State;
 import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
-import ru.practicum.ewm.repository.CategoryRepository;
-import ru.practicum.ewm.repository.EventRepository;
-import ru.practicum.ewm.repository.LocationRepository;
-import ru.practicum.ewm.repository.UserRepository;
+import ru.practicum.ewm.repository.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
+    private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
@@ -122,7 +118,22 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<ParticipationRequestDto> getRequestToParticipationByUser(Long userId, Long eventId) {
         log.info("Private: Получение запросов на участие в событии с id {} пользователя с id {}", eventId, userId);
-        return null;
+        userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("User %s not found", userId)));
+
+        eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Event %s not found", eventId)));
+
+        if (this.mapper.getTypeMap(Request.class, ParticipationRequestDto.class) == null) {
+            this.mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
+        }
+        TypeMap<Request, ParticipationRequestDto> eventMapper = this.mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
+        eventMapper.addMapping(Request::getId, ParticipationRequestDto::setEvent);
+
+        return requestRepository.findAllByEventIdAndEventInitiatorId(eventId, userId)
+                .stream()
+                .map(request -> mapper.map(request, ParticipationRequestDto.class))
+                .collect(Collectors.toList());
     }
 
     @Override
