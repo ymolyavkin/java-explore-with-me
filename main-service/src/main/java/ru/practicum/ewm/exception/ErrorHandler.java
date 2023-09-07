@@ -3,6 +3,7 @@ package ru.practicum.ewm.exception;
 import lombok.extern.slf4j.Slf4j;
 
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -36,6 +37,17 @@ public class ErrorHandler {
                 e.getMessage(),
                 MESSAGE_REASON_DB_CONSTRAINT_VIOLATION,
                 HttpStatus.INTERNAL_SERVER_ERROR,
+                LocalDateTime.now());
+    }
+    @ExceptionHandler({AlreadyExistsException.class, NotAvailableException.class,
+            DataIntegrityViolationException.class})
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError handleConflict(final RuntimeException e) {
+        log.debug("Получен статус 409 Conflict {}", e.getMessage(), e);
+        return new ApiError(List.of(e.toString()),
+                e.getMessage(),
+                MESSAGE_REASON_DB_CONSTRAINT_VIOLATION,
+                HttpStatus.CONFLICT,
                 LocalDateTime.now());
     }
 }

@@ -3,10 +3,7 @@ package ru.practicum.ewm.service.event;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
-import ru.practicum.ewm.dto.request.ParticipationRequestDto;
-import ru.practicum.ewm.dto.request.UpdateEventAdminRequest;
+import ru.practicum.ewm.dto.request.*;
 import ru.practicum.ewm.enums.SortingOption;
 import ru.practicum.ewm.enums.State;
 
@@ -20,7 +17,7 @@ public interface EventService {
 
     EventFullDto addEvent(Long userId, NewEventDto newEventDto);
 
-    EventFullDto editEventFromAuthor(Long userId, Long eventId, NewEventDto newEventDto);
+    EventFullDto editEventFromAuthor(Long userId, Long eventId, UpdateEventUserRequest eventToUpdate);
 
     List<ParticipationRequestDto> getRequestToParticipationByUser(Long userId, Long eventId);
 

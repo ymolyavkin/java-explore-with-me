@@ -9,16 +9,15 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
-import ru.practicum.ewm.dto.request.ParticipationRequestDto;
-import ru.practicum.ewm.dto.request.UpdateEventAdminRequest;
+import ru.practicum.ewm.dto.request.*;
 import ru.practicum.ewm.entity.Category;
 import ru.practicum.ewm.entity.Event;
 import ru.practicum.ewm.entity.Location;
 import ru.practicum.ewm.entity.User;
+import ru.practicum.ewm.enums.ChangeEventState;
 import ru.practicum.ewm.enums.SortingOption;
 import ru.practicum.ewm.enums.State;
+import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.CategoryRepository;
 import ru.practicum.ewm.repository.EventRepository;
@@ -95,9 +94,29 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto editEventFromAuthor(Long userId, Long eventId, NewEventDto newEventDto) {
+    public EventFullDto editEventFromAuthor(Long userId, Long eventId, UpdateEventUserRequest eventToUpdate) {
         log.info("Private: Изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
-        return null;
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new NotFoundException(String.format("Событие с id %s не найдено", eventId)));
+
+        if (event.getState().equals(State.PUBLISHED)) {
+            throw new NotAvailableException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
+        }
+
+        userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователь %s не найден", userId)));
+
+        patchUpdateEvent(eventToUpdate, event);
+
+        if (eventToUpdate.getStateAction() != null) {
+            if (eventToUpdate.getStateAction().equals(ChangeEventState.SEND_TO_REVIEW)) {
+                event.setState(State.PENDING);
+            } else {
+                event.setState(State.CANCELED);
+            }
+        }
+
+        return mapper.map(event, EventFullDto.class);
     }
 
     @Override
@@ -150,13 +169,36 @@ public class EventServiceImpl implements EventService {
 
         return null;
     }
-    /*
-    @Override
-    @Transactional(readOnly = true)
-    public List<EventShortDto> getEventsAddedByCurrentUser(Long userId, Pageable page) {
-        List<Event> events = eventRepository.findAllByInitiator_Id(userId, page);
 
-        return mapToEventShortDto(events);
+    private void patchUpdateEvent(UpdateEventUserRequest requestToUpdate, Event event) {
+        if (requestToUpdate.getAnnotation() != null && !requestToUpdate.getAnnotation().isBlank()) {
+            event.setAnnotation(requestToUpdate.getAnnotation());
+        }
+        if (requestToUpdate.getCategory() != null) {
+            Category category = categoryRepository.findById(requestToUpdate.getCategory()).orElseThrow(() ->
+                    new NotFoundException(String.format("Category %s not found", requestToUpdate.getCategory())));
+            event.setCategory(category);
+        }
+        if (requestToUpdate.getDescription() != null && !requestToUpdate.getDescription().isBlank()) {
+            event.setDescription(requestToUpdate.getDescription());
+        }
+        if (requestToUpdate.getEventDate() != null) {
+            event.setEventDate(requestToUpdate.getEventDate());
+        }
+        if (requestToUpdate.getLocation() != null) {
+            event.setLocation(requestToUpdate.getLocation());
+        }
+        if (requestToUpdate.getPaid() != null) {
+            event.setPaid(requestToUpdate.getPaid());
+        }
+        if (requestToUpdate.getParticipantLimit() != null) {
+            event.setParticipantLimit(requestToUpdate.getParticipantLimit());
+        }
+        if (requestToUpdate.getRequestModeration() != null) {
+            event.setRequestModeration(requestToUpdate.getRequestModeration());
+        }
+        if (requestToUpdate.getTitle() != null && !requestToUpdate.getTitle().isBlank()) {
+            event.setTitle(requestToUpdate.getTitle());
+        }
     }
-     */
 }
