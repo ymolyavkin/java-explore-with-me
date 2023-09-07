@@ -55,6 +55,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
+        log.info("Private: Добавление нового события");
         User initiator = userRepository.findById(userId).orElseThrow(() ->
                 new NotFoundException(String.format("Пользователь %s не найден", userId)));
 
@@ -115,11 +116,13 @@ public class EventServiceImpl implements EventService {
                                                    LocalDateTime rangeEnd,
                                                    int from,
                                                    int size) {
+        log.info("Admin: Получение полной информации о всех событиях по условиям");
         return null;
     }
 
     @Override
     public EventFullDto editEventForPublished(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+        log.info("Admin: Обновление события с id {}", eventId);
         return null;
     }
 
@@ -138,6 +141,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventShortDto getEventById(Long eventId) {
+
         return null;
     }
     /*
