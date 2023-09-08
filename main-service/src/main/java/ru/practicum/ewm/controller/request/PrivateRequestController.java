@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
+import ru.practicum.ewm.service.request.RequestService;
 
 @Controller
 @RequestMapping(value = "/users/{userId}/requests")
 @Slf4j
 @RequiredArgsConstructor
 public class PrivateRequestController {
+    private final RequestService requestService;
     @GetMapping
     public ResponseEntity<ParticipationRequestDto> getRequestByUser(@PathVariable Long userId) {
         log.info("Получен запрос на поиск заявок пользователя с id {} на участие в чужих событиях", userId);
@@ -21,12 +23,12 @@ public class PrivateRequestController {
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+   // @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Object> addNewRequest(@PathVariable Long userId,
                                                 @RequestParam Long eventId) {
         log.info("Получен запрос на добавление нового запроса пользователя с id {} на участие в событии с id {}", userId, eventId);
 
-        return null;
+        return new ResponseEntity<>(requestService.addRequestsToParticipate(userId, eventId), HttpStatus.CREATED);
     }
 
     @PatchMapping("/{requestId}/cancel")

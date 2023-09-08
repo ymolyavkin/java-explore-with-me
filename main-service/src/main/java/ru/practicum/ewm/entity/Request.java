@@ -1,13 +1,17 @@
 package ru.practicum.ewm.entity;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import ru.practicum.ewm.enums.RequestStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder(toBuilder = true)
 @Entity
 @Table(name = "requests")
 public class Request {

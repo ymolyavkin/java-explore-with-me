@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.user.UserShortDto;
 import ru.practicum.ewm.entity.Location;
-import ru.practicum.ewm.enums.State;
+import ru.practicum.ewm.enums.EventsState;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -40,7 +40,7 @@ public class EventFullDto {
     private Integer participantLimit;
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
-    private State state;
+    private EventsState eventsState;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     private String title;
     private Long views;

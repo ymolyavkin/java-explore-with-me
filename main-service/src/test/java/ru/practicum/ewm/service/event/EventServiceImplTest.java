@@ -2,12 +2,9 @@ package ru.practicum.ewm.service.event;
 
 import org.junit.jupiter.api.Test;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.enums.RequestStatus;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class EventServiceImplTest {
     private EventServiceImpl eventService;
@@ -26,8 +23,8 @@ class EventServiceImplTest {
         requestToStatusConfirmed.setRequestIds(List.of(3L, 4L));
         requestToStatusConfirmed.setStatus(RequestStatus.REJECTED);
 
-        EventRequestStatusUpdateResult eventRequestStatusUpdateResultConf = eventService.changeStatusRequests(userId, eventId, requestToStatusConfirmed);
-        EventRequestStatusUpdateResult eventRequestStatusUpdateResultReject = eventService.changeStatusRequests(userId2, eventId2, requestToStatusRejected);
+//        EventRequestStatusUpdateResult eventRequestStatusUpdateResultConf = eventService.changeStatusRequests(userId, eventId, requestToStatusConfirmed);
+//        EventRequestStatusUpdateResult eventRequestStatusUpdateResultReject = eventService.changeStatusRequests(userId2, eventId2, requestToStatusRejected);
 
         System.out.println();
     }

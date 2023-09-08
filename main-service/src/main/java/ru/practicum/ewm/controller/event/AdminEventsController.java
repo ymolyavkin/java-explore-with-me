@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.request.UpdateEventAdminRequest;
-import ru.practicum.ewm.enums.State;
+import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.service.event.EventService;
 
 import javax.validation.Valid;
@@ -29,7 +29,7 @@ public class AdminEventsController {
 
     @GetMapping
     public ResponseEntity<List<EventFullDto>> getEventsByCondition(@PathVariable List<Long> users,
-                                                                   @RequestParam List<State> states,
+                                                                   @RequestParam List<EventsState> eventsStates,
                                                                    @RequestParam List<Long> categories,
                                                                    @RequestParam LocalDateTime rangeStart,
                                                                    @RequestParam LocalDateTime rangeEnd,
@@ -37,7 +37,7 @@ public class AdminEventsController {
                                                                    @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на полную информацию обо всех событиях, подходящих под условия");
 
-        return new ResponseEntity<>(eventService.getEventsByCondition(users, states, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.getEventsByCondition(users, eventsStates, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
     }
 
     @PatchMapping("/{eventId}")

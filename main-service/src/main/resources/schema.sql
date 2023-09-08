@@ -27,7 +27,7 @@ create TABLE IF NOT EXISTS events (
                                      participant_limit INT,
                                      request_moderation VARCHAR(5),
                                      title VARCHAR(120) NOT NULL,
-                                     state VARCHAR(9), --PENDING, CANCELED, PUBLISHED
+                                     eventsState VARCHAR(9), --PENDING, CANCELED, PUBLISHED
                                      created TIMESTAMP WITHOUT TIME ZONE,
                                      initiator_id BIGINT NOT NULL,
                                      published_on TIMESTAMP WITHOUT TIME ZONE,

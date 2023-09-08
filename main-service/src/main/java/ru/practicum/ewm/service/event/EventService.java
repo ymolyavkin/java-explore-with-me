@@ -5,7 +5,7 @@ import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.*;
 import ru.practicum.ewm.enums.SortingOption;
-import ru.practicum.ewm.enums.State;
+import ru.practicum.ewm.enums.EventsState;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +24,7 @@ public interface EventService {
     EventRequestStatusUpdateResult changeStatusRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest);
 
     List<EventFullDto> getEventsByCondition(List<Long> users,
-                                            List<State> states,
+                                            List<EventsState> eventsStates,
                                             List<Long> categories,
                                             LocalDateTime rangeStart,
                                             LocalDateTime rangeEnd,

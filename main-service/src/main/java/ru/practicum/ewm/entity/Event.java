@@ -2,7 +2,7 @@ package ru.practicum.ewm.entity;
 
 import lombok.Data;
 import lombok.ToString;
-import ru.practicum.ewm.enums.State;
+import ru.practicum.ewm.enums.EventsState;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -53,7 +53,7 @@ public class Event {
 
     @Column(name = "state")
     @Enumerated(EnumType.STRING)
-    private State state;
+    private EventsState eventsState;
 
     @Column(name = "created")
     private LocalDateTime createdOn;

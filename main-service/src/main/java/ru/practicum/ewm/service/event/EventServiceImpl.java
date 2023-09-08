@@ -3,19 +3,19 @@ package ru.practicum.ewm.service.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.dto.mapper.Mapper;
 import ru.practicum.ewm.dto.request.*;
 import ru.practicum.ewm.entity.*;
 import ru.practicum.ewm.enums.ChangeEventState;
+import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.enums.RequestStatus;
 import ru.practicum.ewm.enums.SortingOption;
-import ru.practicum.ewm.enums.State;
 import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.*;
@@ -73,7 +73,7 @@ public class EventServiceImpl implements EventService {
             mapper.skip(Event::setId);
             mapper.skip(Event::setCategory);
             mapper.skip(Event::setInitiator);
-            mapper.skip(Event::setState);
+            mapper.skip(Event::setEventsState);
             mapper.skip(Event::setPublishedOn);
             mapper.skip(Event::setCreatedOn);
         });
@@ -83,7 +83,7 @@ public class EventServiceImpl implements EventService {
         event.setCreatedOn(LocalDateTime.now());
         event.setCategory(category);
         event.setInitiator(initiator);
-        event.setState(State.PENDING);
+        event.setEventsState(EventsState.PENDING);
 
 
         Event savedEvent = eventRepository.save(event);
@@ -97,7 +97,7 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Событие с id %s не найдено", eventId)));
 
-        if (event.getState().equals(State.PUBLISHED)) {
+        if (event.getEventsState().equals(EventsState.PUBLISHED)) {
             throw new NotAvailableException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
         }
 
@@ -108,9 +108,9 @@ public class EventServiceImpl implements EventService {
 
         if (eventToUpdate.getStateAction() != null) {
             if (eventToUpdate.getStateAction().equals(ChangeEventState.SEND_TO_REVIEW)) {
-                event.setState(State.PENDING);
+                event.setEventsState(EventsState.PENDING);
             } else {
-                event.setState(State.CANCELED);
+                event.setEventsState(EventsState.CANCELED);
             }
         }
 
@@ -126,15 +126,16 @@ public class EventServiceImpl implements EventService {
         eventRepository.findById(eventId)
                 .orElseThrow(() -> new NotFoundException(String.format("Событие %s не найдено", eventId)));
 
-        if (this.mapper.getTypeMap(Request.class, ParticipationRequestDto.class) == null) {
+       /* if (this.mapper.getTypeMap(Request.class, ParticipationRequestDto.class) == null) {
             this.mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
         }
         TypeMap<Request, ParticipationRequestDto> eventMapper = this.mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
-        eventMapper.addMapping(Request::getId, ParticipationRequestDto::setEvent);
+        eventMapper.addMapping(Request::getId, ParticipationRequestDto::setEvent);*/
 
         return requestRepository.findAllByEventIdAndEventInitiatorId(eventId, userId)
                 .stream()
-                .map(request -> mapper.map(request, ParticipationRequestDto.class))
+            //    .map(request -> mapper.map(request, ParticipationRequestDto.class))
+                .map(request -> Mapper.mapToParticipationRequestDto(mapper, request))
                 .collect(Collectors.toList());
     }
 
@@ -195,7 +196,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<EventFullDto> getEventsByCondition(List<Long> users,
-                                                   List<State> states,
+                                                   List<EventsState> eventsStates,
                                                    List<Long> categories,
                                                    LocalDateTime rangeStart,
                                                    LocalDateTime rangeEnd,
