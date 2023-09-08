@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.dto.mapper.Mapper;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.entity.Event;
@@ -18,8 +17,10 @@ import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.RequestRepository;
 import ru.practicum.ewm.repository.UserRepository;
 
+import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -29,11 +30,6 @@ public class RequestServiceImpl implements RequestService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final ModelMapper mapper;
-
-    @Override
-    public List<ParticipationRequestDto> getRequestsToParticipate(Long userId) {
-        return null;
-    }
 
     @Override
     public ParticipationRequestDto addRequestsToParticipate(Long userId, Long eventId) {
@@ -71,7 +67,28 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public CompilationDto cancellingRequest(Long userId, Long requestId) {
-        return null;
+    public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
+        userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователь %s не найден", userId)));
+
+        Request request = requestRepository.findById(requestId).orElseThrow(() ->
+                new NotFoundException(String.format("Запрос %s не найден", requestId)));
+
+        if (!request.getRequester().getId().equals(userId)) {
+            throw new ValidationException(
+                    String.format("Пользователь %s не подал заявку на участие", userId, requestId));
+        }
+        request.setStatus(RequestStatus.CANCELED);
+
+        return Mapper.mapToParticipationRequestDto(mapper, requestRepository.save(request));
+    }
+
+    @Override
+    public List<ParticipationRequestDto> getRequestByUser(Long userId) {
+        userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException(String.format("Пользователь %s не найден", userId)));
+        List<Request> requests = requestRepository.findByRequesterId(userId);
+
+        return requests.stream().map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList());
     }
 }
