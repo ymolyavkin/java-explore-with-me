@@ -31,7 +31,7 @@ public interface EventService {
                                             int from,
                                             int size);
 
-    EventFullDto editEventForPublished(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto editEventAndStatus(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
 
     List<EventShortDto> getAllEvents(String text,
                                      List<Long> categories,

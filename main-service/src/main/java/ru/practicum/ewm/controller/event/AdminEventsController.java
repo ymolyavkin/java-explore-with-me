@@ -41,10 +41,10 @@ public class AdminEventsController {
     }
 
     @PatchMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> updateEvent(@PathVariable Long eventId,
+    public ResponseEntity<EventFullDto> updateEventAndStatus(@PathVariable Long eventId,
                                                     @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("Получен запрос на обновление события с id {}", eventId);
 
-        return new ResponseEntity<>(eventService.editEventForPublished(eventId, updateEventAdminRequest), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.editEventAndStatus(eventId, updateEventAdminRequest), HttpStatus.OK);
     }
 }

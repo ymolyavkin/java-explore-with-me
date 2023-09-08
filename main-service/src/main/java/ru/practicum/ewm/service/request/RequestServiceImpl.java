@@ -43,7 +43,7 @@ public class RequestServiceImpl implements RequestService {
             throw new NotAvailableException("Инициатор события не может добавлять запросы на участие в своем событии");
         }
         if (!event.getEventsState().equals(EventsState.PUBLISHED)) {
-            throw new NotAvailableException("Нелзя участвовать в неопубликованном событии");
+            throw new NotAvailableException("Нельзя участвовать в неопубликованном событии");
         }
 
         Long confirmedRequests = requestRepository.countAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);

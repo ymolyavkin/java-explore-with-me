@@ -12,10 +12,7 @@ import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.mapper.Mapper;
 import ru.practicum.ewm.dto.request.*;
 import ru.practicum.ewm.entity.*;
-import ru.practicum.ewm.enums.ChangeEventState;
-import ru.practicum.ewm.enums.EventsState;
-import ru.practicum.ewm.enums.RequestStatus;
-import ru.practicum.ewm.enums.SortingOption;
+import ru.practicum.ewm.enums.*;
 import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.*;
@@ -207,9 +204,32 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto editEventForPublished(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
+    public EventFullDto editEventAndStatus(Long eventId, UpdateEventAdminRequest updateEventAdminRequest) {
         log.info("Admin: Обновление события с id {}", eventId);
-        return null;
+        Event event = eventRepository.findById(eventId).orElseThrow(() ->
+                new NotFoundException(String.format("Событие %s не найдено", eventId)));
+
+        if (updateEventAdminRequest.getStateAction() != null) {
+            if (updateEventAdminRequest.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
+                if (!event.getEventsState().equals(EventsState.PENDING)) {
+                    throw new NotAvailableException(String.format("Событие %s уже было опубликовано", eventId));
+                }
+                event.setEventsState(EventsState.PUBLISHED);
+                event.setPublishedOn(LocalDateTime.now());
+            } else {
+                if (!event.getEventsState().equals(EventsState.PENDING)) {
+                    throw new NotAvailableException("Событие должно быть в статусе PENDING");
+                }
+                event.setEventsState(EventsState.CANCELED);
+            }
+        }
+        if (event.getPublishedOn() != null && event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
+            throw new NotAvailableException("Время начала изменяемого события должно быть не раньше, чем за 1 час от даты публикации");
+        }
+       // patchUpdateEvent(updateEventAdminRequest, event);
+        locationRepository.save(event.getLocation());
+
+        return mapper.map(event, EventFullDto.class);
     }
 
     @Override
