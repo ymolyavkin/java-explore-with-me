@@ -12,12 +12,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static ru.practicum.util.Constants.MESSAGE_REASON_DB_CONSTRAINT_VIOLATION;
-import static ru.practicum.util.Constants.MESSAGE_REASON_ERROR_NOT_FOUND;
+import static ru.practicum.util.Constants.*;
 
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ApiError handleException(Throwable e) {
+        log.debug("Необработанное исключение. Статус 500 INTERNAL SERVER ERROR {}", e.getMessage(), e);
+        return new ApiError(List.of(e.toString()),
+                e.getMessage(),
+                MESSAGE_REASON_ERROR_NOT_FOUND,
+                HttpStatus.NOT_FOUND,
+                LocalDateTime.now());
+    }
+
     @ExceptionHandler({NotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFound(final RuntimeException e) {
@@ -35,7 +45,7 @@ public class ErrorHandler {
         log.debug("Получен статус 500. Нарушение ограничения БД", e.getMessage(), e);
         return new ApiError(List.of(e.toString()),
                 e.getMessage(),
-                MESSAGE_REASON_DB_CONSTRAINT_VIOLATION,
+                MESSAGE_INTERNAL_SERVER_ERROR,
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 LocalDateTime.now());
     }
@@ -47,6 +57,16 @@ public class ErrorHandler {
         return new ApiError(List.of(e.toString()),
                 e.getMessage(),
                 MESSAGE_REASON_DB_CONSTRAINT_VIOLATION,
+                HttpStatus.CONFLICT,
+                LocalDateTime.now());
+    }
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError  handleValidationDateException(ValidationDateException e) {
+        log.error("Код ошибки: {}, {}", HttpStatus.BAD_REQUEST, e.getMessage());
+        return new ApiError(List.of(e.toString()),
+                e.getMessage(),
+                MESSAGE_VALIDATION_START_AFTER_END,
                 HttpStatus.CONFLICT,
                 LocalDateTime.now());
     }

@@ -11,6 +11,7 @@ import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.enums.SortingOption;
 import ru.practicum.ewm.service.event.EventService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDateTime;
@@ -35,17 +36,18 @@ public class PublicEventsController {
                                                             @RequestParam(defaultValue = "false") boolean onlyAvailable,
                                                             @RequestParam SortingOption sortingOption,
                                                             @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
-                                                            @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
+                                                            @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size,
+                                                            HttpServletRequest httpServletRequest) {
         log.info("Получен запрос на получение событий с возможностью фильтрации");
 
         return new ResponseEntity<>(eventService.getAllEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
-                sortingOption, from, size), HttpStatus.OK);
+                sortingOption, from, size, httpServletRequest), HttpStatus.OK);
     }
 
     @GetMapping("/{eventId}")
-    public ResponseEntity<EventFullDto> getEventById(@PathVariable Long eventId) {
+    public ResponseEntity<EventFullDto> getEventById(@PathVariable Long eventId, HttpServletRequest httpServletRequest) {
         log.info("Получен запрос на получение события с id {}", eventId);
 
-        return new ResponseEntity<>(eventService.getEventById(eventId), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.getEventByIdPublic(eventId, httpServletRequest), HttpStatus.OK);
     }
 }

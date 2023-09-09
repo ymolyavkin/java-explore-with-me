@@ -16,7 +16,7 @@ import static ru.practicum.util.Constants.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEventAdminRequest {
+public class UpdateEventRequest {
     @Size(min = 20, max = 2000, message = MESSAGE_VALIDATION_SIZE)
     private String annotation;
     private Long category;

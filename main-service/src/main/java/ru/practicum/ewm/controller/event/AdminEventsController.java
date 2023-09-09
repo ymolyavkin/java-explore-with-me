@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.request.UpdateEventAdminRequest;
+import ru.practicum.ewm.dto.request.UpdateEventRequest;
 import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.service.event.EventService;
 
@@ -42,9 +42,9 @@ public class AdminEventsController {
 
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> updateEventAndStatus(@PathVariable Long eventId,
-                                                    @Valid @RequestBody UpdateEventAdminRequest updateEventAdminRequest) {
+                                                    @Valid @RequestBody UpdateEventRequest updateEventRequest) {
         log.info("Получен запрос на обновление события с id {}", eventId);
 
-        return new ResponseEntity<>(eventService.editEventAndStatus(eventId, updateEventAdminRequest), HttpStatus.OK);
+        return new ResponseEntity<>(eventService.editEventAndStatus(eventId, updateEventRequest), HttpStatus.OK);
     }
 }

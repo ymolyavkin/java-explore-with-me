@@ -3,10 +3,14 @@ package ru.practicum.ewm.service.event;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
-import ru.practicum.ewm.dto.request.*;
-import ru.practicum.ewm.enums.SortingOption;
+import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
+import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
+import ru.practicum.ewm.dto.request.ParticipationRequestDto;
+import ru.practicum.ewm.dto.request.UpdateEventRequest;
 import ru.practicum.ewm.enums.EventsState;
+import ru.practicum.ewm.enums.SortingOption;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -17,7 +21,7 @@ public interface EventService {
 
     EventFullDto addEvent(Long userId, NewEventDto newEventDto);
 
-    EventFullDto editEventFromAuthor(Long userId, Long eventId, UpdateEventUserRequest eventToUpdate);
+    EventFullDto editEventFromAuthor(Long userId, Long eventId, UpdateEventRequest eventToUpdate);
 
     List<ParticipationRequestDto> getRequestToParticipationByUser(Long userId, Long eventId);
 
@@ -31,7 +35,7 @@ public interface EventService {
                                             int from,
                                             int size);
 
-    EventFullDto editEventAndStatus(Long eventId, UpdateEventAdminRequest updateEventAdminRequest);
+    EventFullDto editEventAndStatus(Long eventId, UpdateEventRequest updateEventRequest);
 
     List<EventShortDto> getAllEvents(String text,
                                      List<Long> categories,
@@ -41,7 +45,8 @@ public interface EventService {
                                      boolean onlyAvailable,
                                      SortingOption sortingOption,
                                      int from,
-                                     int size);
+                                     int size,
+                                     HttpServletRequest httpServletRequest);
 
-    EventFullDto getEventById(Long id);
+    EventFullDto getEventByIdPublic(Long id, HttpServletRequest httpServletRequest);
 }
