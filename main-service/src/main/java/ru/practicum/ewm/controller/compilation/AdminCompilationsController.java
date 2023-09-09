@@ -19,6 +19,7 @@ import ru.practicum.validator.Marker;
 @RequiredArgsConstructor
 public class AdminCompilationsController {
     private final CompilationService compilationService;
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CompilationDto> addNewCompilation(@Validated(Marker.OnCreate.class)

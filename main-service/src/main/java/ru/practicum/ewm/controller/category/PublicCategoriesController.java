@@ -23,6 +23,7 @@ import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 @RequiredArgsConstructor
 public class PublicCategoriesController {
     private final CategoryService categoryService;
+
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories(@RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
                                                               @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
@@ -30,6 +31,7 @@ public class PublicCategoriesController {
 
         return new ResponseEntity<>(categoryService.getCategories(from, size), HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
         log.info("Получен запрос на получение категории с id {}", id);

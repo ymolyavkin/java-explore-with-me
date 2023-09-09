@@ -49,6 +49,7 @@ public class ErrorHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 LocalDateTime.now());
     }
+
     @ExceptionHandler({AlreadyExistsException.class, NotAvailableException.class,
             DataIntegrityViolationException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
@@ -60,9 +61,10 @@ public class ErrorHandler {
                 HttpStatus.CONFLICT,
                 LocalDateTime.now());
     }
+
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ApiError  handleValidationDateException(ValidationDateException e) {
+    public ApiError handleValidationDateException(ValidationDateException e) {
         log.error("Код ошибки: {}, {}", HttpStatus.BAD_REQUEST, e.getMessage());
         return new ApiError(List.of(e.toString()),
                 e.getMessage(),

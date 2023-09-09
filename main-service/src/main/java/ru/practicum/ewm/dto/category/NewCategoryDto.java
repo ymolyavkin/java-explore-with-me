@@ -3,7 +3,6 @@ package ru.practicum.ewm.dto.category;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.validation.annotation.Validated;
 import ru.practicum.validator.Marker;
 
 import javax.validation.constraints.NotBlank;

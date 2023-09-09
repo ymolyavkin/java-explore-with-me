@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.enums.RequestStatus;
 
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

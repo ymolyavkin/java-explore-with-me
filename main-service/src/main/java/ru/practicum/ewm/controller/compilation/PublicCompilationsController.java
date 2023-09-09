@@ -37,13 +37,14 @@ public class PublicCompilationsController {
 
     @GetMapping
     public ResponseEntity<List<CompilationDto>> getAllCompilations(@RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
-                                                   // public ResponseEntity<Page<CompilationDto>> getAllCompilations(@Valid @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
-                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size,
-                                                   @RequestParam Boolean pinned) {
+                                                                   // public ResponseEntity<Page<CompilationDto>> getAllCompilations(@Valid @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
+                                                                   @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size,
+                                                                   @RequestParam Boolean pinned) {
         log.info("Получен запрос на получение подборок событий");
 
         return new ResponseEntity<>(compilationService.getCompilations(from, size), HttpStatus.OK);
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<CompilationDto> getCompilationById(@PathVariable Long id) {
         log.info("Получен запрос на получение подборки событий с id {}", id);

@@ -213,10 +213,10 @@ public class EventServiceImpl implements EventService {
         log.info("Admin: Получение полной информации о всех событиях по условиям");
         validationDateTime(rangeStart, rangeEnd);
 
-      //  Page<Event> eventsPage = eventRepository.findAllForAdmin(users, eventsStates, categories, getRangeStart(rangeStart),
+        //  Page<Event> eventsPage = eventRepository.findAllForAdmin(users, eventsStates, categories, getRangeStart(rangeStart),
         List<Event> events = eventRepository.findAllForAdmin(users, eventsStates, categories, getRangeStart(rangeStart),
                 PageRequest.of(from, size));
-      //  List<Event> events = eventsPage.getContent();
+        //  List<Event> events = eventsPage.getContent();
 
         return events.stream()
                 .map(event -> mapper.map(event, EventFullDto.class))
@@ -284,8 +284,8 @@ public class EventServiceImpl implements EventService {
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
-        long viewsCount= statsClient.getCount();
-eventFullDto.setViews(viewsCount);
+        long viewsCount = statsClient.getCount();
+        eventFullDto.setViews(viewsCount);
 //        List<String> uris = List.of("/events/" + event.getId());
 //        List<ViewStatsResponseDto> views = statsClient..getStats(START_DATE, END_DATE, uris, null).getBody();
 //
