@@ -131,7 +131,7 @@ public class EventServiceImpl implements EventService {
 
         return requestRepository.findAllByEventIdAndEventInitiatorId(eventId, userId)
                 .stream()
-            //    .map(request -> mapper.map(request, ParticipationRequestDto.class))
+                //    .map(request -> mapper.map(request, ParticipationRequestDto.class))
                 .map(request -> Mapper.mapToParticipationRequestDto(mapper, request))
                 .collect(Collectors.toList());
     }
@@ -226,7 +226,7 @@ public class EventServiceImpl implements EventService {
         if (event.getPublishedOn() != null && event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
             throw new NotAvailableException("Время начала изменяемого события должно быть не раньше, чем за 1 час от даты публикации");
         }
-       // patchUpdateEvent(updateEventAdminRequest, event);
+        // patchUpdateEvent(updateEventAdminRequest, event);
         locationRepository.save(event.getLocation());
 
         return mapper.map(event, EventFullDto.class);

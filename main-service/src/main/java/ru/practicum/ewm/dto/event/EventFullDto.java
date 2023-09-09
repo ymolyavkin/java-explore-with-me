@@ -1,5 +1,6 @@
 package ru.practicum.ewm.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ public class EventFullDto {
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private UserShortDto initiator;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Location location;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private boolean paid;
