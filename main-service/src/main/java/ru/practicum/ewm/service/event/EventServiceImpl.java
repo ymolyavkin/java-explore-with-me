@@ -115,7 +115,7 @@ public class EventServiceImpl implements EventService {
         patchUpdateEvent(eventToUpdate, event);
 
         if (eventToUpdate.getStateAction() != null) {
-            if (eventToUpdate.getStateAction().equals(ChangeEventState.SEND_TO_REVIEW)) {
+            if (eventToUpdate.getStateAction().equals(StateAction.SEND_TO_REVIEW)) {
                 event.setEventsState(EventsState.PENDING);
             } else {
                 event.setEventsState(EventsState.CANCELED);
