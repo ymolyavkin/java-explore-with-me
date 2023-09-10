@@ -75,12 +75,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query("select e from Event e " +
             "where e.eventsState = 'PUBLISHED' " +
             "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
-            "and (:categoryIds is null or e.category.id in :categoryIds) "
-        //    "and (:paid is null or cast(e.paid as text) = :paid) "
+            "and (:categoryIds is null or e.category.id in :categoryIds) " +
+            "and (:paid is null or cast(e.paid as text) = :paid) "
     )
     //(cast(:paid as text)
-   // List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds, @Param("paid") String paid);
-    List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds);
+    List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds, @Param("paid") String paid);
+  //  List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds);
   /*  List<Event> findAllPublicByCondition(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds,
                               @Param("paid") Boolean paid, @Param("rangeStart") LocalDateTime rangeStart,
                               @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable,

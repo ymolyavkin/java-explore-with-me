@@ -267,16 +267,16 @@ public class EventServiceImpl implements EventService {
         if (rangeStart == null) {
             rangeStart = LocalDateTime.now();
         }
-        String paidStr;
+        String paidStr = null;
         if (paid != null) {
-            paidStr = paid ? "true": "false";
+            paidStr = paid ? "true" : "false";
         }
         validationDateTime(rangeStart, rangeEnd);
 
 //        List<Event> events = eventRepository.findAllPublic(text, categoryIds, paid,
 //                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
-        List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds);
-     //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
+        List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr);
+        //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
 
         return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
     }
