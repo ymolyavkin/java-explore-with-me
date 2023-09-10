@@ -273,9 +273,9 @@ public class EventServiceImpl implements EventService {
         }
         validationDateTime(rangeStart, rangeEnd);
 
-//        List<Event> events = eventRepository.findAllPublic(text, categoryIds, paid,
-//                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
-        List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr);
+       /* List<Event> events = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
+                getRangeStart(rangeStart), rangeEnd, onlyAvailable);*/
+          List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr);
         //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
 
         return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());

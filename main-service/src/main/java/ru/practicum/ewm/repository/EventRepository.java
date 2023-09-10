@@ -58,31 +58,48 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                               @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable,
                               Pageable pageable);
 
-  /*  @Query("select e from Event e " +
-             "where e.eventsState = 'PUBLISHED' " +
-             "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
-             "and (:categoryIds is null or e.category.id in :categoryIds) " +
-             "and (:paid is null or e.paid = :paid) " +
-             "and e.eventDate >= :rangeStart " +
-             "and (:rangeEnd is null or e.eventDate <= :rangeEnd) " +
-             "and (:onlyAvailable = false or e.id in " +
-             "(select r.event.id " +
-             "from Request r " +
-             "where r.status = 'CONFIRMED' " +
-             "group by r.event.id " +
-             "having e.participantLimit - count(r.id) > 0 " +
-             "order by count(r.id))) ")*/
+    /*  @Query("select e from Event e " +
+               "where e.eventsState = 'PUBLISHED' " +
+               "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
+               "and (:categoryIds is null or e.category.id in :categoryIds) " +
+               "and (:paid is null or e.paid = :paid) " +
+               "and e.eventDate >= :rangeStart " +
+               "and (:rangeEnd is null or e.eventDate <= :rangeEnd) " +
+               "and (:onlyAvailable = false or e.id in " +
+               "(select r.event.id " +
+               "from Request r " +
+               "where r.status = 'CONFIRMED' " +
+               "group by r.event.id " +
+               "having e.participantLimit - count(r.id) > 0 " +
+               "order by count(r.id))) ")*/
+    @Query("select e from Event e " +
+            "where e.eventsState = 'PUBLISHED' " +
+            "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
+            "and (:categoryIds is null or e.category.id in :categoryIds) " +
+            "and (:paid is null or cast(e.paid as text) = :paid) " +
+            "and e.eventDate >= :rangeStart " +
+            "and (:rangeEnd is null or e.eventDate <= :rangeEnd) " +
+            "and (:onlyAvailable = false or e.id in " +
+            "(select r.event.id " +
+            "from Request r " +
+            "where r.status = 'CONFIRMED' " +
+            "group by r.event.id " +
+            "having e.participantLimit - count(r.id) > 0 " +
+            "order by count(r.id))) "
+    )
+
+    //
+
+    List<Event> findAllPublicByCondition(
+            @Param("text") String text, @Param("categoryIds") List<Long> categoryIds,
+            @Param("paid") String paid, @Param("rangeStart") LocalDateTime rangeStart,
+            @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable);
+
     @Query("select e from Event e " +
             "where e.eventsState = 'PUBLISHED' " +
             "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
             "and (:categoryIds is null or e.category.id in :categoryIds) " +
             "and (:paid is null or cast(e.paid as text) = :paid) "
     )
-    //(cast(:paid as text)
     List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds, @Param("paid") String paid);
-  //  List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds);
-  /*  List<Event> findAllPublicByCondition(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds,
-                              @Param("paid") Boolean paid, @Param("rangeStart") LocalDateTime rangeStart,
-                              @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable,
-                              Pageable pageable);*/
 }
