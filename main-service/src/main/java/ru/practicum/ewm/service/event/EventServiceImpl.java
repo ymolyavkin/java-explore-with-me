@@ -279,11 +279,11 @@ public class EventServiceImpl implements EventService {
         validationDateTime(rangeStart, rangeEnd);
 
 
-          List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
-var v = eventClient.getAllEvents(rangeStart, rangeEnd, from, size);
+        List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
+//var v = eventClient.getAllEvents(rangeStart, rangeEnd, from, size);
 //        List<Event> eventsTest = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
 //                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
-        //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
+        // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
 
         return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
     }
@@ -296,7 +296,7 @@ var v = eventClient.getAllEvents(rangeStart, rangeEnd, from, size);
             throw new NotFoundException(String.format("Событие с id = %s не было опубликовано", eventId));
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-        sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
+        // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
         long viewsCount = statsClient.getCount();
         eventFullDto.setViews(viewsCount);
 //        List<String> uris = List.of("/events/" + event.getId());

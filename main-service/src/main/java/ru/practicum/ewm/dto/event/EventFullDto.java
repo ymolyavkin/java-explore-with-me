@@ -42,7 +42,7 @@ public class EventFullDto {
     private Integer participantLimit;
     private LocalDateTime publishedOn;
     private Boolean requestModeration;
-    private EventsState eventsState;
+    private EventsState state;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     private String title;
     private Long views;

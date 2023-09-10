@@ -38,6 +38,7 @@ public class EventClient extends BaseStatisticClient {
                 "from", from,
                 "size", size
         );*/
+       // rangeStart = rangeStart.plusYears(1);
         HashMap<String, Object> parameters = new HashMap<>();
         StringBuilder path = new StringBuilder("?start={rangeStart}&end={rangeEnd}");
 
