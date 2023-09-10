@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.client.StatsClient;
 import ru.practicum.dto.IncomingHitDto;
+import ru.practicum.ewm.client.EventClient;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
@@ -46,6 +47,7 @@ public class EventServiceImpl implements EventService {
     private final LocationRepository locationRepository;
     private final ModelMapper mapper;
     private final StatsClient statsClient;
+    private final EventClient eventClient;
 
     @Override
     public List<EventShortDto> getEventsByOwner(Long userId, int from, int size) {
@@ -278,7 +280,7 @@ public class EventServiceImpl implements EventService {
 
 
           List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
-
+var v = eventClient.getAllEvents(rangeStart, rangeEnd, from, size);
 //        List<Event> eventsTest = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
 //                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
         //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
