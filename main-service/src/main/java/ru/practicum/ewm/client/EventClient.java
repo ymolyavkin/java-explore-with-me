@@ -20,6 +20,7 @@ public class EventClient extends BaseStatisticClient {
         super(rest);
     }*/
     private static final String API_PREFIX = "/stats";
+
     @Autowired
     public EventClient(@Value("${statistic-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
@@ -29,24 +30,25 @@ public class EventClient extends BaseStatisticClient {
                         .build()
         );
     }
+
     public ResponseEntity<Object> getAllEvents(LocalDateTime rangeStart,
-                                                      LocalDateTime rangeEnd,
-                                                      int from,
-                                                      int size) {
+                                               LocalDateTime rangeEnd,
+                                               int from,
+                                               int size) {
         /*Map<String, Object> parameters = Map.of(
                 "state", state.name(),
                 "from", from,
                 "size", size
         );*/
-       // rangeStart = rangeStart.plusYears(1);
+        // rangeStart = rangeStart.plusYears(1);
         HashMap<String, Object> parameters = new HashMap<>();
         StringBuilder path = new StringBuilder("?start={rangeStart}&end={rangeEnd}");
 
-            parameters.put("start", rangeStart);
-            path.append("&start={rangeStart}");
+        parameters.put("start", rangeStart);
+        path.append("&start={rangeStart}");
 
         if (rangeEnd == null) {
-            rangeEnd=rangeStart.plusMonths(1);
+            rangeEnd = rangeStart.plusMonths(1);
         }
         if (rangeEnd != null) {
             parameters.put("end", rangeEnd);
@@ -77,7 +79,7 @@ public class EventClient extends BaseStatisticClient {
             path.append("&end={rangeStart}");
         }
         if (rangeEnd == null) {
-            rangeEnd=rangeStart.plusMonths(1);
+            rangeEnd = rangeStart.plusMonths(1);
         }
         if (rangeEnd != null) {
             parameters.put("end", rangeEnd);
@@ -96,7 +98,7 @@ public class EventClient extends BaseStatisticClient {
         log.info("Запрос на сервер статистики с id = {} ");
         //return get(path.toString(), parameters);
         //return get("/", parameters);
-       // return get("?start={rangeStart}&end={rangeEnd}", parameters);
+        // return get("?start={rangeStart}&end={rangeEnd}", parameters);
         return get("?start={start}&end={end}", parameters);
     }
 }

@@ -28,6 +28,7 @@ public class ErrorHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 LocalDateTime.now());
     }
+
     @ExceptionHandler({MissingServletRequestParameterException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleMissingServletParameterException(Throwable e) {
