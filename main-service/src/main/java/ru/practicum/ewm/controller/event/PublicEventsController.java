@@ -28,13 +28,13 @@ public class PublicEventsController {
     private final EventService eventService;
 
     @GetMapping
-    public ResponseEntity<List<EventShortDto>> getAllEvents(@RequestParam String text,
-                                                            @RequestParam List<Long> categories,
-                                                            @RequestParam Boolean paid,
-                                                            @RequestParam LocalDateTime rangeStart,
-                                                            @RequestParam LocalDateTime rangeEnd,
-                                                            @RequestParam(defaultValue = "false") boolean onlyAvailable,
-                                                            @RequestParam SortingOption sortingOption,
+    public ResponseEntity<List<EventShortDto>> getAllEvents(@RequestParam(required = false) String text,
+                                                            @RequestParam(required = false) List<Long> categories,
+                                                            @RequestParam(required = false) Boolean paid,
+                                                            @RequestParam(required = false) LocalDateTime rangeStart,
+                                                            @RequestParam(required = false) LocalDateTime rangeEnd,
+                                                            @RequestParam(defaultValue = "false") Boolean onlyAvailable,
+                                                            @RequestParam(required = false) SortingOption sortingOption,
                                                             @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
                                                             @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size,
                                                             HttpServletRequest httpServletRequest) {

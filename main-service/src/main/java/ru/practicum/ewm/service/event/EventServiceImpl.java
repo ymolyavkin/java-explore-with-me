@@ -258,19 +258,25 @@ public class EventServiceImpl implements EventService {
                                             Boolean paid,
                                             LocalDateTime rangeStart,
                                             LocalDateTime rangeEnd,
-                                            boolean onlyAvailable,
+                                            Boolean onlyAvailable,
                                             SortingOption sortingOption,
                                             int from,
                                             int size,
                                             HttpServletRequest httpServletRequest) {
         log.info("Public: Получение событий с возможностью фильтрации");
-
+        if (rangeStart == null) {
+            rangeStart = LocalDateTime.now();
+        }
+        String paidStr;
+        if (paid != null) {
+            paidStr = paid ? "true": "false";
+        }
         validationDateTime(rangeStart, rangeEnd);
 
-        List<Event> events = eventRepository.findAllPublic(text, categoryIds, paid,
-                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
-
-        sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
+//        List<Event> events = eventRepository.findAllPublic(text, categoryIds, paid,
+//                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
+        List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds);
+     //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
 
         return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
     }

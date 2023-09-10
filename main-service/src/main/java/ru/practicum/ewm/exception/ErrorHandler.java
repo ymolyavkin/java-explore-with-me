@@ -1,10 +1,10 @@
 package ru.practicum.ewm.exception;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -23,8 +23,18 @@ public class ErrorHandler {
         log.debug("Необработанное исключение. Статус 500 INTERNAL SERVER ERROR {}", e.getMessage(), e);
         return new ApiError(List.of(e.toString()),
                 e.getMessage(),
-                MESSAGE_REASON_ERROR_NOT_FOUND,
-                HttpStatus.NOT_FOUND,
+                MESSAGE_INTERNAL_SERVER_ERROR,
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                LocalDateTime.now());
+    }
+    @ExceptionHandler({MissingServletRequestParameterException.class})
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ApiError handleMissingServletParameterException(Throwable e) {
+        log.debug("Ошибка на стороне пользователя. Статус 400 BAD_REQUEST {}", e.getMessage(), e);
+        return new ApiError(List.of(e.toString()),
+                e.getMessage(),
+                MESSAGE_BAD_REQUEST,
+                HttpStatus.BAD_REQUEST,
                 LocalDateTime.now());
     }
 

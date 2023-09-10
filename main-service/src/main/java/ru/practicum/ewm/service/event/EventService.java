@@ -42,7 +42,7 @@ public interface EventService {
                                      Boolean paid,
                                      LocalDateTime rangeStart,
                                      LocalDateTime rangeEnd,
-                                     boolean onlyAvailable,
+                                     Boolean onlyAvailable,
                                      SortingOption sortingOption,
                                      int from,
                                      int size,
