@@ -93,7 +93,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllPublicByCondition(
             @Param("text") String text, @Param("categoryIds") List<Long> categoryIds,
             @Param("paid") String paid, @Param("rangeStart") LocalDateTime rangeStart,
-            @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable);
+            @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable, Pageable pageable);
 
     @Query("select e from Event e " +
             "where e.eventsState = 'PUBLISHED' " +
@@ -101,5 +101,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "and (:categoryIds is null or e.category.id in :categoryIds) " +
             "and (:paid is null or cast(e.paid as text) = :paid) "
     )
-    List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds, @Param("paid") String paid);
+    List<Event> findAllPublicByConditionTest(@Param("text") String text, @Param("categoryIds") List<Long> categoryIds, @Param("paid") String paid, Pageable pageable);
 }

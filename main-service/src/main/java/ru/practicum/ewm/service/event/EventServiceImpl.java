@@ -17,7 +17,10 @@ import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.dto.request.UpdateEventRequest;
 import ru.practicum.ewm.entity.*;
-import ru.practicum.ewm.enums.*;
+import ru.practicum.ewm.enums.EventsState;
+import ru.practicum.ewm.enums.RequestStatus;
+import ru.practicum.ewm.enums.SortingOption;
+import ru.practicum.ewm.enums.StateAction;
 import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.ValidationDateException;
@@ -273,9 +276,11 @@ public class EventServiceImpl implements EventService {
         }
         validationDateTime(rangeStart, rangeEnd);
 
-       /* List<Event> events = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
-                getRangeStart(rangeStart), rangeEnd, onlyAvailable);*/
-          List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr);
+
+          List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
+
+//        List<Event> eventsTest = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
+//                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
         //   sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
 
         return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
