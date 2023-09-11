@@ -28,16 +28,18 @@ public class Client extends BaseClient {
     }
 
     public void createStat(HttpServletRequest request) {
-        IncomingHitDto endpointHitDto = IncomingHitDto.builder()
+        IncomingHitDto incomingHitDto = IncomingHitDto.builder()
                 .ip(request.getRemoteAddr())
                 .uri(request.getRequestURI())
                 .created(LocalDateTime.now())
-                .app("ewm_service")
+                .app("ewm-main-service")
                 .build();
-        log.info("Отправлен get запрос на сервер с данными " + endpointHitDto);
-        post("/hit", endpointHitDto);
+        log.info("Отправлен get запрос на сервер с данными " + incomingHitDto);
+        post("/hit", incomingHitDto);
     }
-
+/*
+IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', created=null}
+ */
     public Long getView(Long eventId) {
         Map<String, Object> parameters = Map.of(
                 "eventId", eventId
