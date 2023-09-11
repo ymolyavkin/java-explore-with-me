@@ -282,16 +282,15 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.findAllByPublic(text, categoryIds, paidStr, rangeStart, rangeEnd, page);
         List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
         eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
-//        eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+       // eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
         statClient.createStat(httpServletRequest);
+        String[] uris = {"/events"};
+        List<String> listUris = List.of("/events");
+        var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
+       // var t = statClient.getStats(rangeStart, rangeEnd, listUris, false);
         //   List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
-//var v = eventClient.getAllEvents(rangeStart, rangeEnd, from, size);
-//        List<Event> eventsTest = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
-//                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
-        // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
-
-
-       // return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+//var v = statClient.getView(2L);
+        System.out.println();
         return eventsShort;
     }
 
