@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
 import ru.practicum.ewm.entity.Request;
+import ru.practicum.ewm.entity.User;
 
 @UtilityClass
 public class Mapper {
@@ -12,8 +13,10 @@ public class Mapper {
         if (mapper.getTypeMap(Request.class, ParticipationRequestDto.class) == null) {
             mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
         }
-        TypeMap<Request, ParticipationRequestDto> eventMapper = mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
+        //     TypeMap<Request, ParticipationRequestDto> eventMapper = mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
+        TypeMap<Request, ParticipationRequestDto> eventMapper = mapper.getTypeMap(Request.class, ParticipationRequestDto.class);
         eventMapper.addMapping(Request::getId, ParticipationRequestDto::setEvent);
+        eventMapper.addMapping(user -> user.getId(), ParticipationRequestDto::setRequester);
 
         return mapper.map(request, ParticipationRequestDto.class);
     }
