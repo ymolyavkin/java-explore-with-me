@@ -26,7 +26,6 @@ public class PrivateRequestController {
     }
 
     @PostMapping
-    // @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ParticipationRequestDto> addNewRequest(@PathVariable Long userId,
                                                                  @RequestParam Long eventId) {
         log.info("Получен запрос на добавление нового запроса пользователя с id {} на участие в событии с id {}", userId, eventId);

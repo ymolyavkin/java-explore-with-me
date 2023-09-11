@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.client.StatsClient;
 import ru.practicum.dto.IncomingHitDto;
+import ru.practicum.ewm.client.Client;
 import ru.practicum.ewm.client.EventClient;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -46,8 +47,9 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final ModelMapper mapper;
-    private final StatsClient statsClient;
-    private final EventClient eventClient;
+    //private final StatsClient statsClient;
+    private final Client statClient;
+
 
     @Override
     public List<EventShortDto> getEventsByOwner(Long userId, int from, int size) {
@@ -278,16 +280,21 @@ public class EventServiceImpl implements EventService {
         }
         validationDateTime(rangeStart, rangeEnd);
         PageRequest page = PageRequest.of(from / size, size);
-        List<EventFullDto> answer;
-       List<Event> events = eventRepository.findAllByPublic(text, categoryIds, paidStr, rangeStart, rangeEnd, page);
 
-     //   List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
+        List<Event> events = eventRepository.findAllByPublic(text, categoryIds, paidStr, rangeStart, rangeEnd, page);
+        List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+        eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
+        eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        statClient.createStat(httpServletRequest);
+        //   List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
 //var v = eventClient.getAllEvents(rangeStart, rangeEnd, from, size);
 //        List<Event> eventsTest = eventRepository.findAllPublicByCondition(text, categoryIds, paidStr,
 //                getRangeStart(rangeStart), rangeEnd, onlyAvailable, PageRequest.of(from, size));
         // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
 
-        return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+
+       // return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+        return eventsShort;
     }
 
     @Override
@@ -299,8 +306,8 @@ public class EventServiceImpl implements EventService {
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
-        long viewsCount = statsClient.getCount();
-        eventFullDto.setViews(viewsCount);
+        //long viewsCount = statsClient.getCount();
+      //  eventFullDto.setViews(viewsCount);
 //        List<String> uris = List.of("/events/" + event.getId());
 //        List<ViewStatsResponseDto> views = statsClient..getStats(START_DATE, END_DATE, uris, null).getBody();
 //
@@ -332,7 +339,7 @@ public class EventServiceImpl implements EventService {
         incomingHitDto.setIp(ip);
         incomingHitDto.setCreated(LocalDateTime.now());
 
-        statsClient.saveStats(incomingHitDto);
+        //statsClient.saveStats(incomingHitDto);
     }
 
     private void patchUpdateEvent(UpdateEventRequest requestToUpdate, Event event) {
