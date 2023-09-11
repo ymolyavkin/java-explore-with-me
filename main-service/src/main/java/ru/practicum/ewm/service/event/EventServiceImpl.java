@@ -286,7 +286,7 @@ public class EventServiceImpl implements EventService {
         statClient.createStat(httpServletRequest);
         String[] uris = {"/events"};
         List<String> listUris = List.of("/events");
-        var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
+      //  var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
        // var t = statClient.getStats(rangeStart, rangeEnd, listUris, false);
         //   List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
 //var v = statClient.getView(2L);
