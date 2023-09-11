@@ -1,8 +1,6 @@
 package ru.practicum.dto;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import ru.practicum.validator.Marker;
 
 import javax.validation.constraints.NotBlank;
@@ -10,10 +8,12 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
-
+@Builder
 @Getter
 @Setter
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
+//@RequiredArgsConstructor
 public class IncomingHitDto {
     @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private String app;
