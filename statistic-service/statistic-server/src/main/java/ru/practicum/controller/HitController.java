@@ -49,6 +49,7 @@ public class HitController {
     public ResponseEntity<String> getTest(@RequestParam(name = "pathVariable") String test) {
         log.info("Получен запрос на test");
 
-        return new ResponseEntity<>("Answer from test", HttpStatus.OK);
+        //return new ResponseEntity<>("Answer from test", HttpStatus.OK);
+        return null;
     }
 }

@@ -289,7 +289,7 @@ public class EventServiceImpl implements EventService {
         String[] uris = {"/events"};
         List<String> listUris = List.of("/events");
         var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
-        var n = statClient.getTestClient("client", 1L);
+        var n = statClient.getPathVariableClient("String client", 1L);
        // var t = statClient.getStats(rangeStart, rangeEnd, listUris, false);
         //   List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
 //var v = statClient.getView(2L);

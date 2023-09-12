@@ -42,7 +42,7 @@ public class Client extends BaseClient {
                 .build();
         log.info("Отправлен post запрос на сервер с данными " + incomingHitDto);
         post("/hit", incomingHitDto);
-        get("/test?pathVariable=start from createStat", null);
+     //   get("/test?pathVariable=start from createStat", null);
 
     }
 /*
@@ -98,5 +98,11 @@ IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', c
                 "pathVariable", "test from Client");
         return get("/test", parameters);
     }
+    public ResponseEntity<Object> getPathVariableClient(String client, Long id) {
+        Map<String, Object> parameters = Map.of(
+                "pathVariable", "test from Client");
+        return get("/test?pathVariable=start from getPathVariableClient", parameters);
+    }
 }
+//get("/test?pathVariable=start from createStat", null);
 //return get("/?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false");
