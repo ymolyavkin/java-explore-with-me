@@ -58,11 +58,11 @@ public class HitController {
     @GetMapping("/custom")
     public ResponseEntity<String> controllerMethod(@RequestParam Map<String, String> customQuery) {
 
-        System.out.println("customQuery = brand " + customQuery.containsKey("brand"));
-        System.out.println("customQuery = limit " + customQuery.containsKey("limit"));
-        System.out.println("customQuery = price " + customQuery.containsKey("price"));
-        System.out.println("customQuery = other " + customQuery.containsKey("other"));
-        System.out.println("customQuery = sort " + customQuery.containsKey("sort"));
+        System.out.println("customQuery = start " + customQuery.containsKey("start"));
+        System.out.println("customQuery = end " + customQuery.containsKey("end"));
+        System.out.println("customQuery = uris " + customQuery.containsKey("uris"));
+        System.out.println("customQuery = unique " + customQuery.containsKey("unique"));
+
 
         return null;
     }

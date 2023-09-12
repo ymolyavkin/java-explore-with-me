@@ -90,8 +90,8 @@ IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', c
         );
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
         log.info("Отправлен get запрос на сервер с данными " + parameters);
-       // return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
-        return get("/stats?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false", parameters);
+       return get("/custom?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+        //return get("/stats?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false", parameters);
     }
     public ResponseEntity<Object> getTestClient(String client, Long id) {
         Map<String, Object> parameters = Map.of(
@@ -106,7 +106,7 @@ IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', c
     public ResponseEntity<Object> getPathVariableClient(String client, Long id) {
         Map<String, Object> parameters = Map.of(
                 "pathVariable", "test from Client");
-        return get("/custom?brand=dell&limit=20&price=20000&sort=asc", parameters);
+        return get("/custom?brand=2022-01-06%2013%3A30%3A38&limit=20&price=20000&sort=asc", parameters);
     }
 }
 //get("/test?pathVariable=start from createStat", null);
