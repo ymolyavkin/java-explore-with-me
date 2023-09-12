@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByEventIdAndEventInitiatorId(Long eventId, Long userId);
-
+    @Query("SELECT count(r.id) FROM Request AS r " +
+            "WHERE r.event.id in :eventId " +
+            "AND r.status = :status")
     Long countAllByEventIdAndStatus(Long eventId, RequestStatus status);
 
     List<Request> findAllByEventIdAndEventInitiatorIdAndIdIn(Long eventId, Long userId, List<Long> requestIds);
