@@ -101,7 +101,7 @@ IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', c
     public ResponseEntity<Object> getPathVariableClient(String client, Long id) {
         Map<String, Object> parameters = Map.of(
                 "pathVariable", "test from Client");
-        return get("/test?pathVariable=start from getPathVariableClient", parameters);
+        return get("/test?pathVariable=tPathVariableClient&secondVariable=dfree", parameters);
     }
 }
 //get("/test?pathVariable=start from createStat", null);

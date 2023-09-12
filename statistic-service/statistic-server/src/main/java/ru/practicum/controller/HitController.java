@@ -45,8 +45,10 @@ public class HitController {
 
         return hitService.addHit(incomingHitDto);
     }
+
     @GetMapping("/test")
-    public ResponseEntity<String> getTest(@RequestParam(name = "pathVariable") String test) {
+    public ResponseEntity<String> getTest(@RequestParam(name = "pathVariable") String test,
+                                          @RequestParam(name = "secondVariable") String second) {
         log.info("Получен запрос на test");
 
         //return new ResponseEntity<>("Answer from test", HttpStatus.OK);
