@@ -15,6 +15,7 @@ import ru.practicum.validator.Marker;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
 
@@ -52,6 +53,17 @@ public class HitController {
         log.info("Получен запрос на test");
 
         //return new ResponseEntity<>("Answer from test", HttpStatus.OK);
+        return null;
+    }
+    @GetMapping("/custom")
+    public ResponseEntity<String> controllerMethod(@RequestParam Map<String, String> customQuery) {
+
+        System.out.println("customQuery = brand " + customQuery.containsKey("brand"));
+        System.out.println("customQuery = limit " + customQuery.containsKey("limit"));
+        System.out.println("customQuery = price " + customQuery.containsKey("price"));
+        System.out.println("customQuery = other " + customQuery.containsKey("other"));
+        System.out.println("customQuery = sort " + customQuery.containsKey("sort"));
+
         return null;
     }
 }
