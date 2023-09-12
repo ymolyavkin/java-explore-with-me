@@ -54,6 +54,7 @@ public class HitController {
         //return new ResponseEntity<>("Answer from test", HttpStatus.OK);
         return null;
     }
+
     @GetMapping("/viewstats")
     public List<ViewStatsResponseDto> getViewStats(
             @RequestParam(name = "start")
@@ -62,19 +63,18 @@ public class HitController {
             @DateTimeFormat(pattern = FORMAT_PATTERN) LocalDateTime end,
             @RequestParam(name = "uris", required = false) List<String> uris,
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
+
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
 
         return hitService.getViewStatistics(start, end, uris, unique);
     }
+
     @GetMapping("/custom")
     public ResponseEntity<String> controllerMethod(@RequestParam Map<String, String> customQuery) {
 
-       LocalDateTime startTime = LocalDateTime.parse(customQuery.get("start"), FORMATTER);
-       LocalDateTime endTime = LocalDateTime.parse(customQuery.get("end"), FORMATTER);
+        LocalDateTime startTime = LocalDateTime.parse(customQuery.get("start"), FORMATTER);
+        LocalDateTime endTime = LocalDateTime.parse(customQuery.get("end"), FORMATTER);
 
-
-
-       // return hitService.getViewStatistics(start, end, uris, unique);
         return null;
     }
 }

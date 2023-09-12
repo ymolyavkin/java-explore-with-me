@@ -7,7 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.IncomingHitDto;
-import ru.practicum.ewm.client.BookingClient;
 import ru.practicum.ewm.client.Client;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -46,10 +45,7 @@ public class EventServiceImpl implements EventService {
     private final CategoryRepository categoryRepository;
     private final LocationRepository locationRepository;
     private final ModelMapper mapper;
-    //private final StatsClient statsClient;
     private final Client statClient;
-    private final BookingClient bookingClient;
-
 
     @Override
     public List<EventShortDto> getEventsByOwner(Long userId, int from, int size) {
@@ -284,7 +280,7 @@ public class EventServiceImpl implements EventService {
         List<Event> events = eventRepository.findAllByPublic(text, categoryIds, paidStr, rangeStart, rangeEnd, page);
         List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
         eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
-       // eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        // eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
         statClient.createStat(httpServletRequest);
         String[] uris = {"/events"};
         List<String> listUris = List.of("/events");
@@ -303,7 +299,7 @@ public class EventServiceImpl implements EventService {
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
         //long viewsCount = statsClient.getCount();
-      //  eventFullDto.setViews(viewsCount);
+        //  eventFullDto.setViews(viewsCount);
 //        List<String> uris = List.of("/events/" + event.getId());
 //        List<ViewStatsResponseDto> views = statsClient..getStats(START_DATE, END_DATE, uris, null).getBody();
 //
