@@ -12,8 +12,9 @@ import java.util.Map;
 
 @Service
 public class BookingClient extends BaseBookingClient {
-    private static final String API_PREFIX = "/bookings";
-
+    private static final String API_PREFIX = "/stats";
+    //private static final String API_PREFIX = "/bookings";
+//http://localhost:9090/stats?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false
     @Autowired
     public BookingClient(@Value("${statistic-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
@@ -35,5 +36,11 @@ public class BookingClient extends BaseBookingClient {
 
     public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
         return get("/" + bookingId, userId);
+    }
+    public ResponseEntity<Object> getStats() {
+        return get("/?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false");
+    }
+    public ResponseEntity<Object> getTestBooking(String booking) {
+        return get("/test?pathVariable=startFromBookingClient");
     }
 }

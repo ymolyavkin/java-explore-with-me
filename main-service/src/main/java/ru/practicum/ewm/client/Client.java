@@ -40,8 +40,10 @@ public class Client extends BaseClient {
                 .created(LocalDateTime.now())
                 .app("ewm-main-service")
                 .build();
-        log.info("Отправлен get запрос на сервер с данными " + incomingHitDto);
+        log.info("Отправлен post запрос на сервер с данными " + incomingHitDto);
         post("/hit", incomingHitDto);
+        get("/test?pathVariable=start from createStat", null);
+
     }
 /*
 IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', created=null}
@@ -87,6 +89,14 @@ IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', c
                 "unique", unique
         );
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+        log.info("Отправлен get запрос на сервер с данными " + parameters);
+       // return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+        return get("/stats?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false", parameters);
+    }
+    public ResponseEntity<Object> getTestClient(String client, Long id) {
+        Map<String, Object> parameters = Map.of(
+                "pathVariable", "test from Client");
+        return get("/test", parameters);
     }
 }
+//return get("/?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false");

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.IncomingHitDto;
+import ru.practicum.ewm.client.BookingClient;
 import ru.practicum.ewm.client.Client;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -47,6 +48,7 @@ public class EventServiceImpl implements EventService {
     private final ModelMapper mapper;
     //private final StatsClient statsClient;
     private final Client statClient;
+    private final BookingClient bookingClient;
 
 
     @Override
@@ -286,10 +288,12 @@ public class EventServiceImpl implements EventService {
         statClient.createStat(httpServletRequest);
         String[] uris = {"/events"};
         List<String> listUris = List.of("/events");
-      //  var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
+        var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
+        var n = statClient.getTestClient("client", 1L);
        // var t = statClient.getStats(rangeStart, rangeEnd, listUris, false);
         //   List<Event> events = eventRepository.findAllPublicByConditionTest(text, categoryIds, paidStr, PageRequest.of(from, size));
 //var v = statClient.getView(2L);
+      //  var bookingStat = bookingClient.getStats();
         System.out.println();
         return eventsShort;
     }
