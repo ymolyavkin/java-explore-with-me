@@ -3,7 +3,6 @@ package ru.practicum.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
-import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
+import static ru.practicum.util.Constants.*;
 
 @RestController
 @RequestMapping(value = "/")
@@ -55,15 +54,27 @@ public class HitController {
         //return new ResponseEntity<>("Answer from test", HttpStatus.OK);
         return null;
     }
+    @GetMapping("/viewstats")
+    public List<ViewStatsResponseDto> getViewStats(
+            @RequestParam(name = "start")
+            @DateTimeFormat(pattern = FORMAT_PATTERN) LocalDateTime start,
+            @RequestParam(name = "end")
+            @DateTimeFormat(pattern = FORMAT_PATTERN) LocalDateTime end,
+            @RequestParam(name = "uris", required = false) List<String> uris,
+            @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
+        log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
+
+        return hitService.getViewStatistics(start, end, uris, unique);
+    }
     @GetMapping("/custom")
     public ResponseEntity<String> controllerMethod(@RequestParam Map<String, String> customQuery) {
 
-        System.out.println("customQuery = start " + customQuery.containsKey("start"));
-        System.out.println("customQuery = end " + customQuery.containsKey("end"));
-        System.out.println("customQuery = uris " + customQuery.containsKey("uris"));
-        System.out.println("customQuery = unique " + customQuery.containsKey("unique"));
+       LocalDateTime startTime = LocalDateTime.parse(customQuery.get("start"), FORMATTER);
+       LocalDateTime endTime = LocalDateTime.parse(customQuery.get("end"), FORMATTER);
 
 
+
+       // return hitService.getViewStatistics(start, end, uris, unique);
         return null;
     }
 }

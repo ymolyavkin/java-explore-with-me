@@ -90,8 +90,9 @@ IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', c
         );
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
         log.info("Отправлен get запрос на сервер с данными " + parameters);
-       return get("/custom?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
-        //return get("/stats?start=2020-05-05%2000:00:00&end=2035-05-05%2000:00:00&unique=false", parameters);
+      return get("/viewstats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+     //  return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+
     }
     public ResponseEntity<Object> getTestClient(String client, Long id) {
         Map<String, Object> parameters = Map.of(
