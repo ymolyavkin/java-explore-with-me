@@ -43,18 +43,6 @@ public class CompilationServiceImpl implements CompilationService {
 
         return compilations.stream().map(compilation -> mapper.map(compilation, CompilationDto.class)).collect(Collectors.toList());
     }
-    /*
-     PageRequest page = PageRequest.of(from / size, size);
-        if (pinned != null) {
-            return compilationRepository.findAllByPinned(pinned, page).stream()
-                    .map(c -> CompilationMapper.toCompilationDto(c, getDto(c.getEvents())))
-                    .collect(Collectors.toList());
-        }
-        return compilationRepository.findAll(page).stream()
-                .map(c -> CompilationMapper.toCompilationDto(c, getDto(c.getEvents())))
-                .collect(Collectors.toList());
-    }
-     */
 
     @Override
     public CompilationDto getCompilationById(long id) {
@@ -73,7 +61,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto updateCompilation(Long id, UpdateCompilationRequest updateCompRequest) {
-        log.info("Обновление информации о подборке с id {}", id);
+        log.info("Admin: Обновление информации о подборке с id {}", id);
         Compilation compilation = compilationRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("Подборка %s не найдена", id)));
 
@@ -89,7 +77,7 @@ public class CompilationServiceImpl implements CompilationService {
             List<Event> events = eventRepository.findAllByIdIn(eventIds);
             compilation.setEvents(new HashSet<>(events));
         }
-        return mapper.map(compilation, CompilationDto.class);
+        return mapper.map(compilationRepository.save(compilation), CompilationDto.class);
     }
 
     @Override
