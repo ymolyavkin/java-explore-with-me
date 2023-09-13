@@ -28,6 +28,7 @@ import ru.practicum.ewm.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -167,20 +168,25 @@ public class EventServiceImpl implements EventService {
             throw new NotAvailableException("Изменять можно только запросы находящиеся в ожидании");
         }
         EventRequestStatusUpdateResult result = new EventRequestStatusUpdateResult();
+        List<ParticipationRequestDto> confirmedRequestsDto = new ArrayList<>();
+        List<ParticipationRequestDto> rejectedRequestsDto = new ArrayList<>();
+        result.setConfirmedRequests(confirmedRequestsDto);
+        result.setRejectedRequests(rejectedRequestsDto);
 
         if (requestToStatusUpdate.getStatus().equals(REJECTED)) {
             requests.forEach(request -> request.setStatus(REJECTED));
             result.setRejectedRequests(requestRepository.saveAll(requests).stream()
-                    .map(request -> mapper.map(request, ParticipationRequestDto.class)).collect(Collectors.toList()));
+                    .map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList()));
         }
+        //request -> Mapper.mapToParticipationRequestDto(mapper, request)
         if (requestToStatusUpdate.getStatus().equals(CONFIRMED)) {
             for (Request r : requests) {
                 if (requestRepository.findConfirmedRequests(eventId).equals(event.getParticipantLimit())) {
                     r.setStatus(REJECTED);
-                    result.getRejectedRequests().add(mapper.map(requestRepository.save(r), ParticipationRequestDto.class));
+                    result.getRejectedRequests().add(Mapper.mapToParticipationRequestDto(mapper, requestRepository.save(r)));
                 } else {
                     r.setStatus(CONFIRMED);
-                    result.getConfirmedRequests().add(mapper.map(requestRepository.save(r), ParticipationRequestDto.class));
+                    result.getConfirmedRequests().add(Mapper.mapToParticipationRequestDto(mapper, requestRepository.save(r)));
                 }
             }
         }
