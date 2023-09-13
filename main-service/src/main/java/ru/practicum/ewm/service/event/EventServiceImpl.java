@@ -121,7 +121,7 @@ public class EventServiceImpl implements EventService {
             }
         }
 
-        return mapper.map(event, EventFullDto.class);
+        return mapper.map(eventRepository.save(event), EventFullDto.class);
     }
 
     @Override
@@ -273,7 +273,7 @@ public class EventServiceImpl implements EventService {
         patchUpdateEvent(updateEventRequest, event);
         locationRepository.save(event.getLocation());
 
-        return mapper.map(event, EventFullDto.class);
+        return mapper.map(eventRepository.save(event), EventFullDto.class);
     }
 
     @Override
