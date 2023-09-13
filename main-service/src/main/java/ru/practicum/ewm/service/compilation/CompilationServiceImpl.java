@@ -28,14 +28,33 @@ public class CompilationServiceImpl implements CompilationService {
     private final ModelMapper mapper;
 
     @Override
-    public List<CompilationDto> getCompilations(int from, int size) {
-        log.info("Получение информации о подборках");
-
-        Page<Compilation> compilationsPage = compilationRepository.findAll(PageRequest.of(from, size));
+    public List<CompilationDto> getCompilations(Boolean pinned, int from, int size) {
+        log.info("Public: Получение информации о подборках");
+        PageRequest page = PageRequest.of(from / size, size);
+        if (pinned != null) {
+            String pinnedStr = pinned ? "true" : "false";
+            return compilationRepository.findAllByPinned(pinnedStr, page)
+                    .stream()
+                    .map(compilation -> mapper.map(compilation, CompilationDto.class))
+                    .collect(Collectors.toList());
+        }
+        Page<Compilation> compilationsPage = compilationRepository.findAll(page);
         List<Compilation> compilations = compilationsPage.getContent();
 
         return compilations.stream().map(compilation -> mapper.map(compilation, CompilationDto.class)).collect(Collectors.toList());
     }
+    /*
+     PageRequest page = PageRequest.of(from / size, size);
+        if (pinned != null) {
+            return compilationRepository.findAllByPinned(pinned, page).stream()
+                    .map(c -> CompilationMapper.toCompilationDto(c, getDto(c.getEvents())))
+                    .collect(Collectors.toList());
+        }
+        return compilationRepository.findAll(page).stream()
+                .map(c -> CompilationMapper.toCompilationDto(c, getDto(c.getEvents())))
+                .collect(Collectors.toList());
+    }
+     */
 
     @Override
     public CompilationDto getCompilationById(long id) {

@@ -178,7 +178,6 @@ public class EventServiceImpl implements EventService {
             result.setRejectedRequests(requestRepository.saveAll(requests).stream()
                     .map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList()));
         }
-        //request -> Mapper.mapToParticipationRequestDto(mapper, request)
         if (requestToStatusUpdate.getStatus().equals(CONFIRMED)) {
             for (Request r : requests) {
                 if (requestRepository.findConfirmedRequests(eventId).equals(event.getParticipantLimit())) {
@@ -254,6 +253,9 @@ public class EventServiceImpl implements EventService {
         log.info("Admin: Обновление события с id {}", eventId);
 
         Event event = getEventById(eventId);
+        if (event.getPublishedOn() != null && event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
+            throw new NotAvailableException("Время начала изменяемого события должно быть не раньше, чем за 1 час от даты публикации");
+        }
         if (updateEventRequest.getStateAction() != null) {
             if (updateEventRequest.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
                 if (!event.getEventsState().equals(EventsState.PENDING)) {
@@ -267,9 +269,6 @@ public class EventServiceImpl implements EventService {
                 }
                 event.setEventsState(EventsState.CANCELED);
             }
-        }
-        if (event.getPublishedOn() != null && event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
-            throw new NotAvailableException("Время начала изменяемого события должно быть не раньше, чем за 1 час от даты публикации");
         }
         patchUpdateEvent(updateEventRequest, event);
         locationRepository.save(event.getLocation());
