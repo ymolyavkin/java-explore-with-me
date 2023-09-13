@@ -17,6 +17,7 @@ import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,7 +55,10 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
         log.info("Добавление новой подборки");
-        Compilation compilation = compilationRepository.save(mapper.map(newCompilationDto, Compilation.class));
+        Set<Event> events = eventRepository.findByIdIn(newCompilationDto.getEvents());
+        Compilation compilation = mapper.map(newCompilationDto, Compilation.class);
+        compilation.setEvents(events);
+        compilationRepository.save(compilation);
 
         return mapper.map(compilation, CompilationDto.class);
     }

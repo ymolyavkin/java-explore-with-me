@@ -12,6 +12,7 @@ import ru.practicum.ewm.enums.EventsState;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByIdIn(List<Long> eventIds);
@@ -134,6 +135,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                             @Param("categoryIds") List<Long> categoryIds,
                             @Param("paid") Boolean paid, @Param("rangeStart") LocalDateTime rangeStart,
                             @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable, Pageable pageable);
+
+    Set<Event> findByIdIn(List<Long> events);
 
     @Query("SELECT e FROM Event e " +
             "WHERE (COALESCE(:users, NULL) IS NULL OR e.initiator.id IN :users) " +
