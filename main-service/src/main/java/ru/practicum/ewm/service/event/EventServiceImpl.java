@@ -248,37 +248,41 @@ public class EventServiceImpl implements EventService {
 
         return events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
     }
-/*
- public Collection<EventDto> searchEvents(List<Long> users, List<State> states, List<Long> categories,
-                                             LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
+
+    /*
+     public Collection<EventDto> searchEvents(List<Long> users, List<State> states, List<Long> categories,
+                                                 LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
 
 
-        List<Event> answer = eventRepository.findAllAdminByData(users, states, categories, rangeStart, rangeEnd, page);
-        List<Long> eventsId = answer.stream().map(Event::getId).collect(Collectors.toList());
-        Map<Long, Long> requests = new HashMap<>();
-        Map<Long, Long> views = new HashMap<>();
-        Map<Long, Long> likes = new HashMap<>();
-        Map<Long, Long> dislikes = new HashMap<>();
-        requestRepository.findConfirmedRequests(eventsId)
-                .forEach(stat -> requests.put(stat.getEventId(), stat.getConfirmedRequests()));
-        statClient.getViews(eventsId)
-                .forEach(view -> views.put(Long.parseLong(view.getEventUri().split("/", 0)[2]), view.getView()));
-        rateRepository.findRate(eventsId, TRUE).forEach(like -> likes.put(like.getEvent(), like.getRate()));
-        rateRepository.findRate(eventsId, FALSE).forEach(dislike -> dislikes.put(dislike.getEvent(), dislike.getRate()));
-        return answer.stream().map(event -> EventMapper.toEventDto(event,
-                requests.getOrDefault(event.getId(), 0L),
-                views.getOrDefault(event.getId(), 0L),
-                likes.getOrDefault(event.getId(), 0L),
-                dislikes.getOrDefault(event.getId(), 0L)))
-                .collect(Collectors.toList());
-    }
+            List<Event> answer = eventRepository.findAllAdminByData(users, states, categories, rangeStart, rangeEnd, page);
+            List<Long> eventsId = answer.stream().map(Event::getId).collect(Collectors.toList());
+            Map<Long, Long> requests = new HashMap<>();
+            Map<Long, Long> views = new HashMap<>();
+            Map<Long, Long> likes = new HashMap<>();
+            Map<Long, Long> dislikes = new HashMap<>();
+            requestRepository.findConfirmedRequests(eventsId)
+                    .forEach(stat -> requests.put(stat.getEventId(), stat.getConfirmedRequests()));
+            statClient.getViews(eventsId)
+                    .forEach(view -> views.put(Long.parseLong(view.getEventUri().split("/", 0)[2]), view.getView()));
+            rateRepository.findRate(eventsId, TRUE).forEach(like -> likes.put(like.getEvent(), like.getRate()));
+            rateRepository.findRate(eventsId, FALSE).forEach(dislike -> dislikes.put(dislike.getEvent(), dislike.getRate()));
+            return answer.stream().map(event -> EventMapper.toEventDto(event,
+                    requests.getOrDefault(event.getId(), 0L),
+                    views.getOrDefault(event.getId(), 0L),
+                    likes.getOrDefault(event.getId(), 0L),
+                    dislikes.getOrDefault(event.getId(), 0L)))
+                    .collect(Collectors.toList());
+        }
 
- */
+     */
     @Override
     public EventFullDto editEventAndStatus(Long eventId, UpdateEventRequest updateEventRequest) {
         log.info("Admin: Обновление события с id {}", eventId);
 
         Event event = getEventById(eventId);
+        if (updateEventRequest.getEventDate() != null && updateEventRequest.getEventDate().isBefore(LocalDateTime.now().plusHours(1))) {
+            throw new ValidationDateException("Новая дата события раньше текущей");
+        }
         if (event.getPublishedOn() != null && event.getEventDate().isBefore(event.getPublishedOn().plusHours(1))) {
             throw new NotAvailableException("Время начала изменяемого события должно быть не раньше, чем за 1 час от даты публикации");
         }
