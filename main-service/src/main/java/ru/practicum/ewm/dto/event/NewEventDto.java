@@ -30,7 +30,7 @@ public class NewEventDto {
     private LocalDateTime eventDate;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private Location location;
-    private Boolean paid;
+    private Boolean paid = false;
     private Integer participantLimit;
     private Boolean requestModeration;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
