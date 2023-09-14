@@ -69,7 +69,9 @@ public class EventServiceImpl implements EventService {
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
         log.info("Private: Добавление нового события");
-        //    User initiator = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
+        if (newEventDto.getEventDate() != null && newEventDto.getEventDate().isBefore(LocalDateTime.now().plusHours(2))) {
+            throw new ValidationDateException(MESSAGE_DATE_NOT_VALID);
+        }
         User initiator = getUserById(userId);
         Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() -> new NotFoundException(String.format("Категория  %s не найдена", newEventDto.getCategory())));
 
@@ -109,7 +111,6 @@ public class EventServiceImpl implements EventService {
         if (event.getEventsState().equals(PUBLISHED)) {
             throw new NotAvailableException("Изменить можно только отмененные события или события в состоянии ожидания модерации");
         }
-        //userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
         if (eventToUpdate.getCategory() != null) {
             event.setCategory(categoryRepository.findById(eventToUpdate.getCategory()).orElseThrow(() ->
                     new NotFoundException("Категории с id = " + eventToUpdate.getCategory() + " не существует")));
