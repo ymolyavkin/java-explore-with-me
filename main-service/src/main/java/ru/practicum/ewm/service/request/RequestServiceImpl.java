@@ -11,6 +11,7 @@ import ru.practicum.ewm.entity.Request;
 import ru.practicum.ewm.entity.User;
 import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.enums.RequestStatus;
+import ru.practicum.ewm.exception.AlreadyExistsException;
 import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.EventRepository;
@@ -45,7 +46,9 @@ public class RequestServiceImpl implements RequestService {
         if (!event.getEventsState().equals(EventsState.PUBLISHED)) {
             throw new NotAvailableException("Нельзя участвовать в неопубликованном событии");
         }
-
+        if (requestRepository.existsByRequesterAndEvent(requester, event)) {
+            throw new AlreadyExistsException("Невозможно отправить повторный запрос");
+        }
         Long confirmedRequests = requestRepository.countAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
 
         if (event.getParticipantLimit() <= confirmedRequests && event.getParticipantLimit() != 0) {
