@@ -31,8 +31,8 @@ public class NewEventDto {
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private Location location;
     private Boolean paid = false;
-    private Integer participantLimit;
-    private Boolean requestModeration;
+    private Integer participantLimit = 0;
+    private Boolean requestModeration = true;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     @Size(min = 3, max = 120, message = MESSAGE_VALIDATION_SIZE)
     private String title;

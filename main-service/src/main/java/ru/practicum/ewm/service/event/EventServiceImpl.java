@@ -97,7 +97,6 @@ public class EventServiceImpl implements EventService {
         event.setInitiator(initiator);
         event.setEventsState(EventsState.PENDING);
 
-
         Event savedEvent = eventRepository.save(event);
 
         return mapper.map(savedEvent, EventFullDto.class);
