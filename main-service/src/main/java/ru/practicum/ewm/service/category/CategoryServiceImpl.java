@@ -65,6 +65,6 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto getCategoryById(long id) {
         log.info("Получение информации о категории с id = {}", id);
 
-        return mapper.map(categoryRepository.findById(id), CategoryDto.class);
+        return mapper.map(categoryRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("Категория %s не найдена", id))), CategoryDto.class);
     }
 }
