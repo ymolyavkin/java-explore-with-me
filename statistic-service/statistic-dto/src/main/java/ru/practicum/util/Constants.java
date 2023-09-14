@@ -13,6 +13,7 @@ public class Constants {
     public static final String MESSAGE_VALIDATION_SIZE = "Размер поля не удовлетворяет ограничениям";
     public static final String MESSAGE_VALIDATION_POSITIVE = "Ожидается неотрицательное значение";
     public static final String MESSAGE_VALIDATION_START_AFTER_END = "Начало временного интервала позже его окончания";
+    public static final String MESSAGE_DATE_NOT_VALID = "Недопустимый временной промежуток";
     public static final String MESSAGE_REASON_ERROR_NOT_FOUND = "Запрошенный объект не найден";
     public static final String MESSAGE_REASON_DB_CONSTRAINT_VIOLATION = "Нарушение ограничения БД";
     public static final String MESSAGE_INTERNAL_SERVER_ERROR = "Внутренняя ошибка сервера";
