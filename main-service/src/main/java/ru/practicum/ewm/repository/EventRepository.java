@@ -138,6 +138,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Set<Event> findByIdIn(List<Long> events);
 
+    List<Event> findAllByCategoryId(Long catId);
+
     @Query("SELECT e FROM Event e " +
             "WHERE (COALESCE(:users, NULL) IS NULL OR e.initiator.id IN :users) " +
             "AND (COALESCE(:states, NULL) IS NULL OR e.eventsState IN :states) " +
@@ -145,8 +147,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (COALESCE(:rangeStart, NULL) IS NULL OR e.eventDate >= :rangeStart) " +
             "AND (COALESCE(:rangeEnd, NULL) IS NULL OR e.eventDate <= :rangeEnd) ")
     List<Event> findAllAdminByCondition(@Param("users") List<Long> users,
-                                   @Param("states") List<EventsState> states,
-                                   @Param("categories") List<Long> categories,
-                                   @Param("rangeStart") LocalDateTime rangeStart,
-                                   @Param("rangeEnd") LocalDateTime rangeEnd, PageRequest page);
+                                        @Param("states") List<EventsState> states,
+                                        @Param("categories") List<Long> categories,
+                                        @Param("rangeStart") LocalDateTime rangeStart,
+                                        @Param("rangeEnd") LocalDateTime rangeEnd, PageRequest page);
 }

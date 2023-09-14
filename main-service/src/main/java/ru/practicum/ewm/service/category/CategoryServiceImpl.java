@@ -6,11 +6,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.category.NewCategoryDto;
 import ru.practicum.ewm.entity.Category;
+import ru.practicum.ewm.exception.AlreadyExistsException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.CategoryRepository;
+import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
+    private final EventRepository eventRepository;
     private final ModelMapper mapper;
 
     @Override
@@ -44,6 +48,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Boolean deleteCategoryById(long id) {
         log.info("Удаление категории с id = {}", id);
+        if (!CollectionUtils.isEmpty(eventRepository.findAllByCategoryId(id))) {
+            throw new AlreadyExistsException
+                    ("С категорией существуют связанные события");
+        }
         boolean isFound = categoryRepository.existsById(id);
         if (isFound) {
             categoryRepository.deleteById(id);
