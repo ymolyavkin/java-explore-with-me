@@ -1,5 +1,6 @@
 package ru.practicum.ewm.dto.event;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
+import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
 
 @Data
@@ -23,6 +25,7 @@ public class EventShortDto {
     private CategoryDto category;
     private Long confirmedRequests;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private UserShortDto initiator;
