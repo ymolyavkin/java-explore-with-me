@@ -27,7 +27,7 @@ public class UpdateEventRequest {
     private Location location;
     private Boolean paid;
     @PositiveOrZero(message = MESSAGE_VALIDATION_POSITIVE)
-    private Integer participantLimit;
+    private Long participantLimit;
     private Boolean requestModeration;
     private StateAction stateAction;
     @Size(min = 3, max = 120, message = MESSAGE_VALIDATION_SIZE)
