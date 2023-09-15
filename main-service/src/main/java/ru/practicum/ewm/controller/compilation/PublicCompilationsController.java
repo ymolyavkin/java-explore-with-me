@@ -24,16 +24,6 @@ import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 @RequiredArgsConstructor
 public class PublicCompilationsController {
     private final CompilationService compilationService;
-   /* @GetMapping
-    public ResponseEntity<Object> test(HttpServletRequest request) {
-        log.info("Получен тестовый запрос");
-        System.out.println(request.getLocalAddr());
-        System.out.println(request.getRemoteAddr());
-        log.info("client ip: {}", request.getRemoteAddr());
-        log.info("endpoint path: {}", request.getRequestURI());
-
-        return null;
-    }*/
 
     @GetMapping
     public ResponseEntity<List<CompilationDto>> getAllCompilations(@RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
@@ -50,5 +40,4 @@ public class PublicCompilationsController {
 
         return new ResponseEntity<>(compilationService.getCompilationById(id), HttpStatus.OK);
     }
-
 }
