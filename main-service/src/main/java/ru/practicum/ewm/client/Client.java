@@ -44,17 +44,17 @@ public class Client extends BaseClient {
         post("/hit", incomingHitDto);
     }
 
+
     /*
     IncomingHitDto{app='ewm-main-service', uri='/events/294', ip='129.254.84.176', created=null}
      */
     // public Long getView(Long eventId) {
-    public String getView(Long eventId) {
+    public Long getView(Long eventId) {
         Map<String, Object> parameters = Map.of(
                 "eventId", eventId
         );
         String responseBody = (Objects.requireNonNullElse(get("/view/{eventId}", parameters).getBody(), 0L)).toString();
-        // return Long.parseLong(responseBody);
-        return responseBody;
+        return Long.parseLong(responseBody);
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {

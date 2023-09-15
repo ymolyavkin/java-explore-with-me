@@ -1,6 +1,5 @@
 package ru.practicum.controller;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -17,7 +16,6 @@ import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.service.HitService;
 import ru.practicum.validator.Marker;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +49,10 @@ public class HitController {
 
         return hitService.addHit(incomingHitDto);
     }
-
+    @GetMapping("/view/{eventId}")
+    public Long getView(@PathVariable long eventId) {
+        return hitService.getView(eventId);
+    }
     @GetMapping("/viewstats")
     public List<ViewStatsResponseDto> getViewStats(
             @JsonSerialize(using = LocalDateSerializer.class)

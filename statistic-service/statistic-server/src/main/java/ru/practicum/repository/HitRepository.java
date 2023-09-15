@@ -43,4 +43,8 @@ public interface HitRepository extends JpaRepository<HitEntity, Long> {
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC")
     List<ViewStatsResponseDto> getViewStatisticsWithAllIp(LocalDateTime start, LocalDateTime end, List<String> uris);
+    @Query("SELECT COUNT(DISTINCT e.ip) " +
+            "FROM HitEntity AS e " +
+            "WHERE e.uri = ?1")
+    Long countDistinctByUri(String s);
 }
