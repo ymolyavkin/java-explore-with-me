@@ -94,6 +94,17 @@ public class Client extends BaseClient {
         return get("/viewstats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
     }
 
+    public ResponseEntity<Object> getStatisticsByHits(LocalDateTime start, LocalDateTime end, String[] uris, Boolean unique) {
+        Map<String, Object> parameters = Map.of(
+                "start", start,
+                "end", end,
+                "uris", String.join(",", uris),
+                "unique", unique
+        );
+        log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
+        log.info("Отправлен get запрос на сервер с данными " + parameters);
+        return get("/custom?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+    }
     public ResponseEntity<Object> getPathVariableClient(String client, Long id) {
         Map<String, Object> parameters = Map.of(
                 "pathVariable", "test from Client");

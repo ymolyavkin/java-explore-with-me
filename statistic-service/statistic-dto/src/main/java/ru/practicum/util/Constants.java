@@ -8,7 +8,8 @@ import java.time.format.DateTimeFormatter;
 public class Constants {
     public static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-    public static final String FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String FORMAT_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS";
+    public static final DateTimeFormatter FORMATTER_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSSSSS");
     public static final String MESSAGE_VALIDATION_NOT_BLANK = "Данное поле не должно быть пустым";
     public static final String MESSAGE_VALIDATION_SIZE = "Размер поля не удовлетворяет ограничениям";
     public static final String MESSAGE_VALIDATION_POSITIVE = "Ожидается неотрицательное значение";

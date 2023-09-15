@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.IncomingHitDto;
+import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.ewm.client.Client;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -339,7 +341,9 @@ public class EventServiceImpl implements EventService {
         statClient.createStat(httpServletRequest);
         String[] uris = {"/events"};
         List<String> listUris = List.of("/events");
-        var t = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
+        ResponseEntity<Object> byHits = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
+        List<ViewStatsResponseDto> ans = (List<ViewStatsResponseDto>) byHits.getBody();
+       // var onHits = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
 
         return eventsShort;
     }

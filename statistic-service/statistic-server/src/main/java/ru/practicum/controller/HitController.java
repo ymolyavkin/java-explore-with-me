@@ -1,5 +1,10 @@
 package ru.practicum.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,6 +17,7 @@ import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.service.HitService;
 import ru.practicum.validator.Marker;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -48,24 +54,31 @@ public class HitController {
 
     @GetMapping("/viewstats")
     public List<ViewStatsResponseDto> getViewStats(
+            @JsonSerialize(using = LocalDateSerializer.class)
+            @JsonDeserialize(using = LocalDateTimeDeserializer.class)
             @RequestParam(name = "start")
             @DateTimeFormat(pattern = FORMAT_PATTERN) LocalDateTime start,
+            @JsonSerialize(using = LocalDateSerializer.class)
+            @JsonDeserialize(using = LocalDateTimeDeserializer.class)
             @RequestParam(name = "end")
             @DateTimeFormat(pattern = FORMAT_PATTERN) LocalDateTime end,
             @RequestParam(name = "uris", required = false) List<String> uris,
             @RequestParam(name = "unique", defaultValue = "false") Boolean unique) {
 
         log.info("Получен запрос на получение статистики по посещениям с {} по {}", start, end);
-
+        List<ViewStatsResponseDto> listDto = hitService.getViewStatistics(start, end, uris, unique);
         return hitService.getViewStatistics(start, end, uris, unique);
     }
 
     @GetMapping("/custom")
     public ResponseEntity<String> controllerMethod(@RequestParam Map<String, String> customQuery) {
-
-        LocalDateTime startTime = LocalDateTime.parse(customQuery.get("start"), FORMATTER);
-        LocalDateTime endTime = LocalDateTime.parse(customQuery.get("end"), FORMATTER);
-
+        try {
+            LocalDateTime startTime = LocalDateTime.parse(customQuery.get("start"), FORMATTER_DATE);
+            LocalDateTime endTime = LocalDateTime.parse(customQuery.get("end"), FORMATTER_DATE).withNano(0);
+        } catch (RuntimeException e){
+            System.out.println(e.getMessage());
+            log.info("ошибка в формате даты");
+        }
         return null;
     }
 }
