@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.user.NewUserRequest;
 import ru.practicum.ewm.dto.user.UserDto;
@@ -21,20 +22,11 @@ import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 @Controller
 @RequestMapping(value = "/admin/users")
 @Slf4j
+@Validated
 @RequiredArgsConstructor
 public class AdminUserController {
     private final UserService userService;
 
-    /*@GetMapping
-    public ResponseEntity<Object> test(HttpServletRequest request) {
-        log.info("Получен тестовый запрос на эндпоинт /users GET");
-
-        log.info("client ip: {}", request.getRemoteAddr());
-        log.info("endpoint path: {}", request.getRequestURI());
-
-        return null;
-    }
-*/
     @GetMapping
     public ResponseEntity<List<UserDto>> getUserInfo(@RequestParam(required = false) List<Long> ids,
                                                      @RequestParam(defaultValue = PAGE_DEFAULT_FROM) @PositiveOrZero int from,
@@ -45,7 +37,7 @@ public class AdminUserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> addNewUser(@Valid @RequestBody NewUserRequest newUserRequest) {
+    public ResponseEntity<UserDto> addNewUser(@RequestBody @Valid NewUserRequest newUserRequest) {
         log.info("Получен запрос на добавление нового пользователя");
 
         return new ResponseEntity<>(userService.addUser(newUserRequest), HttpStatus.CREATED);

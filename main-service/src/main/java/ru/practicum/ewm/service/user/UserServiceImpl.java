@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.user.NewUserRequest;
 import ru.practicum.ewm.dto.user.UserDto;
 import ru.practicum.ewm.entity.User;
+import ru.practicum.ewm.exception.ValidationDateException;
 import ru.practicum.ewm.repository.UserRepository;
 
 import java.util.List;
@@ -24,6 +25,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto addUser(NewUserRequest newUserRequest) {
         log.info("Добавление нового пользователя");
+        String[] parts = newUserRequest.getEmail().split("@");
+        String localPart = parts[0];
+        String domainPart = parts[1];
+        if (localPart.length() > 64 || domainPart.length() > 63) {
+            throw new ValidationDateException("ValidationDateException from controller");
+        }
         User user = userRepository.save(mapper.map(newUserRequest, User.class));
 
         return mapper.map(user, UserDto.class);
