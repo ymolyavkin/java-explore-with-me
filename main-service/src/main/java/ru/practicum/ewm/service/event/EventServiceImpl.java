@@ -129,26 +129,16 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<ParticipationRequestDto> getRequestToParticipationByUser(Long userId, Long eventId) {
         log.info("Private: Получение запросов на участие в событии с id {} пользователя с id {}", eventId, userId);
-        //  userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
         getUserById(userId);
-//        eventRepository.findById(eventId)
-//                .orElseThrow(() -> new NotFoundException(String.format("Событие %s не найдено", eventId)));
         getEventById(eventId);
-       /* if (this.mapper.getTypeMap(Request.class, ParticipationRequestDto.class) == null) {
-            this.mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
-        }
-        TypeMap<Request, ParticipationRequestDto> eventMapper = this.mapper.createTypeMap(Request.class, ParticipationRequestDto.class);
-        eventMapper.addMapping(Request::getId, ParticipationRequestDto::setEvent);*/
 
         return requestRepository.findAllByEventIdAndEventInitiatorId(eventId, userId).stream()
-                //    .map(request -> mapper.map(request, ParticipationRequestDto.class))
                 .map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList());
     }
 
     @Override
     public EventRequestStatusUpdateResult changeStatusRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest requestToStatusUpdate) {
         log.info("Private: Изменение статуса заявок на участие в событии с id {} пользователя с id {}", userId, eventId);
-        //User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
         User user = getUserById(userId);
         Event event = getEventById(eventId);
 
@@ -244,10 +234,8 @@ public class EventServiceImpl implements EventService {
         rangeStart = getRangeStart(rangeStart);
         rangeEnd = getRangeEnd(rangeEnd);
         PageRequest page = PageRequest.of(from / size, size);
-        //  Page<Event> eventsPage = eventRepository.findAllForAdmin(users, eventsStates, categories, rangeStart,
-        // List<Event> events = eventRepository.findAllForAdmin(users, eventsStates, categories, rangeStart,
+
         List<Event> events = eventRepository.findAllAdminByCondition(users, eventsStates, categories, rangeStart, rangeEnd, page);
-        //  List<Event> events = eventsPage.getContent();
 
         return events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
     }
@@ -314,12 +302,7 @@ public class EventServiceImpl implements EventService {
         log.info("Public: Получение событий с возможностью фильтрации");
         rangeStart = getRangeStart(rangeStart);
         rangeEnd = getRangeEnd(rangeEnd);
-        /*if (rangeStart == null) {
-            rangeStart = LocalDateTime.now();
-        }
-        if (rangeEnd == null) {
-            rangeEnd = LocalDateTime.now().plusYears(150);
-        }*/
+
         String paidStr = null;
         if (paid != null) {
             paidStr = paid ? "true" : "false";
@@ -332,19 +315,10 @@ public class EventServiceImpl implements EventService {
         eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
         eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
         statClient.createStat(httpServletRequest);
-//        String[] uris = {"/events"};
-//        List<String> listUris = List.of("/events");
-//        ResponseEntity<Object> byHits = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
-//        List<ViewStatsResponseDto> ans = (List<ViewStatsResponseDto>) byHits.getBody();
-       // var onHits = statClient.getStatisticsOnHits(rangeStart, rangeEnd, uris, false);
 
         return eventsShort;
     }
-/*
- answer.forEach(e ->
-                e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
-        answer.forEach(e -> e.setViews(statClient.getView(e.getId())));
- */
+
     @Override
     public EventFullDto getEventByIdPublic(Long eventId, HttpServletRequest httpServletRequest) {
         log.info("Public: Получение событий с возможностью фильтрации");
@@ -353,31 +327,8 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(String.format("Событие с id = %s не было опубликовано", eventId));
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-        // sendStats(httpServletRequest.getRequestURI(), httpServletRequest.getRemoteAddr());
-        //long viewsCount = statsClient.getCount();
-        //  eventFullDto.setViews(viewsCount);
-//        List<String> uris = List.of("/events/" + event.getId());
-//        List<ViewStatsResponseDto> views = statsClient..getStats(START_DATE, END_DATE, uris, null).getBody();
-//
-//        if (views != null) {
-//            eventFullDto.setViews(views.size());
-//        }
-//        statsClient.saveStats(APP, request.getRequestURI(), request.getRemoteAddr(), LocalDateTime.now());
 
-//        log.info("Get event with  id = {}}", id);
         return eventFullDto;
-//        public EventFullDto getEventByIdPublic(Long eventId, String uri, String ip) {
-//            Event event = eventRepository.findById(eventId).orElseThrow(() ->
-//                    new NotFoundException(String.format("Event %s not found", eventId)));
-//
-//            if (!event.getState().equals(EventStatus.PUBLISHED)) {
-//                throw new NotFoundException(String.format("Event %s not published", eventId));
-//            }
-//
-//            sendStats(uri, ip);
-//
-//            return mapToEventFullDto(List.of(event)).get(0);
-//        }
     }
 
     private void sendStats(String uri, String ip) {
@@ -450,64 +401,4 @@ public class EventServiceImpl implements EventService {
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
     }
-
-/*
-private void updateEventCommonFields(Event event, EventUpdatedDto eventDto) {
-        if (eventDto.getAnnotation() != null) {
-            event.setAnnotation(eventDto.getAnnotation());
-        }
-        if (eventDto.getDescription() != null) {
-            event.setDescription(eventDto.getDescription());
-        }
-        if (eventDto.getCategory() != null) {
-            Category category = getCategoryForEvent(eventDto.getCategory());
-            event.setCategory(category);
-        }
-        if (eventDto.getPaid() != null) {
-            event.setPaid(eventDto.getPaid());
-        }
-        if (eventDto.getParticipantLimit() != null) {
-            event.setParticipantLimit(eventDto.getParticipantLimit());
-        }
-        if (eventDto.getRequestModeration() != null) {
-            event.setRequestModeration(eventDto.getRequestModeration());
-        }
-        if (eventDto.getTitle() != null) {
-            event.setTitle(eventDto.getTitle());
-        }
-        if (eventDto.getLocation() != null) {
-            event.setLat(eventDto.getLocation().getLat());
-            event.setLon(eventDto.getLocation().getLon());
-        }
-        if (eventDto.getEventDate() != null) {
-            validateEventDate(eventDto.getEventDate());
-            event.setEventDate(eventDto.getEventDate());
-        }
-    }
- */
-   /* private void setStatus(List<Request> requests, State state, long freePlaces) {
-        if (state.equals(RequestStatus.CONFIRMED)) {
-            for (Request request : requests) {
-                if (!request.getStatus().equals(State.PENDING)) {
-                    throw new NotAvailableException("Request's state has to be PENDING");
-                }
-                if (freePlaces > 0) {
-                    request.setStatus(RequestStatus.CONFIRMED);
-                    freePlaces--;
-                } else {
-                    request.setStatus(RequestStatus.REJECTED);
-                }
-            }
-        } else if (state.equals(RequestStatus.REJECTED)) {
-            requests.forEach(request -> {
-                if (!request.getStatus().equals(RequestStatus.PENDING)) {
-                    throw new NotAvailableException("Request's state has to be PENDING");
-                }
-                request.setStatus(RequestStatus.REJECTED);
-            });
-        } else {
-            throw new NotAvailableException("You must either approve - CONFIRMED" +
-                    " or reject - REJECTED the application");
-        }
-    }*/
 }
