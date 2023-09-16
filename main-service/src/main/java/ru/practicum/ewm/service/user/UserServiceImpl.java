@@ -55,7 +55,8 @@ public class UserServiceImpl implements UserService {
         }
         return isFound;
     }
-    private void validateEmail(NewUserRequest newUserRequest){
+
+    private void validateEmail(NewUserRequest newUserRequest) {
         String[] parts = newUserRequest.getEmail().split("@");
         String mailboxName = parts[0];
         String domainName = parts[1];

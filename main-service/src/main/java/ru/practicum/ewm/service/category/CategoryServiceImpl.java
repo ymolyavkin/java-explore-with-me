@@ -49,8 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Boolean deleteCategoryById(long id) {
         log.info("Удаление категории с id = {}", id);
         if (!CollectionUtils.isEmpty(eventRepository.findAllByCategoryId(id))) {
-            throw new AlreadyExistsException
-                    ("С категорией существуют связанные события");
+            throw new AlreadyExistsException("С категорией существуют связанные события");
         }
         boolean isFound = categoryRepository.existsById(id);
         if (isFound) {
