@@ -74,13 +74,11 @@ public class EventServiceImpl implements EventService {
         }
         User initiator = getUserById(userId);
         Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() -> new NotFoundException(String.format("Категория  %s не найдена", newEventDto.getCategory())));
-
         Location savedLocation = locationRepository.save(newEventDto.getLocation());
 
         if (this.mapper.getTypeMap(NewEventDto.class, Event.class) == null) {
             this.mapper.createTypeMap(NewEventDto.class, Event.class);
         }
-
         this.mapper.getTypeMap(NewEventDto.class, Event.class).addMappings((mapper) -> {
             mapper.skip(Event::setId);
             mapper.skip(Event::setCategory);
@@ -89,14 +87,11 @@ public class EventServiceImpl implements EventService {
             mapper.skip(Event::setPublishedOn);
             mapper.skip(Event::setCreatedOn);
         });
-
         Event event = mapper.map(newEventDto, Event.class);
-
         event.setCreatedOn(LocalDateTime.now());
         event.setCategory(category);
         event.setInitiator(initiator);
         event.setEventsState(EventsState.PENDING);
-
         Event savedEvent = eventRepository.save(event);
 
         return mapper.map(savedEvent, EventFullDto.class);
