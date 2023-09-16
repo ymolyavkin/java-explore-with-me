@@ -13,9 +13,12 @@ public class EmailLengthValidator implements ConstraintValidator<EmailPartsValid
     @Override
     public boolean isValid(NewUserRequest newUserRequest, ConstraintValidatorContext constraintValidatorContext) {
         String[] parts = newUserRequest.getEmail().split("@");
-        String localPart = parts[0];
-        String domainPart = parts[1];
-        if (localPart.length() > 64 || domainPart.length() > 63) {
+        String mailboxName = parts[0];
+        String domainName = parts[1];
+        String[] partsDomain = domainName.split("\\.");
+
+        String domainPart = partsDomain[0];
+        if (mailboxName.length() > 64 || domainPart.length() > 63) {
             return false;
         }
         return true;

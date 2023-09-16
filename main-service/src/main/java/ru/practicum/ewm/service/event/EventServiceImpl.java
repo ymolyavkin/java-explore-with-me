@@ -58,7 +58,6 @@ public class EventServiceImpl implements EventService {
         eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
         eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
-        //return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
         return eventsShort;
     }
 
@@ -70,16 +69,9 @@ public class EventServiceImpl implements EventService {
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
 
-        //return mapper.map(event, EventFullDto.class);
         return eventFullDto;
     }
 
-    /*
-    EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-            eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
-            eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
-            statClient.createStat(httpServletRequest);
-     */
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
         log.info("Private: Добавление нового события");
@@ -136,7 +128,6 @@ public class EventServiceImpl implements EventService {
                 event.setEventsState(EventsState.CANCELED);
             }
         }
-
         return mapper.map(eventRepository.save(event), EventFullDto.class);
     }
 
@@ -200,47 +191,6 @@ public class EventServiceImpl implements EventService {
         return result;
     }
 
-       /* Long confirmedRequests = requestRepository.countAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
-
-        long freePlaces = event.getParticipantLimit() - confirmedRequests;
-
-        RequestStatus status = RequestStatus.valueOf(String.valueOf(requestToStatusUpdate.getStatus()));
-
-        if (status.equals(RequestStatus.CONFIRMED) && freePlaces <= 0) {
-            throw new NotAvailableException("Заявки на участие в данном событии больше не принимаются");
-        }
-
-        List<Request> requests = requestRepository.findAllByEventIdAndEventInitiatorIdAndIdIn(eventId, userId, requestToStatusUpdate.getRequestIds());
-        List<ParticipationRequestDto> confirmedRequestsDto = new ArrayList<>();
-        List<ParticipationRequestDto> rejectedRequestsDto = new ArrayList<>();
-
-        // setStatus(requests, status, freePlaces);
-
-       *//* List<ParticipationRequestDto> requestsDto = requests
-                .stream()
-                .map(requestMapper::toParticipationRequestDto)
-                .collect(Collectors.toList());*//*
-
-        for (Request request : requests) {
-            if (freePlaces > 0) {
-                confirmedRequestsDto.add(mapper.map(request, ParticipationRequestDto.class));
-                freePlaces--;
-            } else {
-                rejectedRequestsDto.add(mapper.map(request, ParticipationRequestDto.class));
-            }
-        }
-
-       *//* requestsDto.forEach(el -> {
-            if (status.equals(RequestStatus.CONFIRMED)) {
-                confirmedRequestsDto.add(el);
-            } else {
-                rejectedRequestsDto.add(el);
-            }
-        });*//*
-
-        return new EventRequestStatusUpdateResult(confirmedRequestsDto, rejectedRequestsDto);*/
-
-
     @Override
     public List<EventFullDto> getEventsByCondition(List<Long> users, List<EventsState> eventsStates, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         log.info("Admin: Получение полной информации о всех событиях по условиям");
@@ -255,36 +205,9 @@ public class EventServiceImpl implements EventService {
         eventsFull.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
         eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
-        //return events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
         return eventsFull;
     }
 
-    /*
-     public Collection<EventDto> searchEvents(List<Long> users, List<State> states, List<Long> categories,
-                                                 LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
-
-
-            List<Event> answer = eventRepository.findAllAdminByData(users, states, categories, rangeStart, rangeEnd, page);
-            List<Long> eventsId = answer.stream().map(Event::getId).collect(Collectors.toList());
-            Map<Long, Long> requests = new HashMap<>();
-            Map<Long, Long> views = new HashMap<>();
-            Map<Long, Long> likes = new HashMap<>();
-            Map<Long, Long> dislikes = new HashMap<>();
-            requestRepository.findConfirmedRequests(eventsId)
-                    .forEach(stat -> requests.put(stat.getEventId(), stat.getConfirmedRequests()));
-            statClient.getViews(eventsId)
-                    .forEach(view -> views.put(Long.parseLong(view.getEventUri().split("/", 0)[2]), view.getView()));
-            rateRepository.findRate(eventsId, TRUE).forEach(like -> likes.put(like.getEvent(), like.getRate()));
-            rateRepository.findRate(eventsId, FALSE).forEach(dislike -> dislikes.put(dislike.getEvent(), dislike.getRate()));
-            return answer.stream().map(event -> EventMapper.toEventDto(event,
-                    requests.getOrDefault(event.getId(), 0L),
-                    views.getOrDefault(event.getId(), 0L),
-                    likes.getOrDefault(event.getId(), 0L),
-                    dislikes.getOrDefault(event.getId(), 0L)))
-                    .collect(Collectors.toList());
-        }
-
-     */
     @Override
     public EventFullDto editEventAndStatus(Long eventId, UpdateEventRequest updateEventRequest) {
         log.info("Admin: Обновление события с id {}", eventId);
@@ -352,16 +275,6 @@ public class EventServiceImpl implements EventService {
 
         return eventFullDto;
     }
-/*
-    private void sendStats(String uri, String ip) {
-        IncomingHitDto incomingHitDto = new IncomingHitDto();
-        incomingHitDto.setApp("main-service");
-        incomingHitDto.setUri(uri);
-        incomingHitDto.setIp(ip);
-        incomingHitDto.setCreated(LocalDateTime.now());
-
-        //statsClient.saveStats(incomingHitDto);
-    }*/
 
     private void patchUpdateEvent(UpdateEventRequest requestToUpdate, Event event) {
         if (requestToUpdate.getAnnotation() != null && !requestToUpdate.getAnnotation().isBlank()) {

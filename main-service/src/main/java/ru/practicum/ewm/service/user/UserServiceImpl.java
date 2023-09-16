@@ -25,12 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto addUser(NewUserRequest newUserRequest) {
         log.info("Добавление нового пользователя");
-        String[] parts = newUserRequest.getEmail().split("@");
-        String localPart = parts[0];
-        String domainPart = parts[1];
-        if (localPart.length() > 64 || domainPart.length() > 63) {
-            throw new ValidationDateException("ValidationDateException from controller");
-        }
+        validateEmail(newUserRequest);
         User user = userRepository.save(mapper.map(newUserRequest, User.class));
 
         return mapper.map(user, UserDto.class);
@@ -59,5 +54,16 @@ public class UserServiceImpl implements UserService {
             userRepository.deleteById(id);
         }
         return isFound;
+    }
+    private void validateEmail(NewUserRequest newUserRequest){
+        String[] parts = newUserRequest.getEmail().split("@");
+        String mailboxName = parts[0];
+        String domainName = parts[1];
+        String[] partsDomain = domainName.split("\\.");
+
+        String domainPart = partsDomain[0];
+        if (mailboxName.length() > 64 || domainPart.length() > 63) {
+            throw new ValidationDateException("Адрес электронной почты не удовлетворяет требованиям");
+        }
     }
 }
