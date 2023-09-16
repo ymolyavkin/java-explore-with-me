@@ -6,7 +6,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.practicum.dto.IncomingHitDto;
 import ru.practicum.ewm.client.Client;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -55,17 +54,32 @@ public class EventServiceImpl implements EventService {
         log.info("Private: Получение событий, добавленных текущим пользователем с id = {}", userId);
         Page<Event> pageEvent = eventRepository.findAllByInitiator_Id(userId, PageRequest.of(from, size));
         List<Event> events = pageEvent.getContent();
-        return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+        List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+        eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
+        eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+
+        //return events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+        return eventsShort;
     }
 
     @Override
     public EventFullDto getEventFullAddedCurrentUser(Long userId, Long eventId) {
         log.info("Private: Получение полной информации о событии с id = {}, добавленном текущим пользователем с id = {}", eventId, userId);
         Event event = eventRepository.findByInitiator_IdAndAndId(userId, eventId).orElseThrow(() -> new NotFoundException(String.format("Событие с id %s, добавленное пользователем с id %s не найдено", eventId, userId)));
+        EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
+        eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
+        eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
 
-        return mapper.map(event, EventFullDto.class);
+        //return mapper.map(event, EventFullDto.class);
+        return eventFullDto;
     }
 
+    /*
+    EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
+            eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
+            eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
+            statClient.createStat(httpServletRequest);
+     */
     @Override
     public EventFullDto addEvent(Long userId, NewEventDto newEventDto) {
         log.info("Private: Добавление нового события");
@@ -236,8 +250,13 @@ public class EventServiceImpl implements EventService {
         PageRequest page = PageRequest.of(from / size, size);
 
         List<Event> events = eventRepository.findAllAdminByCondition(users, eventsStates, categories, rangeStart, rangeEnd, page);
+        List<EventFullDto> eventsFull = events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
 
-        return events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
+        eventsFull.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
+        eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
+
+        //return events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
+        return eventsFull;
     }
 
     /*
@@ -321,16 +340,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventByIdPublic(Long eventId, HttpServletRequest httpServletRequest) {
-        log.info("Public: Получение событий с возможностью фильтрации");
+        log.info("Public: Получение информации об опубликованном событии");
         Event event = getEventById(eventId);
         if (!event.getEventsState().equals(PUBLISHED)) {
             throw new NotFoundException(String.format("Событие с id = %s не было опубликовано", eventId));
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
+        eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
+        eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
+        statClient.createStat(httpServletRequest);
 
         return eventFullDto;
     }
-
+/*
     private void sendStats(String uri, String ip) {
         IncomingHitDto incomingHitDto = new IncomingHitDto();
         incomingHitDto.setApp("main-service");
@@ -339,7 +361,7 @@ public class EventServiceImpl implements EventService {
         incomingHitDto.setCreated(LocalDateTime.now());
 
         //statsClient.saveStats(incomingHitDto);
-    }
+    }*/
 
     private void patchUpdateEvent(UpdateEventRequest requestToUpdate, Event event) {
         if (requestToUpdate.getAnnotation() != null && !requestToUpdate.getAnnotation().isBlank()) {
