@@ -9,10 +9,7 @@ public class ModelMapperConfig {
     @Bean
     public ModelMapper modelMapper() {
         ModelMapper mapper = new ModelMapper();
-        // Converter<Long, Category> converterToCategory = mappingContext ->
-        // propertyMapper.serPostConverter(mappingContext -> {};)
+
         return mapper;
     }
-
-
 }

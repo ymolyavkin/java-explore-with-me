@@ -16,7 +16,6 @@ import java.util.List;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_FROM;
 import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 
-
 @Controller
 @RequestMapping(value = "/categories")
 @Slf4j

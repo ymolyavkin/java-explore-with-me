@@ -56,16 +56,13 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto addCompilation(NewCompilationDto newCompilationDto) {
         log.info("Добавление новой подборки");
         Compilation compilation;
-        if (newCompilationDto.getEvents()!=null){
+        if (newCompilationDto.getEvents() != null) {
             Set<Event> events = eventRepository.findByIdIn(newCompilationDto.getEvents());
             compilation = mapper.map(newCompilationDto, Compilation.class);
             compilation.setEvents(events);
         } else {
             compilation = mapper.map(newCompilationDto, Compilation.class);
         }
-      //  Set<Event> events = eventRepository.findByIdIn(newCompilationDto.getEvents());
-     //  Compilation compilation = mapper.map(newCompilationDto, Compilation.class);
-      //  compilation.setEvents(events);
         compilationRepository.save(compilation);
 
         return mapper.map(compilation, CompilationDto.class);
@@ -83,7 +80,6 @@ public class CompilationServiceImpl implements CompilationService {
         if (updateCompRequest.getPinned() != null) {
             compilation.setPinned(updateCompRequest.getPinned());
         }
-
         if (updateCompRequest.getEvents() != null && !updateCompRequest.getEvents().isEmpty()) {
             List<Long> eventIds = updateCompRequest.getEvents();
             List<Event> events = eventRepository.findAllByIdIn(eventIds);

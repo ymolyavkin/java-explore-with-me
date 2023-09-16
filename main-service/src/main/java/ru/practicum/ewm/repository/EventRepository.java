@@ -19,11 +19,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     Page<Event> findAllByInitiator_Id(Long userId, Pageable pageable);
 
-    /* @Query("select e" +
-             " from Event e" +
-             " where e.initiator.id = :initiatorId" +
-             " and e.id = :eventId")
-     Optional<Event> findEventByInitiatorIdAndEventId(Long initiatorId, Long eventId);*/
     Optional<Event> findByInitiator_IdAndAndId(Long initiatorId, Long eventId);
 
     @Query("SELECT e " +
@@ -35,8 +30,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "AND (e.initiator.id IN :users OR :users IS NULL) " +
             "AND (e.eventsState IN :states OR :states IS NULL)"
     )
-//    Page<Event> findAllForAdmin(List<Long> users, List<EventsState> states, List<Long> categories,
-//                                LocalDateTime rangeStart, PageRequest pageable);
     List<Event> findAllForAdmin(List<Long> users, List<EventsState> states, List<Long> categories,
                                 LocalDateTime rangeStart, PageRequest pageable);
 
@@ -59,20 +52,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                               @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable,
                               Pageable pageable);
 
-    /*  @Query("select e from Event e " +
-               "where e.eventsState = 'PUBLISHED' " +
-               "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
-               "and (:categoryIds is null or e.category.id in :categoryIds) " +
-               "and (:paid is null or e.paid = :paid) " +
-               "and e.eventDate >= :rangeStart " +
-               "and (:rangeEnd is null or e.eventDate <= :rangeEnd) " +
-               "and (:onlyAvailable = false or e.id in " +
-               "(select r.event.id " +
-               "from Request r " +
-               "where r.status = 'CONFIRMED' " +
-               "group by r.event.id " +
-               "having e.participantLimit - count(r.id) > 0 " +
-               "order by count(r.id))) ")*/
     @Query("select e from Event e " +
             "where e.eventsState = 'PUBLISHED' " +
             "and (:text is null or (lower(e.annotation) like lower(concat('%', :text, '%')) or lower(e.description) like lower(concat('%', :text, '%')))) " +
@@ -88,9 +67,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "having e.participantLimit - count(r.id) > 0 " +
             "order by count(r.id))) "
     )
-
-    //
-
     List<Event> findAllPublicByCondition(
             @Param("text") String text, @Param("categoryIds") List<Long> categoryIds,
             @Param("paid") String paid, @Param("rangeStart") LocalDateTime rangeStart,
