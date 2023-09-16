@@ -49,10 +49,12 @@ public class HitController {
 
         return hitService.addHit(incomingHitDto);
     }
+
     @GetMapping("/view/{eventId}")
     public Long getView(@PathVariable long eventId) {
         return hitService.getView(eventId);
     }
+
     @GetMapping("/viewstats")
     public List<ViewStatsResponseDto> getViewStats(
             @JsonSerialize(using = LocalDateSerializer.class)
@@ -76,7 +78,7 @@ public class HitController {
         try {
             LocalDateTime startTime = LocalDateTime.parse(customQuery.get("start"), FORMATTER_DATE);
             LocalDateTime endTime = LocalDateTime.parse(customQuery.get("end"), FORMATTER_DATE).withNano(0);
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             log.info("ошибка в формате даты");
         }

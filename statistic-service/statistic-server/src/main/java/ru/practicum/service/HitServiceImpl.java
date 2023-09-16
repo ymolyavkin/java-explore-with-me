@@ -54,6 +54,7 @@ public class HitServiceImpl implements HitService {
             }
         }
     }
+
     @Override
     @Transactional(readOnly = true)
     public Long getView(long eventId) {
