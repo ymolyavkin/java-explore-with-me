@@ -11,10 +11,7 @@ import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.mapper.Mapper;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
-import ru.practicum.ewm.dto.request.ParticipationRequestDto;
-import ru.practicum.ewm.dto.request.UpdateEventRequest;
+import ru.practicum.ewm.dto.request.*;
 import ru.practicum.ewm.entity.*;
 import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.enums.RequestStatus;
@@ -55,6 +52,7 @@ public class EventServiceImpl implements EventService {
         Page<Event> pageEvent = eventRepository.findAllByInitiator_Id(userId, PageRequest.of(from, size));
         List<Event> events = pageEvent.getContent();
         List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
+        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
         eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
         eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
 

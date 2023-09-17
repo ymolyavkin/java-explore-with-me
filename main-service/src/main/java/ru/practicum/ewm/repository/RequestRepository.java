@@ -2,6 +2,7 @@ package ru.practicum.ewm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.ewm.dto.request.EventsConfirmedRequest;
 import ru.practicum.ewm.entity.Event;
 import ru.practicum.ewm.entity.Request;
 import ru.practicum.ewm.entity.User;
@@ -29,4 +30,10 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "WHERE r.event.id in :eventId " +
             "AND r.status = 'CONFIRMED' ")
     Long findConfirmedRequests(Long eventId);
+    @Query("SELECT new ru.practicum.ewm.dto.request.EventsConfirmedRequest(r.event.id, COUNT( r.id)) " +
+            "FROM Request r " +
+            "WHERE " +
+            "r.status = 'CONFIRMED' " +
+            "GROUP BY r.event.id")
+    List<EventsConfirmedRequest> getCountConfirmedRequests();
 }

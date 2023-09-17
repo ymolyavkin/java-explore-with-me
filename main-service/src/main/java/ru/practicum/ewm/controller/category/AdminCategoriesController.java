@@ -15,7 +15,6 @@ import ru.practicum.validator.Marker;
 @Controller
 @RequestMapping(value = "/admin/categories")
 @Slf4j
-@Validated
 @RequiredArgsConstructor
 public class AdminCategoriesController {
     private final CategoryService categoryService;
