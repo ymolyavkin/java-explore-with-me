@@ -25,6 +25,7 @@ import ru.practicum.ewm.repository.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -198,8 +199,11 @@ public class EventServiceImpl implements EventService {
     public List<EventFullDto> getEventsByCondition(List<Long> users, List<EventsState> eventsStates, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, int from, int size) {
         log.info("Admin: Получение полной информации о всех событиях по условиям");
         validationDateTime(rangeStart, rangeEnd);
-        rangeStart = getRangeStart(rangeStart);
-        rangeEnd = getRangeEnd(rangeEnd);
+       /* rangeStart = getRangeStart(rangeStart);
+        rangeEnd = getRangeEnd(rangeEnd);*/
+        if (rangeStart == null || rangeEnd == null) {
+            return Collections.emptyList();
+        }
         PageRequest page = PageRequest.of(from / size, size);
 
         List<Event> events = eventRepository.findAllAdminByCondition(users, eventsStates, categories, rangeStart, rangeEnd, page);
