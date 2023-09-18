@@ -204,13 +204,13 @@ public class EventServiceImpl implements EventService {
 
         List<Event> events = eventRepository.findAllAdminByCondition(users, eventsStates, categories, rangeStart, rangeEnd, page);
         List<EventFullDto> eventsFull = events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
-        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
+       /* List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        eventsFull.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));
-       // eventsFull.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
+        eventsFull.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));*/
+        eventsFull.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
         eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
         return eventsFull;
