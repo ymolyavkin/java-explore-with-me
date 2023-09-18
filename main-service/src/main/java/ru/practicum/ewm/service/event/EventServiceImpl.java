@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.enums.EventsState.PUBLISHED;
@@ -53,7 +54,11 @@ public class EventServiceImpl implements EventService {
         List<Event> events = pageEvent.getContent();
         List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
         List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
-        eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
+        Map<Long, Long> mapConfirmedRequests = confirmedRequests
+                .stream()
+                .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
+        //  eventsShort.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
+        eventsShort.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));
         eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
         return eventsShort;
