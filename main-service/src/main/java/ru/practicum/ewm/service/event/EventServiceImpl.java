@@ -165,9 +165,9 @@ public class EventServiceImpl implements EventService {
         }
         long confirmedRequests = requestRepository.countAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
         long freePlaces = event.getParticipantLimit() - confirmedRequests;
-        //  RequestStatus status = RequestStatus.valueOf(String.valueOf(requestToStatusUpdate.getStatus()));
+
         RequestStatus status = RequestStatus.valueOf(String.valueOf(requestToStatusUpdate.getStatus()));
-        if (status.equals(CONFIRMED) && freePlaces <= 0) {
+        if (status.equals(RequestStatus.CONFIRMED) && freePlaces <= 0) {
             throw new NotAvailableException("Заявки на участие в данном событии больше не принимаются");
         }
         List<Request> requests = requestRepository.findAllByEventIdAndEventInitiatorIdAndIdIn(eventId, userId, requestToStatusUpdate.getRequestIds());
