@@ -203,30 +203,25 @@ public class EventServiceImpl implements EventService {
         PageRequest page = PageRequest.of(from / size, size);
 
         List<Event> events = eventRepository.findAllAdminByCondition(users, eventsStates, categories, rangeStart, rangeEnd, page);
-        List<EventFullDto> eventsFull = events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
-       /* List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
+
+        List<EventFullDto> otherEventsFull = events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
+        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        eventsFull.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));*/
-        eventsFull.forEach(e -> e.setConfirmedRequests(requestRepository.findConfirmedRequests(e.getId())));
-        eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        otherEventsFull.forEach((eventFullDto -> {
+            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
+                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
+            } else {
+                eventFullDto.setConfirmedRequests(0L);
+            }
+        }));
+        otherEventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
-        return eventsFull;
+        return otherEventsFull;
     }
-    /*
-        Page<Event> pageEvent = eventRepository.findAllByInitiator_Id(userId, PageRequest.of(from, size));
-            List<Event> events = pageEvent.getContent();
-            List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
-            List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
-            Map<Long, Long> mapConfirmedRequests = confirmedRequests
-                    .stream()
-                    .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-            eventsShort.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));
-            eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
-         */
     @Override
     public EventFullDto editEventAndStatus(Long eventId, UpdateEventRequest updateEventRequest) {
         log.info("Admin: Обновление события с id {}", eventId);
