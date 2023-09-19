@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class EventRequestStatusUpdateRequest {
     private List<Long> requestIds;
-    private RequestStatus status;
+    private Status status;
 
     public enum Status {
         CONFIRMED,
