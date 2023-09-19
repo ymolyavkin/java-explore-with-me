@@ -2,7 +2,6 @@ package ru.practicum.ewm.service.event;
 
 import org.junit.jupiter.api.Test;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
-import ru.practicum.ewm.enums.RequestStatus;
 
 import java.util.List;
 
