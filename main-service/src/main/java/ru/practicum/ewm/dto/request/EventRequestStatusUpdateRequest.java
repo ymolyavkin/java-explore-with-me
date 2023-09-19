@@ -13,4 +13,9 @@ import java.util.List;
 public class EventRequestStatusUpdateRequest {
     private List<Long> requestIds;
     private RequestStatus status;
+
+    public enum Status {
+        CONFIRMED,
+        REJECTED
+    }
 }

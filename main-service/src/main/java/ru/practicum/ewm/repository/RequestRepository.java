@@ -2,6 +2,7 @@ package ru.practicum.ewm.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.dto.request.EventsConfirmedRequest;
 import ru.practicum.ewm.entity.Event;
 import ru.practicum.ewm.entity.Request;
@@ -25,6 +26,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     boolean existsByRequesterAndEvent(User user, Event event);
 
     List<Request> findAllByStatusAndEventIdIn(RequestStatus status, List<Long> eventIds);
+
+    List<Request> findAllByStatusAndEventIdIn(EventRequestStatusUpdateRequest.Status status, List<Long> eventIds);
 
     @Query("SELECT count(r.id) FROM Request AS r " +
             "WHERE r.event.id in :eventId " +

@@ -29,9 +29,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest.Status.CONFIRMED;
+import static ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest.Status.REJECTED;
 import static ru.practicum.ewm.enums.EventsState.PUBLISHED;
-import static ru.practicum.ewm.enums.RequestStatus.CONFIRMED;
-import static ru.practicum.ewm.enums.RequestStatus.REJECTED;
 import static ru.practicum.util.Constants.MESSAGE_DATE_NOT_VALID;
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_START_AFTER_END;
 
@@ -58,7 +58,6 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        // eventsShort.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));
         eventsShort.forEach((eventFullDto -> {
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
@@ -164,8 +163,9 @@ public class EventServiceImpl implements EventService {
         if (!event.getInitiator().equals(user)) {
             throw new IllegalArgumentException("Событие не принадлежит данному пользователю");
         }
-        long confirmedRequests = requestRepository.countAllByEventIdAndStatus(eventId, CONFIRMED);
+        long confirmedRequests = requestRepository.countAllByEventIdAndStatus(eventId, RequestStatus.CONFIRMED);
         long freePlaces = event.getParticipantLimit() - confirmedRequests;
+        //  RequestStatus status = RequestStatus.valueOf(String.valueOf(requestToStatusUpdate.getStatus()));
         RequestStatus status = RequestStatus.valueOf(String.valueOf(requestToStatusUpdate.getStatus()));
         if (status.equals(CONFIRMED) && freePlaces <= 0) {
             throw new NotAvailableException("Заявки на участие в данном событии больше не принимаются");
@@ -182,17 +182,17 @@ public class EventServiceImpl implements EventService {
         result.setRejectedRequests(rejectedRequestsDto);
 
         if (requestToStatusUpdate.getStatus().equals(REJECTED)) {
-            requests.forEach(request -> request.setStatus(REJECTED));
+            requests.forEach(request -> request.setStatus(RequestStatus.REJECTED));
             result.setRejectedRequests(requestRepository.saveAll(requests).stream()
                     .map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList()));
         }
         if (requestToStatusUpdate.getStatus().equals(CONFIRMED)) {
             for (Request r : requests) {
                 if (requestRepository.findConfirmedRequests(eventId).equals(event.getParticipantLimit())) {
-                    r.setStatus(REJECTED);
+                    r.setStatus(RequestStatus.REJECTED);
                     result.getRejectedRequests().add(Mapper.mapToParticipationRequestDto(mapper, requestRepository.save(r)));
                 } else {
-                    r.setStatus(CONFIRMED);
+                    r.setStatus(RequestStatus.CONFIRMED);
                     result.getConfirmedRequests().add(Mapper.mapToParticipationRequestDto(mapper, requestRepository.save(r)));
                 }
             }
@@ -281,7 +281,6 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        //eventsShort.forEach(e -> e.setConfirmedRequests(mapConfirmedRequests.get(e.getId())));
         eventsShort.forEach((eventFullDto -> {
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
