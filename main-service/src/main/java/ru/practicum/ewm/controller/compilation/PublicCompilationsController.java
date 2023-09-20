@@ -2,11 +2,13 @@ package ru.practicum.ewm.controller.compilation;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.compilation.CompilationDto;
 import ru.practicum.ewm.service.compilation.CompilationService;
 
@@ -31,13 +33,13 @@ public class PublicCompilationsController {
                                                                    @RequestParam(required = false) Boolean pinned) {
         log.info("Получен запрос на получение подборок событий");
 
-        return new ResponseEntity<>(compilationService.getCompilations(pinned, from, size), HttpStatus.OK);
+        return ResponseEntity.ok(compilationService.getCompilations(pinned, from, size));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CompilationDto> getCompilationById(@PathVariable Long id) {
         log.info("Получен запрос на получение подборки событий с id {}", id);
 
-        return new ResponseEntity<>(compilationService.getCompilationById(id), HttpStatus.OK);
+        return ResponseEntity.ok(compilationService.getCompilationById(id));
     }
 }

@@ -33,7 +33,7 @@ public class AdminCategoriesController {
                                                       @PathVariable Long id) {
         log.info("Получен запрос на обновление категориис id {}", id);
 
-        return new ResponseEntity<>(categoryService.editCategory(id, newCategoryDto), HttpStatus.OK);
+        return ResponseEntity.ok(categoryService.editCategory(id, newCategoryDto));
     }
 
     @DeleteMapping("/{id}")

@@ -69,7 +69,7 @@ public class PrivateEventsController {
                                                             @Valid @RequestBody UpdateEventUserRequest newEventDto) {
         log.info("Получен запрос на изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
 
-        return new ResponseEntity<>(eventService.editEventFromAuthor(userId, eventId, newEventDto), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.editEventFromAuthor(userId, eventId, newEventDto));
     }
 
     @PatchMapping("/{eventId}/requests")
@@ -79,6 +79,6 @@ public class PrivateEventsController {
 
         log.info("Получен запрос на изменение статуса заявок на участие в событии с id {} пользователя с id {}", userId, eventId);
 
-        return new ResponseEntity<>(eventService.changeStatusRequests(userId, eventId, eventRequestStatusUpdateRequest), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.changeStatusRequests(userId, eventId, eventRequestStatusUpdateRequest));
     }
 }

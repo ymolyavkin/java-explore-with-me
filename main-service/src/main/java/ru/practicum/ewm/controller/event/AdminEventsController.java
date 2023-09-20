@@ -3,7 +3,6 @@ package ru.practicum.ewm.controller.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,7 @@ public class AdminEventsController {
                                                                    @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на полную информацию обо всех событиях, подходящих под условия");
 
-        return new ResponseEntity<>(eventService.getEventsByCondition(users, eventsStates, categories, rangeStart, rangeEnd, from, size), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.getEventsByCondition(users, eventsStates, categories, rangeStart, rangeEnd, from, size));
     }
 
     @PatchMapping("/{eventId}")
@@ -47,6 +46,6 @@ public class AdminEventsController {
                                                              @Valid @RequestBody UpdateEventAdminRequest updateEventRequest) {
         log.info("Получен запрос на обновление события с id {}", eventId);
 
-        return new ResponseEntity<>(eventService.editEventAndStatus(eventId, updateEventRequest), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.editEventAndStatus(eventId, updateEventRequest));
     }
 }

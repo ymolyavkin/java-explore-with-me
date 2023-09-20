@@ -2,10 +2,13 @@ package ru.practicum.ewm.controller.category;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.service.category.CategoryService;
 
@@ -19,6 +22,7 @@ import static ru.practicum.util.Constants.PAGE_DEFAULT_SIZE;
 @Controller
 @RequestMapping(value = "/categories")
 @Slf4j
+@Validated
 @RequiredArgsConstructor
 public class PublicCategoriesController {
     private final CategoryService categoryService;
@@ -28,13 +32,13 @@ public class PublicCategoriesController {
                                                               @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на получение всех категорий");
 
-        return new ResponseEntity<>(categoryService.getCategories(from, size), HttpStatus.OK);
+        return ResponseEntity.ok(categoryService.getCategories(from, size));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable Long id) {
         log.info("Получен запрос на получение категории с id {}", id);
 
-        return new ResponseEntity<>(categoryService.getCategoryById(id), HttpStatus.OK);
+        return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 }

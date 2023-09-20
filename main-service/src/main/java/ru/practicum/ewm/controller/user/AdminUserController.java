@@ -33,7 +33,7 @@ public class AdminUserController {
                                                      @RequestParam(defaultValue = PAGE_DEFAULT_SIZE) @Positive int size) {
         log.info("Получен запрос на получение информации о пользователях");
 
-        return new ResponseEntity<>(userService.getUsers(ids, from, size), HttpStatus.OK);
+        return ResponseEntity.ok(userService.getUsers(ids, from, size));
     }
 
     @PostMapping

@@ -35,7 +35,7 @@ public class AdminCompilationsController {
                                                             @PathVariable Long id) {
         log.info("Получен запрос на обновление информации о подборке с id {}", id);
 
-        return new ResponseEntity<>(compilationService.updateCompilation(id, updateCompilationRequest), HttpStatus.OK);
+        return ResponseEntity.ok(compilationService.updateCompilation(id, updateCompilationRequest));
     }
 
     @DeleteMapping("/{id}")

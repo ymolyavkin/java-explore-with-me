@@ -22,7 +22,7 @@ public class PrivateRequestController {
     public ResponseEntity<List<ParticipationRequestDto>> getRequestByUser(@PathVariable Long userId) {
         log.info("Получен запрос на поиск заявок пользователя с id {} на участие в чужих событиях", userId);
 
-        return new ResponseEntity<>(requestService.getRequestByUser(userId), HttpStatus.OK);
+        return ResponseEntity.ok(requestService.getRequestByUser(userId));
     }
 
     @PostMapping
@@ -38,6 +38,6 @@ public class PrivateRequestController {
 
         log.info("Получен запрос на отмену заявки с id {} пользователя с id {}", requestId, userId);
 
-        return new ResponseEntity<>(requestService.cancelRequest(userId, requestId), HttpStatus.OK);
+        return ResponseEntity.ok(requestService.cancelRequest(userId, requestId));
     }
 }

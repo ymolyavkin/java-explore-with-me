@@ -3,10 +3,12 @@ package ru.practicum.ewm.controller.event;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.enums.SortingOption;
@@ -40,14 +42,14 @@ public class PublicEventsController {
                                                             HttpServletRequest httpServletRequest) {
         log.info("Получен запрос на получение событий с возможностью фильтрации");
 
-        return new ResponseEntity<>(eventService.getAllEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
-                sortingOption, from, size, httpServletRequest), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.getAllEvents(text, categories, paid, rangeStart, rangeEnd, onlyAvailable,
+                sortingOption, from, size, httpServletRequest));
     }
 
     @GetMapping("/{eventId}")
     public ResponseEntity<EventFullDto> getEventById(@PathVariable Long eventId, HttpServletRequest httpServletRequest) {
         log.info("Получен запрос на получение события с id {}", eventId);
 
-        return new ResponseEntity<>(eventService.getEventByIdPublic(eventId, httpServletRequest), HttpStatus.OK);
+        return ResponseEntity.ok(eventService.getEventByIdPublic(eventId, httpServletRequest));
     }
 }
