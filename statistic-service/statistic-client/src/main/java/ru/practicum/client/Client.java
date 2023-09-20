@@ -18,6 +18,9 @@ import java.util.Objects;
 @Component
 @Slf4j
 public class Client extends BaseClient {
+    @Value("${main-app.name}")
+    String mainApplicationName;
+
     @Autowired
     public Client(@Value("${statistic-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(builder
@@ -32,9 +35,9 @@ public class Client extends BaseClient {
                 .ip(request.getRemoteAddr())
                 .uri(request.getRequestURI())
                 .created(LocalDateTime.now())
-                .app("ewm-main-service")
+                .app(mainApplicationName)
                 .build();
-        log.info("Отправлен post запрос на сервер с данными " + incomingHitDto);
+        log.info("Отправлен post запрос на сервер с данными {}", incomingHitDto);
         post("/hit", incomingHitDto);
     }
 

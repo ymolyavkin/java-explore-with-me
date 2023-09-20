@@ -20,7 +20,6 @@ public class NewEventDto {
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     @Size(min = 20, max = 2000, message = MESSAGE_VALIDATION_SIZE)
     private String annotation;
-    @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private long category;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
     @Size(min = 20, max = 7000, message = MESSAGE_VALIDATION_SIZE)
