@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.client.Client;
 import ru.practicum.ewm.dto.event.EventFullDto;
+import ru.practicum.ewm.dto.event.EventMapper;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.mapper.Mapper;
@@ -90,9 +91,10 @@ public class EventServiceImpl implements EventService {
         }
         User initiator = getUserById(userId);
         Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() -> new NotFoundException(String.format("Категория  %s не найдена", newEventDto.getCategory())));
-        Location savedLocation = locationRepository.save(newEventDto.getLocation());
+       // Location savedLocation = locationRepository.save(newEventDto.getLocation());
+        Location savedLocation = locationRepository.save(mapper.map(newEventDto.getLocation(), Location.class));
 
-        if (this.mapper.getTypeMap(NewEventDto.class, Event.class) == null) {
+      /*  if (this.mapper.getTypeMap(NewEventDto.class, Event.class) == null) {
             this.mapper.createTypeMap(NewEventDto.class, Event.class);
         }
         this.mapper.getTypeMap(NewEventDto.class, Event.class).addMappings((mapper) -> {
@@ -102,13 +104,17 @@ public class EventServiceImpl implements EventService {
             mapper.skip(Event::setEventsState);
             mapper.skip(Event::setPublishedOn);
             mapper.skip(Event::setCreatedOn);
+           // mapper.skip(Event::setLocation);
         });
         Event event = mapper.map(newEventDto, Event.class);
         event.setCreatedOn(LocalDateTime.now());
         event.setCategory(category);
         event.setInitiator(initiator);
         event.setEventsState(EventsState.PENDING);
-        Event savedEvent = eventRepository.save(event);
+        event.setLocation(savedLocation);
+        Event savedEvent = eventRepository.save(event);*/
+        Event savedEvent = eventRepository.save(EventMapper.mapToEvent(newEventDto, category, savedLocation, initiator));
+
 
         return mapper.map(savedEvent, EventFullDto.class);
     }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.entity.Location;
+import ru.practicum.ewm.dto.LocationDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -28,7 +28,7 @@ public class NewEventDto {
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocalDateTime eventDate;
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
-    private Location location;
+    private LocationDto location;
     private Boolean paid = false;
     private Long participantLimit = 0L;
     private Boolean requestModeration = true;
