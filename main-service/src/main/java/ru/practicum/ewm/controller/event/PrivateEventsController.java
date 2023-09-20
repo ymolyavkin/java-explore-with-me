@@ -12,7 +12,7 @@ import ru.practicum.ewm.dto.event.NewEventDto;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest;
 import ru.practicum.ewm.dto.request.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.dto.request.ParticipationRequestDto;
-import ru.practicum.ewm.dto.request.UpdateEventRequest;
+import ru.practicum.ewm.dto.request.UpdateEventUserRequest;
 import ru.practicum.ewm.service.event.EventService;
 
 import javax.validation.Valid;
@@ -66,7 +66,7 @@ public class PrivateEventsController {
     @PatchMapping("/{eventId}")
     public ResponseEntity<EventFullDto> editEventFromAuthor(@PathVariable Long userId,
                                                             @PathVariable Long eventId,
-                                                            @Valid @RequestBody UpdateEventRequest newEventDto) {
+                                                            @Valid @RequestBody UpdateEventUserRequest newEventDto) {
         log.info("Получен запрос на изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
 
         return new ResponseEntity<>(eventService.editEventFromAuthor(userId, eventId, newEventDto), HttpStatus.OK);

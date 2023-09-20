@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.practicum.ewm.entity.Location;
-import ru.practicum.ewm.enums.StateAction;
 
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -16,7 +15,7 @@ import static ru.practicum.util.Constants.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateEventRequest {
+public abstract class UpdateEventRequest {
     @Size(min = 20, max = 2000, message = MESSAGE_VALIDATION_SIZE)
     private String annotation;
     private Long category;
@@ -29,7 +28,6 @@ public class UpdateEventRequest {
     @PositiveOrZero(message = MESSAGE_VALIDATION_POSITIVE)
     private Long participantLimit;
     private Boolean requestModeration;
-    private StateAction stateAction;
     @Size(min = 3, max = 120, message = MESSAGE_VALIDATION_SIZE)
     private String title;
 }

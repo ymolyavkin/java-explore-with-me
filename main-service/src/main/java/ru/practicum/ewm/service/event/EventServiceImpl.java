@@ -16,7 +16,6 @@ import ru.practicum.ewm.entity.*;
 import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.enums.RequestStatus;
 import ru.practicum.ewm.enums.SortingOption;
-import ru.practicum.ewm.enums.StateAction;
 import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.exception.ValidationDateException;
@@ -31,6 +30,8 @@ import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest.Status.CONFIRMED;
 import static ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest.Status.REJECTED;
+import static ru.practicum.ewm.dto.request.UpdateEventAdminRequest.StateAction.PUBLISH_EVENT;
+import static ru.practicum.ewm.dto.request.UpdateEventUserRequest.StateAction.SEND_TO_REVIEW;
 import static ru.practicum.ewm.enums.EventsState.PUBLISHED;
 import static ru.practicum.util.Constants.MESSAGE_DATE_NOT_VALID;
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_START_AFTER_END;
@@ -113,7 +114,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto editEventFromAuthor(Long userId, Long eventId, UpdateEventRequest eventToUpdate) {
+    public EventFullDto editEventFromAuthor(Long userId, Long eventId, UpdateEventUserRequest eventToUpdate) {
         log.info("Private: Изменение события с id {}, добавленного пользователем с id {}", eventId, userId);
 
         Event event = getEventById(eventId);
@@ -131,7 +132,7 @@ public class EventServiceImpl implements EventService {
         patchUpdateEvent(eventToUpdate, event);
 
         if (eventToUpdate.getStateAction() != null) {
-            if (eventToUpdate.getStateAction().equals(StateAction.SEND_TO_REVIEW)) {
+            if (eventToUpdate.getStateAction().equals(SEND_TO_REVIEW)) {
                 event.setEventsState(EventsState.PENDING);
             } else {
                 event.setEventsState(EventsState.CANCELED);
@@ -230,7 +231,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto editEventAndStatus(Long eventId, UpdateEventRequest updateEventRequest) {
+    public EventFullDto editEventAndStatus(Long eventId, UpdateEventAdminRequest updateEventRequest) {
         log.info("Admin: Обновление события с id {}", eventId);
 
         Event event = getEventById(eventId);
@@ -241,7 +242,7 @@ public class EventServiceImpl implements EventService {
             throw new NotAvailableException("Время начала изменяемого события должно быть не раньше, чем за 1 час от даты публикации");
         }
         if (updateEventRequest.getStateAction() != null) {
-            if (updateEventRequest.getStateAction().equals(StateAction.PUBLISH_EVENT)) {
+            if (updateEventRequest.getStateAction().equals(PUBLISH_EVENT)) {
                 if (!event.getEventsState().equals(EventsState.PENDING)) {
                     throw new NotAvailableException(String.format("Событие %s уже было опубликовано", eventId));
                 }
@@ -261,7 +262,9 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventShortDto> getAllEvents(String text, List<Long> categoryIds, Boolean paid, LocalDateTime rangeStart, LocalDateTime rangeEnd, Boolean onlyAvailable, SortingOption sortingOption, int from, int size, HttpServletRequest httpServletRequest) {
+    public List<EventShortDto> getAllEvents(String text, List<Long> categoryIds, Boolean paid, LocalDateTime rangeStart,
+                                            LocalDateTime rangeEnd, Boolean onlyAvailable, SortingOption sortingOption,
+                                            int from, int size, HttpServletRequest httpServletRequest) {
         log.info("Public: Получение событий с возможностью фильтрации");
         rangeStart = getRangeStart(rangeStart);
         rangeEnd = getRangeEnd(rangeEnd);
