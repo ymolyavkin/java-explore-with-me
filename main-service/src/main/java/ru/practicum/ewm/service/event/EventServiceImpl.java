@@ -82,7 +82,7 @@ public class EventServiceImpl implements EventService {
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Long> eventIds = List.of(eventFullDto.getId());
         Map<Long, Long> eventViews = getViews(eventIds);
-               // eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
+        // eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
         eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
         return eventFullDto;
     }
@@ -238,24 +238,11 @@ public class EventServiceImpl implements EventService {
             }
         }));
         Map<Long, Long> eventViews = getViews(eventIds);
-       // eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        // eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
         eventsFull.forEach(e -> e.setViews(eventViews.get(e.getId())));
 
         return eventsFull;
     }
-    /*
-    List<Long> eventIds = new ArrayList<>(events.size());
-        eventsShort.forEach((eventFullDto -> {
-            eventIds.add(eventFullDto.getId());
-            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
-                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
-            } else {
-                eventFullDto.setConfirmedRequests(0L);
-            }
-        }));
-        Map<Long, Long> eventViews = getViews(eventIds);
-        eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
-     */
 
     @Override
     public EventFullDto editEventAndStatus(Long eventId, UpdateEventAdminRequest updateEventRequest) {
@@ -311,18 +298,37 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
+        List<Long> eventIds = new ArrayList<>(events.size());
         eventsShort.forEach((eventFullDto -> {
+            eventIds.add(eventFullDto.getId());
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
             } else {
                 eventFullDto.setConfirmedRequests(0L);
             }
         }));
-        eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        Map<Long, Long> eventViews = getViews(eventIds);
+      //  eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
         statClient.createStat(httpServletRequest);
 
         return eventsShort;
     }
+
+    /*
+    List<Long> eventIds = new ArrayList<>(events.size());
+        eventsShort.forEach((eventFullDto -> {
+            eventIds.add(eventFullDto.getId());
+            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
+                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
+            } else {
+                eventFullDto.setConfirmedRequests(0L);
+            }
+        }));
+        Map<Long, Long> eventViews = getViews(eventIds);
+        eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
+     */
+
 
     @Override
     public EventFullDto getEventByIdPublic(Long eventId, HttpServletRequest httpServletRequest) {
