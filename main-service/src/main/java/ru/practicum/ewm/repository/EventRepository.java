@@ -10,6 +10,7 @@ import ru.practicum.ewm.entity.Event;
 import ru.practicum.ewm.enums.EventsState;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -111,6 +112,9 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                             @Param("categoryIds") List<Long> categoryIds,
                             @Param("paid") Boolean paid, @Param("rangeStart") LocalDateTime rangeStart,
                             @Param("rangeEnd") LocalDateTime rangeEnd, @Param("onlyAvailable") Boolean onlyAvailable, Pageable pageable);
+
+    @Query("SELECT MIN(e.publishedOn) FROM Event e WHERE e.id IN :eventsId")
+    Optional<LocalDateTime> getStart(@Param("eventsId") Collection<Long> eventsId);
 
     Set<Event> findByIdIn(List<Long> events);
 

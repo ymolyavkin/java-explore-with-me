@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.practicum.client.Client;
+import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
 import ru.practicum.ewm.dto.event.EventMapper;
 import ru.practicum.ewm.dto.event.EventShortDto;
@@ -24,9 +25,7 @@ import ru.practicum.ewm.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ru.practicum.ewm.dto.request.EventRequestStatusUpdateRequest.Status.CONFIRMED;
@@ -59,15 +58,18 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
-
+        List<Long> eventIds = new ArrayList<>(events.size());
         eventsShort.forEach((eventFullDto -> {
+            eventIds.add(eventFullDto.getId());
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
             } else {
                 eventFullDto.setConfirmedRequests(0L);
             }
         }));
-        eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
+        Map<Long, Long> eventViews = getViews(eventIds);
+        eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
+        //eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
         return eventsShort;
     }
@@ -78,8 +80,10 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findByInitiator_IdAndAndId(userId, eventId).orElseThrow(() -> new NotFoundException(String.format("Событие с id %s, добавленное пользователем с id %s не найдено", eventId, userId)));
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
-        eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
-
+        List<Long> eventIds = List.of(eventFullDto.getId());
+        Map<Long, Long> eventViews = getViews(eventIds);
+               // eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
+        eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
         return eventFullDto;
     }
 
@@ -91,7 +95,7 @@ public class EventServiceImpl implements EventService {
         }
         User initiator = getUserById(userId);
         Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() -> new NotFoundException(String.format("Категория  %s не найдена", newEventDto.getCategory())));
-       // Location savedLocation = locationRepository.save(newEventDto.getLocation());
+        // Location savedLocation = locationRepository.save(newEventDto.getLocation());
         Location savedLocation = locationRepository.save(mapper.map(newEventDto.getLocation(), Location.class));
 
       /*  if (this.mapper.getTypeMap(NewEventDto.class, Event.class) == null) {
@@ -377,5 +381,33 @@ public class EventServiceImpl implements EventService {
 
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
+    }
+
+    private Map<Long, Long> getViews(Collection<Long> eventsId) {
+        List<String> uris = eventsId
+                .stream()
+                .map(id -> "/events/" + id)
+                .collect(Collectors.toList());
+
+        Optional<LocalDateTime> start = eventRepository.getStart(eventsId);
+
+        Map<Long, Long> views = new HashMap<>();
+
+        if (start.isPresent()) {
+            List<ViewStatsResponseDto> response = statClient
+                    .getStats(start.get(), LocalDateTime.now(), uris, true);
+
+            response.forEach(dto -> {
+                String uri = dto.getUri();
+                String[] split = uri.split("/");
+                String id = split[2];
+                Long eventId = Long.parseLong(id);
+                views.put(eventId, dto.getHits());
+            });
+        } else {
+            eventsId.forEach(el -> views.put(el, 0L));
+        }
+
+        return views;
     }
 }
