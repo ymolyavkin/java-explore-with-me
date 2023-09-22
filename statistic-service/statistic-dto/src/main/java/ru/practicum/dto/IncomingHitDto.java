@@ -13,7 +13,6 @@ import static ru.practicum.util.Constants.MESSAGE_VALIDATION_NOT_BLANK;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-//@RequiredArgsConstructor
 public class IncomingHitDto {
     @NotBlank(groups = Marker.OnCreate.class, message = MESSAGE_VALIDATION_NOT_BLANK)
     private String app;

@@ -31,7 +31,7 @@ public class EventFullDto {
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     private Location location;
     private boolean paid;
-    private Integer participantLimit;
+    private Long participantLimit;
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime publishedOn;
     private Boolean requestModeration;

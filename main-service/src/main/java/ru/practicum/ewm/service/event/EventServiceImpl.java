@@ -69,7 +69,6 @@ public class EventServiceImpl implements EventService {
         }));
         Map<Long, Long> eventViews = getViews(eventIds);
         eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
-        //eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
 
         return eventsShort;
     }
@@ -82,8 +81,8 @@ public class EventServiceImpl implements EventService {
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Long> eventIds = List.of(eventFullDto.getId());
         Map<Long, Long> eventViews = getViews(eventIds);
-        // eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
         eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
+
         return eventFullDto;
     }
 
@@ -95,30 +94,9 @@ public class EventServiceImpl implements EventService {
         }
         User initiator = getUserById(userId);
         Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() -> new NotFoundException(String.format("Категория  %s не найдена", newEventDto.getCategory())));
-        // Location savedLocation = locationRepository.save(newEventDto.getLocation());
+
         Location savedLocation = locationRepository.save(mapper.map(newEventDto.getLocation(), Location.class));
-
-      /*  if (this.mapper.getTypeMap(NewEventDto.class, Event.class) == null) {
-            this.mapper.createTypeMap(NewEventDto.class, Event.class);
-        }
-        this.mapper.getTypeMap(NewEventDto.class, Event.class).addMappings((mapper) -> {
-            mapper.skip(Event::setId);
-            mapper.skip(Event::setCategory);
-            mapper.skip(Event::setInitiator);
-            mapper.skip(Event::setEventsState);
-            mapper.skip(Event::setPublishedOn);
-            mapper.skip(Event::setCreatedOn);
-           // mapper.skip(Event::setLocation);
-        });
-        Event event = mapper.map(newEventDto, Event.class);
-        event.setCreatedOn(LocalDateTime.now());
-        event.setCategory(category);
-        event.setInitiator(initiator);
-        event.setEventsState(EventsState.PENDING);
-        event.setLocation(savedLocation);
-        Event savedEvent = eventRepository.save(event);*/
         Event savedEvent = eventRepository.save(EventMapper.mapToEvent(newEventDto, category, savedLocation, initiator));
-
 
         return mapper.map(savedEvent, EventFullDto.class);
     }
@@ -238,7 +216,6 @@ public class EventServiceImpl implements EventService {
             }
         }));
         Map<Long, Long> eventViews = getViews(eventIds);
-        // eventsFull.forEach(e -> e.setViews(statClient.getView(e.getId())));
         eventsFull.forEach(e -> e.setViews(eventViews.get(e.getId())));
 
         return eventsFull;
@@ -308,27 +285,11 @@ public class EventServiceImpl implements EventService {
             }
         }));
         Map<Long, Long> eventViews = getViews(eventIds);
-      //  eventsShort.forEach(e -> e.setViews(statClient.getView(e.getId())));
         eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
         statClient.createStat(httpServletRequest);
 
         return eventsShort;
     }
-
-    /*
-    List<Long> eventIds = new ArrayList<>(events.size());
-        eventsShort.forEach((eventFullDto -> {
-            eventIds.add(eventFullDto.getId());
-            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
-                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
-            } else {
-                eventFullDto.setConfirmedRequests(0L);
-            }
-        }));
-        Map<Long, Long> eventViews = getViews(eventIds);
-        eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
-     */
-
 
     @Override
     public EventFullDto getEventByIdPublic(Long eventId, HttpServletRequest httpServletRequest) {
@@ -339,7 +300,12 @@ public class EventServiceImpl implements EventService {
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
+        List<Long> eventIds = List.of(eventFullDto.getId());
+        Map<Long, Long> eventViews = getViews(eventIds);
+
+        eventFullDto.setViews(getEventViews(eventViews, eventFullDto.getId()));
         eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
+
         statClient.createStat(httpServletRequest);
 
         return eventFullDto;
@@ -374,6 +340,12 @@ public class EventServiceImpl implements EventService {
         if (requestToUpdate.getTitle() != null && !requestToUpdate.getTitle().isBlank()) {
             event.setTitle(requestToUpdate.getTitle());
         }
+    }
+
+    private long getEventViews(Map<Long, Long> eventViews, long id) {
+        if (eventViews.containsKey(id)) {
+            return eventViews.get(id);
+        } else return 0L;
     }
 
     private void validationDateTime(LocalDateTime rangeStart, LocalDateTime rangeEnd) {

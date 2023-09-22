@@ -8,6 +8,7 @@ import ru.practicum.ewm.dto.LocationDto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
@@ -30,6 +31,8 @@ public class NewEventDto {
     @NotNull(message = MESSAGE_VALIDATION_NOT_BLANK)
     private LocationDto location;
     private Boolean paid = false;
+    @PositiveOrZero
+    @NotNull
     private Long participantLimit = 0L;
     private Boolean requestModeration = true;
     @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
