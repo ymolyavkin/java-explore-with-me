@@ -302,8 +302,6 @@ public class EventServiceImpl implements EventService {
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Long> eventIds = List.of(eventFullDto.getId());
         Map<Long, Long> eventViews = getViews(eventIds);
-
-        eventFullDto.setViews(getEventViews(eventViews, eventFullDto.getId()));
         eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
 
         statClient.createStat(httpServletRequest);
