@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @UtilityClass
 public class EventMapper {
-    public static Event mapToEvent(NewEventDto newEventDto, Category category, Location location, User initiator) {
+    public Event mapToEvent(NewEventDto newEventDto, Category category, Location location, User initiator) {
         Event event = new Event();
         event.setAnnotation(newEventDto.getAnnotation());
         event.setCategory(category);
