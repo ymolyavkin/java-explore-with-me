@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.Client;
 import ru.practicum.dto.ViewStatsResponseDto;
+import ru.practicum.ewm.dto.LocationDto;
+import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
-import ru.practicum.ewm.dto.event.EventMapper;
 import ru.practicum.ewm.dto.event.EventShortDto;
 import ru.practicum.ewm.dto.event.NewEventDto;
+import ru.practicum.ewm.dto.mapper.EventMapper;
 import ru.practicum.ewm.dto.mapper.Mapper;
 import ru.practicum.ewm.dto.request.*;
+import ru.practicum.ewm.dto.user.UserShortDto;
 import ru.practicum.ewm.entity.*;
 import ru.practicum.ewm.enums.EventsState;
 import ru.practicum.ewm.enums.RequestStatus;
@@ -76,11 +79,18 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEventFullAddedCurrentUser(Long userId, Long eventId) {
         log.info("Private: Получение полной информации о событии с id = {}, добавленном текущим пользователем с id = {}", eventId, userId);
         Event event = eventRepository.findByInitiator_IdAndAndId(userId, eventId).orElseThrow(() -> new NotFoundException(String.format("Событие с id %s, добавленное пользователем с id %s не найдено", eventId, userId)));
-        EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-        eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
+        //EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
+        //eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Event> events = List.of(event);
         Map<Long, Long> eventViews = getViews(events);
-        eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
+        //   eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
+        EventFullDto eventFullDto = EventMapper.mapToEventFullDto(
+                event,
+                mapper.map(event.getCategory(), CategoryDto.class),
+                requestRepository.findConfirmedRequests(event.getId()),
+                mapper.map(event.getLocation(), LocationDto.class),
+                mapper.map(event.getInitiator(), UserShortDto.class),
+                eventViews.get(event.getId()));
 
         return eventFullDto;
     }
@@ -200,7 +210,13 @@ public class EventServiceImpl implements EventService {
 
         List<Event> events = eventRepository.findAllAdminByCondition(users, eventsStates, categories, rangeStart, rangeEnd, page);
 
-        List<EventFullDto> eventsFull = events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
+        List<EventFullDto> eventsFull = events.stream().map(event -> EventMapper.mapToEventFullDto(
+                event,
+                mapper.map(event.getCategory(), CategoryDto.class),
+                null,
+                mapper.map(event.getLocation(), LocationDto.class),
+                mapper.map(event.getInitiator(), UserShortDto.class),
+                null)).collect(Collectors.toList());
         List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()

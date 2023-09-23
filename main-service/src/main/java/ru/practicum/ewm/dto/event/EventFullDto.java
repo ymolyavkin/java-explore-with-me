@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.ewm.dto.LocationDto;
 import ru.practicum.ewm.dto.category.CategoryDto;
 import ru.practicum.ewm.dto.user.UserShortDto;
-import ru.practicum.ewm.entity.Location;
 import ru.practicum.ewm.enums.EventsState;
 
 import java.time.LocalDateTime;
@@ -29,7 +29,7 @@ public class EventFullDto {
     private LocalDateTime eventDate;
     private UserShortDto initiator;
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    private Location location;
+    private LocationDto location;
     private boolean paid;
     private Long participantLimit;
     @JsonFormat(pattern = DATE_TIME_PATTERN)
