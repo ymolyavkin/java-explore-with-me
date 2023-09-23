@@ -36,23 +36,24 @@ public class EventMapper {
 
     public static EventFullDto mapToEventFullDto(Event event, CategoryDto categoryDto, Long confirmedRequests,
                                                  LocationDto locationDto, UserShortDto initiator, Long views) {
-        EventFullDto eventFullDto = new EventFullDto();
-        eventFullDto.setId(event.getId());
-        eventFullDto.setAnnotation(event.getAnnotation());
-        eventFullDto.setCategory(categoryDto);
-        eventFullDto.setConfirmedRequests(confirmedRequests);
-        eventFullDto.setInitiator(initiator);
-        eventFullDto.setDescription(event.getDescription());
-        eventFullDto.setEventDate(event.getEventDate());
-        eventFullDto.setLocation(locationDto);
-        eventFullDto.setPaid(event.getPaid());
-        eventFullDto.setParticipantLimit(event.getParticipantLimit());
-        eventFullDto.setRequestModeration(event.getRequestModeration());
-        eventFullDto.setTitle(event.getTitle());
-        eventFullDto.setState(event.getEventsState());
-        eventFullDto.setCreatedOn(event.getCreatedOn());
-        eventFullDto.setPublishedOn(event.getPublishedOn());
-        eventFullDto.setViews(views);
+        EventFullDto eventFullDto = EventFullDto.builder()
+                .id(event.getId())
+                .annotation(event.getAnnotation())
+                .category(categoryDto)
+                .confirmedRequests(confirmedRequests)
+                .initiator(initiator)
+                .description(event.getDescription())
+                .eventDate(event.getEventDate())
+                .location(locationDto)
+                .paid(event.getPaid())
+                .participantLimit(event.getParticipantLimit())
+                .requestModeration(event.getRequestModeration())
+                .title(event.getTitle())
+                .state(event.getEventsState())
+                .createdOn(event.getCreatedOn())
+                .publishedOn(event.getPublishedOn())
+                .views(views)
+                .build();
 
         return eventFullDto;
     }
