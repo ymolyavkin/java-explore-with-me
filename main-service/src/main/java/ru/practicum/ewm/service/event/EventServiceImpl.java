@@ -58,7 +58,7 @@ public class EventServiceImpl implements EventService {
         Page<Event> pageEvent = eventRepository.findAllByInitiator_Id(userId, PageRequest.of(from, size));
         List<Event> events = pageEvent.getContent();
         List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
-        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
+        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests(events);
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
@@ -214,7 +214,7 @@ public class EventServiceImpl implements EventService {
                 mapper.map(event.getLocation(), LocationDto.class),
                 mapper.map(event.getInitiator(), UserShortDto.class),
                 null)).collect(Collectors.toList());
-        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
+        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests(events);
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
@@ -286,7 +286,7 @@ public class EventServiceImpl implements EventService {
 
         List<Event> events = eventRepository.findAllByPublic(text, categoryIds, paidStr, rangeStart, rangeEnd, page);
         List<EventShortDto> eventsShort = events.stream().map(event -> mapper.map(event, EventShortDto.class)).collect(Collectors.toList());
-        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
+        List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests(events);
 
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
