@@ -382,8 +382,8 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .map(event -> "/events/" + event.getId())
                 .collect(Collectors.toList());
-        Comparator<Event> byPublishedOn2 = Comparator.comparing(event -> event.getPublishedOn());
-        Optional<Event> earliestEvent = events.stream().filter(e -> e.getPublishedOn() != null).min(byPublishedOn2);
+        Comparator<Event> byPublishedOn = Comparator.comparing(event -> event.getPublishedOn());
+        Optional<Event> earliestEvent = events.stream().filter(e -> e.getPublishedOn() != null).min(byPublishedOn);
         Map<Long, Long> views = new HashMap<>();
 
         if (earliestEvent.isPresent()) {

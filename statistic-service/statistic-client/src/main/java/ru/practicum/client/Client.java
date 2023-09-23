@@ -24,9 +24,9 @@ import static ru.practicum.util.Constants.DATE_TIME_PATTERN;
 @Slf4j
 public class Client extends BaseClient {
     @Value("${main-app.name}")
-    String mainApplicationName;
+    private String mainApplicationName;
     @Value("${statistic-server.url}")
-    String serverUrl;
+    private String serverUrl;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
 
     @Autowired
