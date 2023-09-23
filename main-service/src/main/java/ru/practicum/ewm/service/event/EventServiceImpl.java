@@ -263,7 +263,14 @@ public class EventServiceImpl implements EventService {
         patchUpdateEvent(updateEventRequest, event);
         locationRepository.save(event.getLocation());
 
-        return mapper.map(eventRepository.save(event), EventFullDto.class);
+        //return mapper.map(eventRepository.save(event), EventFullDto.class);
+        return EventMapper.mapToEventFullDto(eventRepository.save(event),
+                mapper.map(event.getCategory(), CategoryDto.class),
+                requestRepository.findConfirmedRequests(event.getId()),
+                mapper.map(event.getLocation(), LocationDto.class),
+                mapper.map(event.getInitiator(), UserShortDto.class),
+                null
+        );
     }
 
     @Override
