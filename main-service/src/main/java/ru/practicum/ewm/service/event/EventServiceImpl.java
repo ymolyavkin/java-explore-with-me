@@ -79,11 +79,8 @@ public class EventServiceImpl implements EventService {
     public EventFullDto getEventFullAddedCurrentUser(Long userId, Long eventId) {
         log.info("Private: Получение полной информации о событии с id = {}, добавленном текущим пользователем с id = {}", eventId, userId);
         Event event = eventRepository.findByInitiator_IdAndAndId(userId, eventId).orElseThrow(() -> new NotFoundException(String.format("Событие с id %s, добавленное пользователем с id %s не найдено", eventId, userId)));
-        //EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-        //eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Event> events = List.of(event);
         Map<Long, Long> eventViews = getViews(events);
-        //   eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
         EventFullDto eventFullDto = EventMapper.mapToEventFullDto(
                 event,
                 mapper.map(event.getCategory(), CategoryDto.class),
@@ -263,7 +260,6 @@ public class EventServiceImpl implements EventService {
         patchUpdateEvent(updateEventRequest, event);
         locationRepository.save(event.getLocation());
 
-        //return mapper.map(eventRepository.save(event), EventFullDto.class);
         return EventMapper.mapToEventFullDto(eventRepository.save(event),
                 mapper.map(event.getCategory(), CategoryDto.class),
                 requestRepository.findConfirmedRequests(event.getId()),
@@ -317,19 +313,16 @@ public class EventServiceImpl implements EventService {
         if (!event.getEventsState().equals(PUBLISHED)) {
             throw new NotFoundException(String.format("Событие с id = %s не было опубликовано", eventId));
         }
-       // EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-      //  eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Event> events = List.of(event);
         Map<Long, Long> eventViews = getViews(events);
-      //  eventFullDto.setViews(statClient.getView(event.getId()));
         statClient.createStat(httpServletRequest);
-EventFullDto eventFullDto = EventMapper.mapToEventFullDto(
-        event,
-        mapper.map(event.getCategory(), CategoryDto.class),
-        requestRepository.findConfirmedRequests(event.getId()),
-        mapper.map(event.getLocation(), LocationDto.class),
-        mapper.map(event.getInitiator(), UserShortDto.class),
-        statClient.getView(event.getId()));
+        EventFullDto eventFullDto = EventMapper.mapToEventFullDto(
+                event,
+                mapper.map(event.getCategory(), CategoryDto.class),
+                requestRepository.findConfirmedRequests(event.getId()),
+                mapper.map(event.getLocation(), LocationDto.class),
+                mapper.map(event.getInitiator(), UserShortDto.class),
+                statClient.getView(event.getId()));
 
         return eventFullDto;
     }
