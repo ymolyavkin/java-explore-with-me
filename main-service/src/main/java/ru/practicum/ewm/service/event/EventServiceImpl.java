@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.client.Client;
 import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.ewm.dto.event.EventFullDto;
@@ -138,7 +139,7 @@ public class EventServiceImpl implements EventService {
         return requestRepository.findAllByEventIdAndEventInitiatorId(eventId, userId).stream()
                 .map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList());
     }
-
+    @Transactional
     @Override
     public EventRequestStatusUpdateResult changeStatusRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest requestToStatusUpdate) {
         log.info("Private: Изменение статуса заявок на участие в событии с id {} пользователя с id {}", userId, eventId);
@@ -303,7 +304,6 @@ public class EventServiceImpl implements EventService {
         List<Long> eventIds = List.of(eventFullDto.getId());
         Map<Long, Long> eventViews = getViews(eventIds);
         eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
-
         statClient.createStat(httpServletRequest);
 
         return eventFullDto;
