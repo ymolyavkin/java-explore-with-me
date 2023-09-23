@@ -59,16 +59,14 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
-        List<Long> eventIds = new ArrayList<>(events.size());
         eventsShort.forEach((eventFullDto -> {
-            eventIds.add(eventFullDto.getId());
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
             } else {
                 eventFullDto.setConfirmedRequests(0L);
             }
         }));
-        Map<Long, Long> eventViews = getViews(eventIds);
+        Map<Long, Long> eventViews = getViews(events);
         eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
 
         return eventsShort;
@@ -80,8 +78,8 @@ public class EventServiceImpl implements EventService {
         Event event = eventRepository.findByInitiator_IdAndAndId(userId, eventId).orElseThrow(() -> new NotFoundException(String.format("Событие с id %s, добавленное пользователем с id %s не найдено", eventId, userId)));
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
-        List<Long> eventIds = List.of(eventFullDto.getId());
-        Map<Long, Long> eventViews = getViews(eventIds);
+        List<Event> events = List.of(event);
+        Map<Long, Long> eventViews = getViews(events);
         eventFullDto.setViews(eventViews.get(eventFullDto.getId()));
 
         return eventFullDto;
@@ -139,6 +137,7 @@ public class EventServiceImpl implements EventService {
         return requestRepository.findAllByEventIdAndEventInitiatorId(eventId, userId).stream()
                 .map(request -> Mapper.mapToParticipationRequestDto(mapper, request)).collect(Collectors.toList());
     }
+
     @Transactional
     @Override
     public EventRequestStatusUpdateResult changeStatusRequests(Long userId, Long eventId, EventRequestStatusUpdateRequest requestToStatusUpdate) {
@@ -203,20 +202,18 @@ public class EventServiceImpl implements EventService {
 
         List<EventFullDto> eventsFull = events.stream().map(event -> mapper.map(event, EventFullDto.class)).collect(Collectors.toList());
         List<EventsConfirmedRequest> confirmedRequests = requestRepository.getCountConfirmedRequests();
-        List<Long> eventIds = new ArrayList<>(events.size());
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
         eventsFull.forEach((eventFullDto -> {
-            eventIds.add(eventFullDto.getId());
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
             } else {
                 eventFullDto.setConfirmedRequests(0L);
             }
         }));
-        Map<Long, Long> eventViews = getViews(eventIds);
+        Map<Long, Long> eventViews = getViews(events);
         eventsFull.forEach(e -> e.setViews(eventViews.get(e.getId())));
 
         return eventsFull;
@@ -276,16 +273,14 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        List<Long> eventIds = new ArrayList<>(events.size());
         eventsShort.forEach((eventFullDto -> {
-            eventIds.add(eventFullDto.getId());
             if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
                 eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
             } else {
                 eventFullDto.setConfirmedRequests(0L);
             }
         }));
-        Map<Long, Long> eventViews = getViews(eventIds);
+        Map<Long, Long> eventViews = getViews(events);
         eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
         statClient.createStat(httpServletRequest);
 
@@ -301,8 +296,8 @@ public class EventServiceImpl implements EventService {
         }
         EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
         eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
-        List<Long> eventIds = List.of(eventFullDto.getId());
-        Map<Long, Long> eventViews = getViews(eventIds);
+        List<Event> events = List.of(event);
+        Map<Long, Long> eventViews = getViews(events);
         eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
         statClient.createStat(httpServletRequest);
 
@@ -376,19 +371,18 @@ public class EventServiceImpl implements EventService {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
     }
 
-    private Map<Long, Long> getViews(Collection<Long> eventsId) {
-        List<String> uris = eventsId
+    private Map<Long, Long> getViews(Collection<Event> events) {
+        List<String> uris = events
                 .stream()
-                .map(id -> "/events/" + id)
+                .map(event -> "/events/" + event.getId())
                 .collect(Collectors.toList());
-
-        Optional<LocalDateTime> start = eventRepository.getStart(eventsId);
-
+        Comparator<Event> byPublishedOn2 = Comparator.comparing(event -> event.getPublishedOn());
+        Optional<Event> earliestEvent = events.stream().filter(e -> e.getPublishedOn() != null).min(byPublishedOn2);
         Map<Long, Long> views = new HashMap<>();
 
-        if (start.isPresent()) {
+        if (earliestEvent.isPresent()) {
             List<ViewStatsResponseDto> response = statClient
-                    .getStats(start.get(), LocalDateTime.now(), uris, true);
+                    .getStats(earliestEvent.get().getPublishedOn(), LocalDateTime.now(), uris, true);
 
             response.forEach(dto -> {
                 String uri = dto.getUri();
@@ -398,7 +392,7 @@ public class EventServiceImpl implements EventService {
                 views.put(eventId, dto.getHits());
             });
         } else {
-            eventsId.forEach(el -> views.put(el, 0L));
+            events.forEach(e -> views.put(e.getId(), 0L));
         }
 
         return views;
