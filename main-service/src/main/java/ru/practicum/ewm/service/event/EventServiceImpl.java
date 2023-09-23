@@ -62,13 +62,8 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> mapConfirmedRequests = confirmedRequests
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
-        eventsShort.forEach((eventFullDto -> {
-            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
-                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
-            } else {
-                eventFullDto.setConfirmedRequests(0L);
-            }
-        }));
+
+        eventsShort.forEach(eventsShortDto -> eventsShortDto.setConfirmedRequests(mapConfirmedRequests.getOrDefault(eventsShortDto.getId(), 0L)));
         Map<Long, Long> eventViews = getViews(events);
         eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
 
@@ -219,13 +214,7 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        eventsFull.forEach((eventFullDto -> {
-            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
-                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
-            } else {
-                eventFullDto.setConfirmedRequests(0L);
-            }
-        }));
+        eventsFull.forEach(eventFullDto -> eventFullDto.setConfirmedRequests(mapConfirmedRequests.getOrDefault(eventFullDto.getId(), 0L)));
         Map<Long, Long> eventViews = getViews(events);
         eventsFull.forEach(e -> e.setViews(eventViews.get(e.getId())));
 
@@ -292,13 +281,7 @@ public class EventServiceImpl implements EventService {
                 .stream()
                 .collect(Collectors.toMap(request -> request.getEventId(), request -> request.getCountConfirmedRequests()));
 
-        eventsShort.forEach((eventFullDto -> {
-            if (mapConfirmedRequests.containsKey(eventFullDto.getId())) {
-                eventFullDto.setConfirmedRequests(mapConfirmedRequests.get(eventFullDto.getId()));
-            } else {
-                eventFullDto.setConfirmedRequests(0L);
-            }
-        }));
+        eventsShort.forEach(eventsShortDto -> eventsShortDto.setConfirmedRequests(mapConfirmedRequests.getOrDefault(eventsShortDto.getId(), 0L)));
         Map<Long, Long> eventViews = getViews(events);
         eventsShort.forEach(e -> e.setViews(eventViews.get(e.getId())));
         statClient.createStat(httpServletRequest);

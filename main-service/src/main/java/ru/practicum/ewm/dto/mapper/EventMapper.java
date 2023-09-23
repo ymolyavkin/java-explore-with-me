@@ -34,7 +34,7 @@ public class EventMapper {
         return event;
     }
 
-    public static EventFullDto mapToEventFullDto(Event event, CategoryDto categoryDto, Long confirmedRequests,
+    public EventFullDto mapToEventFullDto(Event event, CategoryDto categoryDto, Long confirmedRequests,
                                                  LocationDto locationDto, UserShortDto initiator, Long views) {
         EventFullDto eventFullDto = EventFullDto.builder()
                 .id(event.getId())
