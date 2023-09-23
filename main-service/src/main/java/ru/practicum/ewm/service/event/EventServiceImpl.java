@@ -317,12 +317,19 @@ public class EventServiceImpl implements EventService {
         if (!event.getEventsState().equals(PUBLISHED)) {
             throw new NotFoundException(String.format("Событие с id = %s не было опубликовано", eventId));
         }
-        EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
-        eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
+       // EventFullDto eventFullDto = mapper.map(event, EventFullDto.class);
+      //  eventFullDto.setConfirmedRequests(requestRepository.findConfirmedRequests(eventFullDto.getId()));
         List<Event> events = List.of(event);
         Map<Long, Long> eventViews = getViews(events);
-        eventFullDto.setViews(statClient.getView(eventFullDto.getId()));
+      //  eventFullDto.setViews(statClient.getView(event.getId()));
         statClient.createStat(httpServletRequest);
+EventFullDto eventFullDto = EventMapper.mapToEventFullDto(
+        event,
+        mapper.map(event.getCategory(), CategoryDto.class),
+        requestRepository.findConfirmedRequests(event.getId()),
+        mapper.map(event.getLocation(), LocationDto.class),
+        mapper.map(event.getInitiator(), UserShortDto.class),
+        statClient.getView(event.getId()));
 
         return eventFullDto;
     }
