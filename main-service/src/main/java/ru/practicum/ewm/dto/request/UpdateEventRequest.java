@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.ewm.entity.Location;
+import ru.practicum.ewm.dto.LocationDto;
 
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -23,7 +23,7 @@ public abstract class UpdateEventRequest {
     private String description;
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime eventDate;
-    private Location location;
+    private LocationDto location;
     private Boolean paid;
     @PositiveOrZero(message = MESSAGE_VALIDATION_POSITIVE)
     private Long participantLimit;
