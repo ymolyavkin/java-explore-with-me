@@ -434,7 +434,7 @@
           {
             "description": "список состояний в которых находятся искомые события",
             "in": "query",
-            "name": "states",
+            "name": "eventsStates",
             "required": false,
             "schema": {
               "type": "array",

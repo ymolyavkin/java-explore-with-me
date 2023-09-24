@@ -3,6 +3,7 @@ package ru.practicum.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.IncomingHitDto;
@@ -37,10 +38,16 @@ public class HitController {
     }
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseHitDto addHit(@Validated(Marker.OnCreate.class) @RequestBody IncomingHitDto incomingHitDto) {
         log.info("Получен запрос на сохранение информации о том что эндпойнт запрашивали");
         incomingHitDto.setCreated(LocalDateTime.now());
 
         return hitService.addHit(incomingHitDto);
+    }
+
+    @GetMapping("/view/{eventId}")
+    public Long getView(@PathVariable long eventId) {
+        return hitService.getView(eventId);
     }
 }

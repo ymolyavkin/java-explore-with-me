@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.dto.IncomingHitDto;
+import ru.practicum.dto.ResponseHitDto;
 import ru.practicum.dto.ViewStatsResponseDto;
 import ru.practicum.entity.HitEntity;
 import ru.practicum.mapper.HitMapper;
@@ -14,6 +14,7 @@ import ru.practicum.repository.HitRepository;
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 import static ru.practicum.util.Constants.MESSAGE_VALIDATION_START_AFTER_END;
 
@@ -52,5 +53,12 @@ public class HitServiceImpl implements HitService {
                 return hitRepository.getViewStatisticsWithAllIp(start, end, uris);
             }
         }
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Long getView(long eventId) {
+        Long view = hitRepository.countDistinctByUri("/events/" + eventId);
+        return Objects.requireNonNullElse(view, 0L);
     }
 }
