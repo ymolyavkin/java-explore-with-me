@@ -19,6 +19,8 @@ public class Constants {
     public static final String MESSAGE_REASON_DB_CONSTRAINT_VIOLATION = "Нарушение ограничения БД";
     public static final String MESSAGE_INTERNAL_SERVER_ERROR = "Внутренняя ошибка сервера";
     public static final String MESSAGE_BAD_REQUEST = "Ошибка на стороне пользователя";
+    public static final String MESSAGE_EVENT_IS_NOT_PUBLISHED = "Данное событие не опубликовано";
+    public static final String MESSAGE_USER_IS_NOT_AUTHOR = "Комментарий не принадлежит данному пользователю";
     public static final String PAGE_DEFAULT_FROM = "0";
     public static final String PAGE_DEFAULT_SIZE = "10";
 }
