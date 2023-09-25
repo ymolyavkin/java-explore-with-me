@@ -89,7 +89,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     private void checkCommentsAuthor(Comment comment, User user) {
-        if (comment.getAuthor().getId() != user.getId()) {
+        if (!comment.getAuthor().getId().equals(user.getId())) {
             throw new NotAvailableException(MESSAGE_USER_IS_NOT_AUTHOR);
         }
     }
