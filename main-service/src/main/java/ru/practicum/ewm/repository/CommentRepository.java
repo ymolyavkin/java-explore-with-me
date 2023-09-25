@@ -1,5 +1,6 @@
 package ru.practicum.ewm.repository;
 
+import org.springframework.data.domain.Page;
 import ru.practicum.ewm.entity.Comment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
              "where :text is null or (lower(c.text) like lower(concat('%', :text, '%'))) " +
              "order by c.created"
      )*/
-    List<Comment> findAllByTextOrderByCreated(String text, Pageable pageable);
+    Page<Comment> findAllByTextOrderByCreated(String text, Pageable pageable);
 
     List<Comment> findAllByEventOrderByCreated(Long eventId, Pageable pageable);
 

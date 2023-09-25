@@ -1,7 +1,9 @@
 package ru.practicum.ewm.service.comment;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.comment.NewCommentDto;
@@ -19,6 +21,7 @@ import ru.practicum.ewm.repository.EventRepository;
 import ru.practicum.ewm.repository.UserRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.practicum.util.Constants.MESSAGE_EVENT_IS_NOT_PUBLISHED;
 import static ru.practicum.util.Constants.MESSAGE_USER_IS_NOT_AUTHOR;
@@ -61,11 +64,27 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
 
     @Override
     public List<ResponseCommentDto> getAllCommentsByUser(Long userId, int from, int size) {
-        return null;
+        log.info("Private: Получение всех комментариев пользователя с id = {}", userId);
+        User user = getUserById(userId);
+        PageRequest page = PageRequest.of(from / size, size);
+        List<Comment> comments = commentRepository.findAllByAuthorOrderByCreated(userId, page);
+
+        return comments
+                .stream()
+                .map(comment -> CommentMapper.mapToResponseCommentDto(comment, mapper.map(user, UserShortDto.class), comment.getEvent().getId()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public boolean deleteCommentByUser(Long userId, Long commentId) {
+        log.info("Private: Удаление комментария с id = {} пользователем с id = {}", commentId, userId);
+        if (commentRepository.existsById(commentId)) {
+            Comment comment = getCommentById(commentId);
+            User user = getUserById(userId);
+            checkCommentsAuthor(comment, user);
+            commentRepository.deleteById(commentId);
+            return true;
+        }
         return false;
     }
 
@@ -86,5 +105,4 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new NotFoundException(String.format("Пользователь %s не найден", userId)));
     }
-
 }
