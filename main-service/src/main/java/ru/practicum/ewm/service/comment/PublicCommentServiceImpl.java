@@ -11,16 +11,12 @@ import ru.practicum.ewm.dto.mapper.CommentMapper;
 import ru.practicum.ewm.dto.user.UserShortDto;
 import ru.practicum.ewm.entity.Comment;
 import ru.practicum.ewm.entity.Event;
-import ru.practicum.ewm.entity.User;
-import ru.practicum.ewm.exception.NotAvailableException;
 import ru.practicum.ewm.exception.NotFoundException;
 import ru.practicum.ewm.repository.CommentRepository;
 import ru.practicum.ewm.repository.EventRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static ru.practicum.util.Constants.MESSAGE_USER_IS_NOT_AUTHOR;
 
 @Service
 @Slf4j
