@@ -17,7 +17,7 @@ import static ru.practicum.util.Constants.MESSAGE_VALIDATION_SIZE;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewCommentDto {
-    @NotBlank(groups = {Marker.OnCreate.class}, message = MESSAGE_VALIDATION_NOT_BLANK)
-    @Size(groups = {Marker.OnCreate.class}, min = 1, max = 2000, message = MESSAGE_VALIDATION_SIZE)
+    @NotBlank(message = MESSAGE_VALIDATION_NOT_BLANK)
+    @Size(min = 2, max = 2000, message = MESSAGE_VALIDATION_SIZE)
     private String text;
 }
