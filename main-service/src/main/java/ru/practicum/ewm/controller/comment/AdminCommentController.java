@@ -30,8 +30,6 @@ public class AdminCommentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
         log.info("Получен запрос на удаление комментария");
-        adminCommentService.deleteComment(commentId);
-
         if (adminCommentService.deleteComment(commentId)) {
             return new ResponseEntity<>("Комментарий удален", HttpStatus.NO_CONTENT);
         } else {

@@ -13,8 +13,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      )*/
     Page<Comment> findAllByTextOrderByCreated(String text, Pageable pageable);
 
-    List<Comment> findAllByEventOrderByCreated(Long eventId, Pageable pageable);
+    List<Comment> findAllByEventIdOrderByCreated(Long eventId, Pageable pageable);
 
-    List<Comment> findAllByAuthorOrderByCreated(Long authorId, Pageable pageable);
+    List<Comment> findAllByAuthorIdOrderByCreated(Long authorId, Pageable pageable);
 
 }

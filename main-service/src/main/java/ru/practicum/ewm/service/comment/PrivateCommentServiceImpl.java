@@ -67,7 +67,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
         log.info("Private: Получение всех комментариев пользователя с id = {}", userId);
         User user = getUserById(userId);
         PageRequest page = PageRequest.of(from / size, size);
-        List<Comment> comments = commentRepository.findAllByAuthorOrderByCreated(userId, page);
+        List<Comment> comments = commentRepository.findAllByAuthorIdOrderByCreated(userId, page);
 
         return comments
                 .stream()
@@ -76,6 +76,7 @@ public class PrivateCommentServiceImpl implements PrivateCommentService {
     }
 
     @Override
+    @Transactional
     public boolean deleteCommentByUser(Long userId, Long commentId) {
         log.info("Private: Удаление комментария с id = {} пользователем с id = {}", commentId, userId);
         if (commentRepository.existsById(commentId)) {

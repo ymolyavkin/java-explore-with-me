@@ -31,7 +31,7 @@ public class PublicCommentServiceImpl implements PublicCommentService {
         log.info("Public: Получение всех комментариев к событию с id = {}", eventId);
         Event event = getEventById(eventId);
         PageRequest page = PageRequest.of(from / size, size);
-        List<Comment> comments = commentRepository.findAllByEventOrderByCreated(eventId, page);
+        List<Comment> comments = commentRepository.findAllByEventIdOrderByCreated(eventId, page);
 
         return mapToListResponseComment(comments);
     }

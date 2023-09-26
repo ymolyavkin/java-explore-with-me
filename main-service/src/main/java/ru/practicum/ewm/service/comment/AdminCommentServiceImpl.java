@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.dto.comment.ResponseCommentDto;
 import ru.practicum.ewm.dto.mapper.CommentMapper;
 import ru.practicum.ewm.dto.user.UserShortDto;
@@ -29,6 +30,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
     private final ModelMapper mapper;
 
     @Override
+    @Transactional
     public boolean deleteComment(Long commentId) {
         log.info("Admin: Удаление комментария с id = {}", commentId);
         if (commentRepository.existsById(commentId)) {
@@ -44,7 +46,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
         log.info("Admin: Получение комментариев к событию с id = {}", eventId);
         getEventById(eventId);
         PageRequest page = PageRequest.of(from / size, size);
-        List<Comment> comments = commentRepository.findAllByEventOrderByCreated(eventId, page);
+        List<Comment> comments = commentRepository.findAllByEventIdOrderByCreated(eventId, page);
 
         return mapToListResponseComment(comments);
     }
@@ -54,7 +56,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
         log.info("Admin: Получение комментариев пользователя с id = {}", userId);
         getUserById(userId);
         PageRequest page = PageRequest.of(from / size, size);
-        List<Comment> comments = commentRepository.findAllByAuthorOrderByCreated(userId, page);
+        List<Comment> comments = commentRepository.findAllByAuthorIdOrderByCreated(userId, page);
 
         return mapToListResponseComment(comments);
     }
