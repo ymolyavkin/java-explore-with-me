@@ -59,7 +59,7 @@ public class PrivateCommentController {
                                          @PathVariable Long commentId) {
         log.info("Получен запрос от пользователя {} на удаление комментария id = {}", userId, commentId);
         if (privateCommentService.deleteCommentByUser(userId, commentId)) {
-            return new ResponseEntity<>("Комментарий удален", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>("Комментарий не найден или недоступен", HttpStatus.NOT_FOUND);
         }

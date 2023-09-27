@@ -27,11 +27,10 @@ public class AdminCommentController {
     private final AdminCommentServiceImpl adminCommentService;
 
     @DeleteMapping("/{commentId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<String> deleteComment(@PathVariable Long commentId) {
         log.info("Получен запрос на удаление комментария");
         if (adminCommentService.deleteComment(commentId)) {
-            return new ResponseEntity<>("Комментарий удален", HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>("Комментарий не найден или недоступен", HttpStatus.NOT_FOUND);
         }
