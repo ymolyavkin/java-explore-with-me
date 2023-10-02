@@ -2,6 +2,7 @@ package ru.practicum.ewm.entity;
 
 import lombok.Data;
 import lombok.ToString;
+import org.hibernate.annotations.Formula;
 import ru.practicum.ewm.enums.EventsState;
 
 import javax.persistence.*;
@@ -60,4 +61,6 @@ public class Event {
 
     @Column(name = "published_on")
     private LocalDateTime publishedOn;
+    @Formula("(select count(*) from comments where comments.event_id = id)")
+    private Long commentsCount;
 }
